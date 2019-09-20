@@ -7,7 +7,7 @@
         <title>Login</title>
     </head>
     <body>
-        <form action="processLogin.php" method="GET" style="text-align:center; padding:200px;">
+        <form action="processLogin.php" method="POST" style="text-align:center; padding:200px;">
         <h1>Login</h1>
         <?php
             // Display error messages
@@ -15,7 +15,7 @@
                 $msg = $_SESSION['errors'];
                 printErrors();
                 unset ($_SESSION['errors']);
-                echo "<p style='color:red'>$msg</p>";
+                //echo "<p style='color:red'>$msg</p>";
             }
                 
         ?>
