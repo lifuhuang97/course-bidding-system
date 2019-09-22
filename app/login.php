@@ -15,7 +15,8 @@
                     $msg = $_SESSION['errors'];
                     printErrors();
                     unset ($_SESSION['errors']);
-                }   
+                }
+                    
             ?>
             <table align='center'>
                 <tr>
