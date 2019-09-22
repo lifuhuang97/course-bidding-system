@@ -1,23 +1,23 @@
 <?php
     require_once 'include/common.php';
 
-    if (!isset($_SESSION['sucess'])){
+    if (!isset($_SESSION['success'])){
         header('Location.php');
         exit;
     }
     else{
         //Retrieve student information
-        if ($_SESSION['sucess']!='admin'){
+        if ($_SESSION['success']!='admin'){
             $studentDAO = New StudentDAO();
-            $student = $studentDAO->retrieveStudent($_SESSION['sucess']);
+            $student = $studentDAO->retrieveStudent($_SESSION['success']);
             $_SESSION['student'] = $student;
             $name = $student['name'];
             $school = $student['school'];
             $eCredit = $student['edollar'];
             $bidDAO = New BidDAO();
-            $biddedModule = $bidDAO->checkBiddedMod($_SESSION['sucess']);
+            $biddedModule = $bidDAO->checkBiddedMod($_SESSION['success']);
         }else{
-            $name = $_SESSION['sucess'];
+            $name = $_SESSION['success'];
             $school = '-';
             $eCredit = '-';
         }
