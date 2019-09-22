@@ -11,11 +11,11 @@
             $studentDAO = New StudentDAO();
             $student = $studentDAO->retrieveStudent($_SESSION['success']);
             $_SESSION['student'] = $student;
-            $name = $student['name'];
-            $school = $student['school'];
-            $eCredit = $student['edollar'];
+            $name = $student->getName();
+            $school = $student->getSchool();
+            $eCredit = $student->getEdollar();
             $bidDAO = New BidDAO();
-            $biddedModule = $bidDAO->checkBiddedMod($_SESSION['success']);
+            $biddedModule = $bidDAO->getBidInfo($_SESSION['success']);
         }else{
             $name = $_SESSION['success'];
             $school = '-';
@@ -27,7 +27,7 @@
     <body>
         Welcome, <?=$name?><br>
         School: <?=$school?><br>
-        Your Credit Balance: <?$eCredit?><br>
+        Your Credit Balance: <?=$eCredit?><br>
         <?php //Current Time Table<br> ?>
         <table border = 1px>
             <tr>
@@ -86,7 +86,7 @@
                                 <th>Lesson End Time</th>
                                 <th>Instructor</th>
                                 <th>Amount</th>";
-                            echo "</tr";
+                            echo "</tr>";
                             foreach ($biddedModule as $module){
                                 echo "<tr><td>";
                                 $code = $module->getCode();
@@ -100,7 +100,7 @@
                                     <td>{$course->getEnd()}</td>
                                     <td>{$course->getInstructor()}</td>
                                     <td>{$module->getAmount()}</td>";
-                                echo "</td>";
+                                echo "</tr>";
                             }
                             echo "</table>";
                         }
@@ -114,7 +114,7 @@
         <tr>
             <td align='center'><a href='makebid.php'>Make a Bid</a></td>
             <td align='center'><a href='editbid.php'>Edit a Bid</a></td>
-            <td align='center'><a href='deletebid.php'>Cancel Drop Bid</a></td>          
+            <td align='center'><a href='deletebid.php'>Cancel/Drop Bid</a></td>          
         </tr>
         <tr>
             <td colspan='3' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td>

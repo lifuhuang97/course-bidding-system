@@ -57,6 +57,53 @@ class CourseDAO {
         $stmt = null;
         $conn = null; 
     }
+
+    public function RetrieveAllCourseDetail($courseid='',$sectionid='',$school=''){
+
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+        if (strlen($courseid)!=0 && strlen($sectionid)!=0){
+            $sql = "SELECT * 
+                FROM COURSE c, SECTION s
+                WHERE 
+                    c.courseID=s.coursesID AND
+                    c.courseID=:courseid AND
+                    sectionID=:sectionid;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':courseid',$courseid ,PDO::PARAM_STR);
+            $stmt->bindParam(':sectionid',$sectionid ,PDO::PARAM_STR);
+        }elseif(strlen($school)!=0){
+            $sql = "SELECT * 
+                FROM COURSE c, SECTION s
+                WHERE 
+                    c.courseID=s.coursesID AND
+                    school=:school;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':school',$school ,PDO::PARAM_STR);
+        }
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        //Retrieve Query Results (if any)
+        $course=[];
+        while ($row=$stmt->fetch()){
+            $course[]=new CourseSection($row['courseID'],$row['sectionID'],$row['day'],$row['start'],$row['end'],$row['instructor'],$row['venue'],$row['size'],$row['school'],$row['title'],$row['description'],$row['examDate'],$row['examStart'],$row['examEnd']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $course;
+    }
 }
 
 
