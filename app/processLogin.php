@@ -20,7 +20,8 @@
                 exit;
             } else {
                 array_push($_SESSION['errors'], 'Password is incorrect!');
-            }  
+            }
+            
         } elseif (count($_SESSION['errors']) == 0){
             $userid = $_POST['username'];
             $pass = $_POST['password'];
