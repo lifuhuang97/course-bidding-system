@@ -57,10 +57,7 @@ class StudentDAO {
         // $student=[];
         $student = false;
         if ($row=$stmt->fetch()){
-            // $student['name']=$row['name'];
-            // $student['school']=$row['school'];
-            // $student['edollar']=$row['edollar'];
-            $student = new Student($row['name'], $row['school'], $row['edollar']);
+            $student = new Student($row['userid'], $row['password'], $row['name'], $row['school'], $row['edollar']);
         }
         
         // Clear Resources $stmt, $pdo

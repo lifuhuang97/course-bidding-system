@@ -53,9 +53,44 @@ class BidDAO {
         $conn = null; 
     }
 
-    // public function getBidInfo() {
+    public function getBidInfo($userid) {
+        
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
 
-    // }
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+        $sql = "SELECT * 
+                FROM BID 
+                WHERE 
+                    userid=:userid
+                ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+        
+        // Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+        // check if query fail
+        if (!$status){ //if ($status==False)
+            //if there is error
+            $err=$stmt->errorinfo();
+            var_dump($err);
+        }
+        // Retrieve Query Results (if any)
+        $mod=[];
+        while ($row=$stmt->fetch()){
+            $mod[]=new Bid($row['userid'],$row['amount'],$row['code'],$row['section']); 
+        }
+        
+        // Clear Resources $stmt, $pdo
+        $stmt = null;
+        $conn = null;
+
+        // Step 6 - Return (if any)
+        return $mod;
+    }
+
 }
 
 ?>
