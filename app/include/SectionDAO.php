@@ -8,7 +8,7 @@ class SectionDAO {
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
-        $courseID=$Section->getCourseid();
+        $coursesID=$Section->getCourseid();
         $sectionID=$Section->getSectionid();
         $day=$Section->getDay();
         $start=$Section->getStart();
@@ -18,10 +18,10 @@ class SectionDAO {
         $size=$Section->getSize();
 
         // Prepare SQL
-        $sql = "INSERT INTO SECTION (courseID, sectionID, day, start, end, instructor, venue, size) VALUES
-        (:courseID, :sectionID, :day, :start, :end, :instructor, :venue, :size)"; 
+        $sql = "INSERT INTO SECTION (coursesID, sectionID, day, start, end, instructor, venue, size) VALUES
+        (:coursesID, :sectionID, :day, :start, :end, :instructor, :venue, :size)"; 
         $stmt=$conn->prepare($sql);
-        $stmt->bindParam(':courseID',$courseID,PDO::PARAM_STR);
+        $stmt->bindParam(':coursesID',$coursesID,PDO::PARAM_STR);
         $stmt->bindParam(':sectionID',$sectionID,PDO::PARAM_STR);
         $stmt->bindParam(':day',$day,PDO::PARAM_STR);
         $stmt->bindParam(':start',$start,PDO::PARAM_STR);

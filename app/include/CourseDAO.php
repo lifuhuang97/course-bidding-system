@@ -69,7 +69,7 @@ class CourseDAO {
             $sql = "SELECT * 
                 FROM COURSE c, SECTION s
                 WHERE 
-                    c.courseID=s.courseID AND
+                    c.courseID=s.coursesID AND
                     c.courseID=:courseid AND
                     sectionID=:sectionid;
             ";
@@ -80,7 +80,7 @@ class CourseDAO {
             $sql = "SELECT * 
                 FROM COURSE c, SECTION s
                 WHERE 
-                    c.courseID=s.courseID AND
+                    c.courseID=s.coursesID AND
                     school=:school;
             ";
             $stmt = $conn->prepare($sql);
