@@ -9,10 +9,11 @@ body{
 	justify-content: center;
 	align-items: center;
 	padding: 40px;
+	padding-bottom: 20px;
 }
 .header-logo img{
-	width: 30%;
-	height: 30%;
+	width: 20%;
+	height: 20%;
 	background: transparent;
 }
 
@@ -20,6 +21,7 @@ body{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding-bottom: 20px;
 }
 .boss-title img{
 	background: transparent;
@@ -40,7 +42,7 @@ body{
     background: transparent;
 }
 .submit{
-	width: 13em;
+	width: 10em;
     height: 3em;
     border: none;
     background: white;
