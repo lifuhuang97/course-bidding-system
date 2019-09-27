@@ -5,20 +5,20 @@
 <html>
     <head>
         <title>Login</title>
-        <link rel="stylesheet" type="text/css" href="login.css">
+        <link rel="stylesheet" type="text/css" href="css/login.css">
     </head>
     <body>
         <header>
             <div class="header-logo">
-                <img src="smulogo-white.png">
+                <img src="css/smulogo.png">
             </div>
         </header>
         <div class="boss-title">
-            <img src="bios.png" style="width: 6em">
-            <img src="boss-full.png" class="boss-full">
+            <img src="css/bios.png" style="width: 5em">
+            <img src="css/boss-full.png" class="boss-full" style="width: 20%">
         </div>
         <div class="signin-title">
-            <img src="Headline.png" style="width: 7em">
+            <img src="css/Headline.png" style="width: 7em">
             <!-- <img src="line1.png"> -->
         </div>
         <div class="login-form">
