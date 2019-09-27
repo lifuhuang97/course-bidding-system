@@ -15,7 +15,7 @@ create table COURSE (
 );
 
 create table SECTION (
-    courseID varchar(100) not null,
+    coursesID varchar(100) not null,
 	sectionID varchar(2) not null,
     day int(1) not null,
     start time not null,
@@ -23,8 +23,8 @@ create table SECTION (
     instructor varchar(100) not null,
 	venue varchar(100) not  null,
 	size int not  null,
-	CONSTRAINT SECTION_PK primary key (courseID,sectionID),
-	CONSTRAINT SECTION_FK1 foreign key(courseID) references COURSE(courseID)
+	CONSTRAINT SECTION_PK primary key (coursesID,sectionID),
+	CONSTRAINT SECTION_FK1 foreign key(coursesID) references COURSE(courseID)
 );
 
 create table STUDENT (
@@ -59,15 +59,5 @@ create table BID (
     section varchar(2) not null,
 	CONSTRAINT BID_PK primary key (userid,code,section),
 	CONSTRAINT BID_FK1 foreign key(userid) references STUDENT(userid),
-	CONSTRAINT BID_FK2 foreign key(code,section) references SECTION(courseID,sectionID)
+	CONSTRAINT BID_FK2 foreign key(code,section) references SECTION(coursesID,sectionID)
 );
-
-
-
-#load data file
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/course.csv' INTO TABLE COURSE FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/section.csv' INTO TABLE SECTION FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/student.csv' INTO TABLE STUDENT FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/prerequisite.csv' INTO TABLE PREREQUISITE FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/course_completed.csv' INTO TABLE COURSE_COMPLETED FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
-LOAD DATA LOCAL INFILE 'C:/Users/tee-y/OneDrive/Documents/SMU/Y2S1/SPM/Assignment/SampleData/bid.csv' INTO TABLE BID FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;
