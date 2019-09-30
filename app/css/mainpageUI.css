@@ -1,0 +1,55 @@
+*{
+	font-family: "Source Sans Pro", sans-serif;
+}
+.container{
+	display: grid;
+	grid-template-areas: "navbar-left display-right";
+	grid-template-columns: 0.5fr 3fr;
+}
+.navbar-left{
+	height: 100%;
+	color: white;
+	background: #6441A5;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(#2a0845, #6441A5);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(#2a0845, #6441A5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.navbar-left__profile, .navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout, .navbar-left__smuLogo{
+	padding: 20px;
+}
+.profile-picture{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.profile-details p{
+	text-align: center;
+	margin: 0;
+}
+.profpic{
+	height: 7em;
+	width: 7em;
+	border-radius: 50%;
+}
+.navbar-left__smuLogo img{
+	width: 10em;
+}
+.navbar-left__completed:hover, .navbar-left__addCourse:hover, .navbar-left__editBid:hover, .navbar-left__dropCourse:hover, .navbar-left__logout:hover{
+	background: white;
+	color: #6441A5;
+	border-radius: 30px;
+}
+.display-right__table-dates, .display-right__table-cart, .display-right__table-enrolment{
+	padding: 20px;
+}
+table{
+	border: 2px solid #6441A5;
+}
+.table-title{
+	text-align: center;
+    font-size: x-large;
+    color:#6441A5;
+}
+th, td{
+	text-align: center;
+	width: 10em;
+}
