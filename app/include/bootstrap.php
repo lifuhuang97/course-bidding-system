@@ -109,17 +109,19 @@ function doBootstrap() {
 				
 				# for this lab, assume the only error you should check for is that each CSV field 
 				# must not be blank 
-				
-				# for the project, the full error list is listed in the wiki
+				$inputRowError=array();
+                # for the project, the full error list is listed in the wiki
                 // Student
                 $data =fgetcsv($student);
                 $line=2;
                 $useridList=[];
                 while (($data=fgetcsv($student))!==false){
-                    //userid password name school edollar
+                    //$data[0]=>userid, $data[1]=>password, $data[2]=>name, $data[3]=>school, $data[4]=>edollar
                     $message=[];
-                    
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=4;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank userid";
                     }elseif(strlen($data[0])>128){
@@ -128,32 +130,32 @@ function doBootstrap() {
                     }elseif(in_array($data[0],$useridList)){
                         $message[]="duplicate userid";
                     }
-                    if (strlen(trim($data[1]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank password";
                     }elseif(strlen($data[1])>128){
                         //check if length of text is more than 128
                         $message[]="invalid password";
                     }
-                    if (strlen(trim($data[2]))==0){
+                    if (strlen($data[2])==0){
                         //check for empty cell
                         $message[]="blank name";
                     }elseif(strlen($data[2])>100){
                         //check if length of text is more than 100
                         $message[]="invalid name";
                     }
-                    if (strlen(trim($data[3]))==0){
+                    if (strlen($data[3])==0){
                         //check for empty cell
                         $message[]="blank school";
                     }
-                    if (strlen(trim($data[4]))==0){
+                    if (strlen($data[4])==0){
                         //check for empty cell
                         $message[]="blank e-dollar";
                     }elseif(!is_numeric($data[4]) || ($data[4]<0) || $data[4]!=number_format($data[4],2,'.','')){
                         //check if is numeric value, positive value and not more 2 decimal point
                         $message[]="invalid e-dollar";
                     }
-
+                    
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"student.csv",
@@ -161,7 +163,8 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
+                        
                     }else{
                         $studentDAO->add(new Student($data[0],$data[1],$data[2],$data[3],$data[4]));
                         $student_processed++;
@@ -170,7 +173,7 @@ function doBootstrap() {
                     $line++;
                 }
 				// process each line, check for errors, then insert if no errors
-
+                
                 // clean up
                 fclose($student);
                 @unlink($student_path);
@@ -180,37 +183,34 @@ function doBootstrap() {
                 $line=2;
                 $courseList=[];
                 while (($data=fgetcsv($course))!==false){
+                    //$data[0]=>Course, $data[1]=>School, $data[2]=>Title, $data[3]=>Description, $data[4]=>ExamDate, $data[5]=>ExamStart, $data[6]=>ExamEnd
                     $message=[];
-                    //check if blank
-                    //check order of upload
-                    //set error=0
-                    //add 1 if there is error
-                    //add course if no error
-                    //row number to indicate error
-                    //Course School Title Description ExamDate ExamStart ExamEnd
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=6;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank course";
                     }
-                    if (strlen(trim($data[1]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank school";
                     }
-                    if (strlen(trim($data[2]))==0){
+                    if (strlen($data[2])==0){
                         //check for empty cell
                         $message[]="blank title";
                     }elseif(strlen($data[2])>100){
                         //check if length of text is more than 100
                         $message[]="invalid title";
                     }
-                    if (strlen(trim($data[3]))==0){
+                    if (strlen($data[3])==0){
                         //check for empty cell
                         $message[]="blank description";
                     }elseif(strlen($data[3])>1000){
                         //check if length of text is more than 1000
                         $message[]="invalid description";
                     }
-                    if (strlen(trim($data[4]))==0){
+                    if (strlen($data[4])==0){
                         //check for empty cell
                         $message[]="blank examDate";
                     }elseif($data[4]!=date("Ymd",strtotime($data[4]))){
@@ -218,7 +218,7 @@ function doBootstrap() {
                         $message[]="invalid exam date";
                     }
                     $dateFormat=TRUE;
-                    if (strlen(trim($data[5]))==0){
+                    if (strlen($data[5])==0){
                         $message[]="blank examStart";
                         //check for empty cell
                     }elseif($data[5]!=date("G:i",strtotime($data[5])) ){
@@ -227,7 +227,7 @@ function doBootstrap() {
                         $message[]="invalid exam start";
                         $dateFormat=False;
                     }
-                    if (strlen(trim($data[6]))==0){
+                    if (strlen($data[6])==0){
                         //check for empty cell
                         $message[]="blank examEnd";
                     }elseif($data[6]!=date("G:i",strtotime($data[6])) ){
@@ -247,7 +247,8 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
+                        
                     }else{
                         $courseDAO->add(new Course($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6]));
                         $course_processed++;
@@ -256,7 +257,7 @@ function doBootstrap() {
                     $line++;
                 }
 				// process each line, check for errors, then insert if no errors
-                
+               
 				// clean up
                 fclose($course);
                 @unlink($course_path);
@@ -266,30 +267,33 @@ function doBootstrap() {
                 $line=2;
                 $sectionList=[];
                 while (($data=fgetcsv($section))!==false){
+                    //$data[0]=>Course, $data[1]=>Section, $data[2]=>Day, $data[3]=>Start, $data[4]=>End, $data[5]=>Instructor, $data[6]=>Venue, $data[7]=>Size
                     $message=[];
-                    //Course Section Day Start End Instructor Venue Size
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=7;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank course";
                     }elseif(!in_array($data[0],$courseList)){
                         //check if course exist in course.csv
                         $message[]="invalid course";
                     }
-                    if (strlen(trim($data[1]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank section";
                     }elseif($data[1][0]!="S" || substr($data[1],1)<1 || substr($data[1],1)>99){
                         //check if first character is not a "S" and check numbers is between 1 to 99
                         $message[]="invalid section";
                     }
-                    if (strlen(trim($data[2]))==0){
+                    if (strlen($data[2])==0){
                         //check for empty cell
                         $message[]="blank day";
                     }elseif($data[2]<1 ||$data[2]>7){
                         $message[]="invalid day";
                     }
                     $dateFormat= True;
-                    if (strlen(trim($data[3]))==0){
+                    if (strlen($data[3])==0){
                         //check for empty cell
                         $message[]="blank start";
                     }elseif($data[3]!=date("G:i",strtotime($data[3])) ){
@@ -298,7 +302,7 @@ function doBootstrap() {
                         $message[]="invalid start";
                         $dateFormat=False;
                     }
-                    if (strlen(trim($data[4]))==0){
+                    if (strlen($data[4])==0){
                         //check for empty cell
                         $message[]="blank end";
                     }elseif($data[4]!=date("G:i",strtotime($data[4])) ){
@@ -312,7 +316,7 @@ function doBootstrap() {
                         $message[]="invalid end";
                     }
 
-                    if (strlen(trim($data[5]))==0){
+                    if (strlen($data[5])==0){
                         //check for empty cell
                         $message[]="blank instructor";
                     }elseif(strlen($data[5])>100){
@@ -320,14 +324,14 @@ function doBootstrap() {
                         $message[]="invalid instructor";
                     }
 
-                    if (strlen(trim($data[6]))==0){
+                    if (strlen($data[6])==0){
                         //check for empty cell
                         $message[]="blank venue";
                     }elseif(strlen($data[6])>100){
                         //check if length of text is more than 100
                         $message[]="invalid venue";
                     }
-                    if (strlen(trim($data[7]))==0){
+                    if (strlen($data[7])==0){
                         //check for empty cell and variable not equal to 0
                         $message[]="blank size";
                     }elseif($data[7]<1){
@@ -342,7 +346,7 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
                     }else{
                         $sectionDAO->add(new Section($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]));
                         $section_processed++;
@@ -365,16 +369,19 @@ function doBootstrap() {
                 $data =fgetcsv($prerequisite);
 
                 while (($data=fgetcsv($prerequisite))!==false){
-                    //course prerequisite
+                    //$data[0]=>course, $data[1]=>prerequisite
                     $message=[];
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=1;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank course";
                     }elseif(!in_array($data[0],$courseList)){
                         //check for course in course.csv
                         $message[]="invalid course";
                     }
-                    if (strlen(trim($data[0]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank prerequisite";
                     }elseif(!in_array($data[1],$courseList)){
@@ -389,7 +396,7 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
                     }else{
                         $prerequisiteDAO->add(new Prerequisite($data[0],$data[1]));
                         $prerequisite_processed++;
@@ -405,17 +412,21 @@ function doBootstrap() {
                 // course_completed
                 $data =fgetcsv($course_completed);
                 $line=2;
-                //userid and code
+                
                 while (($data=fgetcsv($course_completed))!==false){
+                    //$data[0]=>userid, $data[1]=>code
                     $message=[];
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=1;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank userid";
                     }elseif(!in_array($data[0],$useridList)){
                         //check userid exist in student.csv
                         $message[]="invalid userid";
                     }
-                    if (strlen(trim($data[1]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank course";
                     }elseif(!in_array($data[1],$courseList)){
@@ -429,7 +440,7 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
                     }else{
                         $course_completedDAO->add(new CourseCompleted($data[0],$data[1]));
                         $course_completed_processed++;
@@ -445,17 +456,21 @@ function doBootstrap() {
                 // Bid
                 $data =fgetcsv($bid);
                 $line=2;
-                //userid amount code section
+                
                 while (($data=fgetcsv($bid))!==false){
+                    //$data[0]=>userid, $data[1]=>amount, $data[2]=>code, $data[3]=>section
                     $message=[];
-                    if (strlen(trim($data[0]))==0){
+                    for ($i=0;$i<=3;$i++){
+                        $data[$i]=trim($data[$i]);
+                    }
+                    if (strlen($data[0])==0){
                         //check for empty cell
                         $message[]="blank userid";
                     }elseif(!in_array($data[0],$useridList)){
                         // check if userid exist in student.csv
                         $message[]="invalid userid";
                     }
-                    if (strlen(trim($data[1]))==0){
+                    if (strlen($data[1])==0){
                         //check for empty cell
                         $message[]="blank amount";
                     }elseif(!is_numeric($data[1]) || ($data[1]<10) || $data[1]!=number_format($data[1],2,'.','')){
@@ -463,7 +478,7 @@ function doBootstrap() {
                         $message[]="invalid amount";
                     }
                     $courseValid=TRUE;
-                    if (strlen(trim($data[2]))==0){
+                    if (strlen($data[2])==0){
                         //check for empty cell
                         $message[]="blank course";
                         $courseValid=FALSE;
@@ -472,7 +487,7 @@ function doBootstrap() {
                         $message[]="invalid course";
                         $courseValid=FALSE;
                     }
-                    if (strlen(trim($data[3]))==0){
+                    if (strlen($data[3])==0){
                         //check for empty cell
                         $message[]="blank section";
                     }
@@ -487,7 +502,7 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $errors["error"][]=$lineError;
+                        $inputRowError[]=$lineError;
                     }else{
                         $bidDAO->add(new Bid($data[0],$data[1],$data[2],$data[3]));
                         $bid_processed++;
@@ -504,10 +519,10 @@ function doBootstrap() {
 			}
 		}
 	}
-
+    
 	# Sample code for returning JSON format errors. remember this is only for the JSON API. Humans should not get JSON errors.
 
-	if (count($errors)!=0)
+	if (!isEmpty($errors))
 	{	
 		$sortclass = new Sort();
 		$errors = $sortclass->sort_it($errors,"bootstrap");
@@ -516,7 +531,6 @@ function doBootstrap() {
 			"messages" => $errors
 		];
 	}
-
 	else
 	{	
 		$result = [ 
@@ -529,7 +543,11 @@ function doBootstrap() {
                 "section.csv" => $section_processed,
 				"student.csv" => $student_processed
 			]
-		];
+        ];
+        if (!isEmpty($inputRowError)){
+            $result["status"]="error";
+            $result["error"]=$inputRowError;
+        }
 	}
 	header('Content-Type: application/json');
 	echo json_encode($result, JSON_PRETTY_PRINT);

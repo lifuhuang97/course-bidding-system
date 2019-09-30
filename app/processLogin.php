@@ -16,7 +16,7 @@
         if ($_POST['username'] == 'admin') {
             if ($_POST['password'] == 'password') {
                 $_SESSION['success'] = $_POST['username'];
-                header('Location: mainpage.php');
+                header('Location: bootstrap.php');
                 exit;
             } else {
                 array_push($_SESSION['errors'], 'Password is incorrect!');
