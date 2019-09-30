@@ -9,4 +9,5 @@ require_once 'include/common.php';
 	<input id='bootstrap-file' type="file" name="bootstrap-file"></br>
 	<input type="submit" name="submit" value="Import">
 </form>
-
+<!-- temporary logout button for admin to logout -->
+<a href="logout.php">Logout</a>

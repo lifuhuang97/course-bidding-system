@@ -545,6 +545,9 @@ function doBootstrap() {
 			]
         ];
         if (!isEmpty($inputRowError)){
+            $file=array_column($inputRowError,"file");
+            $lines=array_column($inputRowError,"line");
+            array_multisort($file,SORT_ASC,$lines,SORT_ASC,$inputRowError);
             $result["status"]="error";
             $result["error"]=$inputRowError;
         }

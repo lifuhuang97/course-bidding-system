@@ -14,7 +14,7 @@
 
         // Authenticate then go to mainpage
         if ($_POST['username'] == 'admin') {
-            if ($_POST['password'] == 'password') {
+            if ($_POST['password'] == 'P@ssw0rd!547') {
                 $_SESSION['success'] = $_POST['username'];
                 header('Location: bootstrap.php');
                 exit;
