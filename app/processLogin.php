@@ -1,5 +1,6 @@
 <?php
     require_once 'include/common.php';
+    require_once 'include/token.php';
 
     $dao = new StudentDAO();
     $_SESSION['errors'] = [];
@@ -16,7 +17,7 @@
         if ($_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!547') {
                 $_SESSION['success'] = $_POST['username'];
-                header('Location: bootstrap.php');
+                header('Location: bootstrap.php?token='.$token);
                 exit;
             } else {
                 array_push($_SESSION['errors'], 'Password is incorrect!');
@@ -29,7 +30,8 @@
             $message = $dao->authenticate($userid,$pass);
             if ($message == 'SUCCESS') {
                 $_SESSION['success'] = $userid;
-                header('Location: mainpage.php');
+                $token=generate_token($userid);
+                header('Location: mainpage.php?token='.$token);
                 exit;
             }
             else {
