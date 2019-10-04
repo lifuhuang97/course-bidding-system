@@ -47,6 +47,32 @@ class CourseCompletedDAO {
         $stmt = null;
         $conn = null; 
     }
+    public function getallcoursecomplete($userid='') {
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = 'SELECT * FROM course_completed where userid =:userid ';
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+        //Execute SQL Query
+        //$stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        $course1=[];
+        while($row=$stmt->fetch()){
+            $course1[]=new CourseCompleted($row['userid'],$row['code']);
+        }
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $course1;
+
+    }
+
 }
 
 
