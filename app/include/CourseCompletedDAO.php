@@ -72,7 +72,39 @@ class CourseCompletedDAO {
         return $course1;
 
     }
+    public function checkCourseComplete($userid,$code){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
 
+        // Prepare SQL
+        $sql = "SELECT * FROM course_completed where userid=:userid and code=:code"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+        $stmt->bindParam(':code',$code,PDO::PARAM_STR);
+        // Run Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status = $stmt->execute();
+
+        // check if query fail
+        if (!$status){ //if ($status==False)
+            //if there is error
+            $err=$stmt->errorinfo();
+            var_dump($err);
+        }
+        $status=FALSE;
+        if ($row=$stmt->fetch()){
+            if ($row!=NULL){
+                $status=TRUE;
+            }
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $status;
+    }
 }
 
 

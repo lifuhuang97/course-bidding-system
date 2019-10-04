@@ -1,5 +1,7 @@
 <?php
 require_once 'common.php';
+// require_once 'protect.php';
+require_once 'function.php';
 
 function doBootstrap() {
 		
@@ -433,6 +435,9 @@ function doBootstrap() {
                         //check course exist in course.csv
                         $message[]="invalid course";
                     }
+                    if (isEmpty($message) and !CheckForCompletedPrerequisites($data[0],$data[1])){
+                        $message[]="invalid course completed";
+                    }
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"course_completed.csv",
@@ -495,6 +500,30 @@ function doBootstrap() {
                         // check if code exist in student.csv
                         $message[]="invalid section";
                     }
+                    if (isEmpty($message)){
+                        if (!CheckForOwnSchool($data[0],$data[2])){
+                            $message[]="not own school course";
+                        }
+                        if (!CheckClassTimeTable($data[0],$data[2],$data[3])){
+                            $message[]="class timetable clash";
+                        }
+                        if (!CheckExamTimeTable($data[0],$data[2])){
+                            $message[]="exam timetable clash";
+                        }
+                        if (!CheckForCompletedPrerequisites($data[0],$data[2])){
+                            $message[]="incomplete prerequisites";
+                        }
+                        if (CheckForCompletedCourse($data[0],$data[2])){
+                            $message[]="course completed";
+                        }
+                        if (!CheckForExceedOfBidSection($data[0],$data[2])){
+                            $message[]="section limit reached";
+                        }
+                        if (!CheckForEdollar($data[0],$data[1],$data[2])){
+                            $message[]="not enough e-dollar";
+                        }
+                        
+                    }
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"bid.csv",
@@ -504,7 +533,7 @@ function doBootstrap() {
                         ;
                         $inputRowError[]=$lineError;
                     }else{
-                        $bidDAO->add(new Bid($data[0],$data[1],$data[2],$data[3]));
+                        ChangeBidUpdateEdollar(new Bid($data[0],$data[1],$data[2],$data[3]));
                         $bid_processed++;
                     }
                     $line++;

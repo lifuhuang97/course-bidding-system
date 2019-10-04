@@ -3,6 +3,39 @@
 require_once 'common.php';
 
 class PrerequisiteDAO {
+    public function checkPrerequisite($courseid){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "SELECT prerequisite FROM prerequisite where course=:courseid"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':courseid',$courseid,PDO::PARAM_STR);
+
+        // Run Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status = $stmt->execute();
+
+        // check if query fail
+        if (!$status){ //if ($status==False)
+            //if there is error
+            $err=$stmt->errorinfo();
+            var_dump($err);
+        }
+        $prerequisite=[];
+        while ($row=$stmt->fetch()){
+            $prerequisite[]= $row['prerequisite'];
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $prerequisite;
+
+    }
+
     public function add($Prerequisite) { // Adding a prerequisite
         // Connect to Database
         $connMgr = new ConnectionManager();
@@ -29,7 +62,6 @@ class PrerequisiteDAO {
         
         return $status; // Return True or False
     }
-
 
     public function removeAll() { // Removing everything from Prerequisite
         // $sql = 'TRUNCATE TABLE PREREQUISITE';

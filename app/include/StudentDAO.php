@@ -68,7 +68,32 @@ class StudentDAO {
         return $student;
     }
 
-    
+    public function updateDollar($userid,$eDollar) {
+        
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "UPDATE STUDENT SET edollar=:edollar where userid=:userid "; 
+        
+        // Run Query
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':edollar',$eDollar,PDO::PARAM_STR);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+        $status = False;
+
+        if ($stmt->execute()){
+            $status=True;
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+
+        return $status; // Boolean True or False
+    }
 
     public function add($Student) { // Adding in new student information
         // Connect to Database

@@ -194,5 +194,131 @@ function CheckForCompletedCourse($userid,$course){
 
 }
 
+function CheckForExceedOfBidSection($userid,$course){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Prepare SQL
+        $sql = "SELECT *  FROM bid where userid=:userid"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+        // Run Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status = $stmt->execute();
+    
+        // check if query fail
+        if (!$status){ //if ($status==False)
+            //if there is error
+            $err=$stmt->errorinfo();
+            var_dump($err);
+        }
+        $status=FALSE;
+        $count=0;
+        while ($row=$stmt->fetch()){
+            if ($row['code']!=$course){
+                $count++;
+            }
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $count<5;// return True if didnt exceed
+}
+
+function CheckForEdollar($userid, $amount, $course, $retrieveValue=FALSE){
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Prepare SQL
+    //retrieve exisiting course bid
+    $sql = "SELECT *  FROM  bid where userid=:userid  and code=:course"; 
+    $stmt=$conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+    $stmt->bindParam(':course',$course,PDO::PARAM_STR);
+
+    // Run Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status = $stmt->execute();
+
+    // check if query fail
+    if (!$status){ //if ($status==False)
+        //if there is error
+        $err=$stmt->errorinfo();
+        var_dump($err);
+    }
+    $amt=0;
+    if ($row=$stmt->fetch()){
+        if ($row!=NULL){
+            $amt=$row['amount'];
+        }
+    }
+    // Prepare SQL
+    //retrieve student current edollar
+    $sql = "SELECT *  FROM  student where userid=:userid"; 
+    $stmt=$conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+    // Run Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status = $stmt->execute();
+
+    // check if query fail
+    if (!$status){ //if ($status==False)
+        //if there is error
+        $err=$stmt->errorinfo();
+        var_dump($err);
+    }
+    $userEdollar=0;
+    if ($row=$stmt->fetch()){
+        if ($row!=NULL){
+            $userEdollar=$row['edollar'];
+        }
+    }
+
+    // Close Query/Connection
+    $stmt = null;
+    $conn = null;
+
+    $TotalAmt=$userEdollar+$amt;
+    if ($retrieveValue){// retrieve total amount
+        $inBidList=FALSE;
+        if ($amt!=0){
+            $inBidList=TRUE;
+        }
+        return [$TotalAmt,$inBidList];
+    }
+
+    return $TotalAmt >=$amount;// return True have enough bid 
+}
+
+function ChangeBidUpdateEdollar($bid, $action=''){
+    $list=CheckForEdollar($bid->getUserid(),$bid->getAmount(),$bid->getCode(),TRUE);
+    $TotalAmt=$list[0];
+    $bidDAO= new BidDAO();
+    if ($action=="Drop"){
+        //drop bid
+        $status=$bidDAO->drop($bid->getUserid(),$bid->getCode(), $bid->getSection());
+    }elseif($list[1]){
+        //update bid
+        $status=$bidDAO->update($bid->getUserid(),$bid->getCode(), $bid->getSection(),$bid->getAmount());
+        $TotalAmt-=$bid->getAmount();
+    }else{
+        //add bid
+        $TotalAmt-=$bid->getAmount();
+        $status=$bidDAO->add($bid);
+    }
+    
+    if ($status){
+        $studentDAO=new StudentDAO();
+        $status=$studentDAO->updateDollar($bid->getUserid(),$TotalAmt);
+    }
+    
+    return $status;
+}
 
 ?>
