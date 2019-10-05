@@ -50,4 +50,9 @@
     		array_push($_SESSION['errors'], 'Invalid Bid Amount');
     	}
     }
+
+    // return to makebid.php if there is error
+    if (sizeof($_SESSION['error']) > 0) {
+    	header("makebid.php");
+    }
 ?>
