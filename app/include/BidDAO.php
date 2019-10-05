@@ -4,6 +4,32 @@ require_once 'common.php';
 
 class BidDAO {
 
+    public function update($id, $courseid, $sectionid, $amount) {
+
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "UPDATE BID SET amount=:amount, section=:sectionid where userid=:id and code=:courseid"; 
+        
+        // Run Query
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':amount',$amount,PDO::PARAM_STR);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->bindParam(':courseid',$courseid,PDO::PARAM_STR);
+        $stmt->bindParam(':sectionid',$sectionid,PDO::PARAM_STR);
+        $status = False;
+
+        if ($stmt->execute()){
+            $status=True;
+        }
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+
+        return $status; // Boolean True or False
+    }
 
     public function add($bid) {
         // Connect to Database
