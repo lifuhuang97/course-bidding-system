@@ -1,6 +1,7 @@
 <?php
     #$_SESSION['success'] = $userid;
      require_once 'include/common.php';
+     require_once 'include/function.php';
      if (!isset($_SESSION['success'])){
          header('Location: login.php');
          exit; 
@@ -13,6 +14,7 @@
         $school = $student->getSchool(); #get school
         $edollar = $student->getEdollar(); #get edollar
 
+        //preparing for removing modules that user alr completed
         $courseDAO= new CourseDAO();
         $courses=$courseDAO->RetrieveAllCourseDetail('', '', $school);
 
@@ -23,14 +25,18 @@
         foreach ($completed_courses as $value) {
             $a = ($value->getCode());
             array_push($realarray, $a);
-
         }
         
-        
-        #var_dump($completed_courses);
-        // need remove mod that user cannot take due to prerequitsite
-        // need remove mod that user alr bidded        
-        
+        // need remove mod that user alr bidded
+
+        $biddingDAO = new BidDAO();
+        $modules = $biddingDAO->getBidInfo($userid);
+
+        $biddedmodsarray = [];
+        foreach ($modules as $mods) {
+            $b = ($mods->getCode());
+            array_push($biddedmodsarray, $b);
+        }             
      }
 ?>
 <html>
@@ -79,9 +85,10 @@ if (count($courses)==0){
         <th>Size</th> 
     </tr>";
     foreach ($courses as $course){
-        // need remove modules that user alr completed
-        if (!(in_array($course->getCourseid(), $realarray))){
-            //print out every mods that the user haven't take
+        // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
+        if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
+            //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
+            var_dump($course);
             echo"<tr>
             <td>{$course->getCourseid()}</td>
             <td>{$course->getTitle()}</td>
