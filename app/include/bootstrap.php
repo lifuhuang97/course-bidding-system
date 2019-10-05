@@ -5,7 +5,6 @@ require_once 'function.php';
 
 function doBootstrap() {
 		
-
 	$errors = array();
 	# need tmp_name -a temporary name create for the file and stored inside apache temporary folder- for proper read address
 	$zip_file = $_FILES["bootstrap-file"]["tmp_name"];
@@ -114,7 +113,7 @@ function doBootstrap() {
 				$inputRowError=array();
                 # for the project, the full error list is listed in the wiki
                 // Student
-                $data =fgetcsv($student);
+                $header =fgetcsv($student);
                 $line=2;
                 $useridList=[];
                 while (($data=fgetcsv($student))!==false){
@@ -122,42 +121,33 @@ function doBootstrap() {
                     $message=[];
                     for ($i=0;$i<=4;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank userid";
-                    }elseif(strlen($data[0])>128){
-                        //check if length of text is more than 128
-                        $message[]="invalid userid";
-                    }elseif(in_array($data[0],$useridList)){
-                        $message[]="duplicate userid";
+                    if (isEmpty($message)){
+                        if(strlen($data[0])>128){
+                            //check if length of text is more than 128
+                            $message[]="invalid userid";
+                        }elseif(in_array($data[0],$useridList)){
+                            $message[]="duplicate userid";
+                        }
+                        if(strlen($data[1])>128){
+                            //check if length of text is more than 128
+                            $message[]="invalid password";
+                        }
+                        if(strlen($data[2])>100){
+                            //check if length of text is more than 100
+                            $message[]="invalid name";
+                        }
+                        
+                        if(!is_numeric($data[4]) || ($data[4]<0) || $data[4]!=number_format($data[4],2,'.','')){
+                            //check if is numeric value, positive value and not more 2 decimal point
+                            $message[]="invalid e-dollar";
+                        }
                     }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank password";
-                    }elseif(strlen($data[1])>128){
-                        //check if length of text is more than 128
-                        $message[]="invalid password";
-                    }
-                    if (strlen($data[2])==0){
-                        //check for empty cell
-                        $message[]="blank name";
-                    }elseif(strlen($data[2])>100){
-                        //check if length of text is more than 100
-                        $message[]="invalid name";
-                    }
-                    if (strlen($data[3])==0){
-                        //check for empty cell
-                        $message[]="blank school";
-                    }
-                    if (strlen($data[4])==0){
-                        //check for empty cell
-                        $message[]="blank e-dollar";
-                    }elseif(!is_numeric($data[4]) || ($data[4]<0) || $data[4]!=number_format($data[4],2,'.','')){
-                        //check if is numeric value, positive value and not more 2 decimal point
-                        $message[]="invalid e-dollar";
-                    }
-                    
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"student.csv",
@@ -165,8 +155,7 @@ function doBootstrap() {
                             "message"=>$message
                             ]
                         ;
-                        $inputRowError[]=$lineError;
-                        
+                        $inputRowError[]=$lineError;                        
                     }else{
                         $studentDAO->add(new Student($data[0],$data[1],$data[2],$data[3],$data[4]));
                         $student_processed++;
@@ -181,7 +170,7 @@ function doBootstrap() {
                 @unlink($student_path);
 
 				// Course 
-                $data =fgetcsv($course);
+                $header =fgetcsv($course);
                 $line=2;
                 $courseList=[];
                 while (($data=fgetcsv($course))!==false){
@@ -189,58 +178,44 @@ function doBootstrap() {
                     $message=[];
                     for ($i=0;$i<=6;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank course";
-                    }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank school";
-                    }
-                    if (strlen($data[2])==0){
-                        //check for empty cell
-                        $message[]="blank title";
-                    }elseif(strlen($data[2])>100){
-                        //check if length of text is more than 100
-                        $message[]="invalid title";
-                    }
-                    if (strlen($data[3])==0){
-                        //check for empty cell
-                        $message[]="blank description";
-                    }elseif(strlen($data[3])>1000){
-                        //check if length of text is more than 1000
-                        $message[]="invalid description";
-                    }
-                    if (strlen($data[4])==0){
-                        //check for empty cell
-                        $message[]="blank examDate";
-                    }elseif($data[4]!=date("Ymd",strtotime($data[4]))){
-                        //check if the date format is in YYYYMMDD eg 20191029
-                        $message[]="invalid exam date";
-                    }
-                    $dateFormat=TRUE;
-                    if (strlen($data[5])==0){
-                        $message[]="blank examStart";
-                        //check for empty cell
-                    }elseif($data[5]!=date("G:i",strtotime($data[5])) ){
-                        //Hours with no leading 0 use G 
-                        //check if time format is in HH:MM eg 15:30
-                        $message[]="invalid exam start";
-                        $dateFormat=False;
-                    }
-                    if (strlen($data[6])==0){
-                        //check for empty cell
-                        $message[]="blank examEnd";
-                    }elseif($data[6]!=date("G:i",strtotime($data[6])) ){
-                        //Hours with no leading 0 use G 
-                        //check if time format is in HH:MM eg 15:30
-                        $message[]="invalid exam end";
-                        $dateFormat=False;
-                    }
-                    if($dateFormat and (strtotime($data[6])-strtotime($data[5]))<=0){
-                        //Check if date is in right format and different between end and start is positive
-                        $message[]="invalid exam end";
+                    if (isEmpty($message)){
+                        if(strlen($data[2])>100){
+                            //check if length of text is more than 100
+                            $message[]="invalid title";
+                        }
+                        if(strlen($data[3])>1000){
+                            //check if length of text is more than 1000
+                            $message[]="invalid description";
+                        }
+                        if($data[4]!=date("Ymd",strtotime($data[4]))){
+                            //check if the date format is in YYYYMMDD eg 20191029
+                            $message[]="invalid exam date";
+                        }
+                        $dateFormat=TRUE;
+                        if($data[5]!=date("G:i",strtotime($data[5])) and $data[5]!=date("H:i",strtotime($data[5]))){
+                            //Hours with no leading 0 use G 
+                            //Hours with leading 0 use H 
+                            //check if time format is in HH:MM eg 15:30
+                            $message[]="invalid exam start";
+                            $dateFormat=False;
+                        }
+                        if($data[6]!=date("G:i",strtotime($data[6])) and $data[6]!=date("H:i",strtotime($data[6]))){
+                            //Hours with no leading 0 use G
+                            //Hours with leading 0 use H 
+                            //check if time format is in HH:MM eg 15:30
+                            $message[]="invalid exam end";
+                            $dateFormat=False;
+                        }
+                        if($dateFormat and (strtotime($data[6])-strtotime($data[5]))<=0){
+                            //Check if date is in right format and different between end and start is positive
+                            $message[]="invalid exam end";
+                        }
                     }
                     if (!isEmpty($message)){
                         $lineError=
@@ -265,7 +240,7 @@ function doBootstrap() {
                 @unlink($course_path);
 
 				// Section
-                $data =fgetcsv($section);
+                $header =fgetcsv($section);
                 $line=2;
                 $sectionList=[];
                 while (($data=fgetcsv($section))!==false){
@@ -273,74 +248,58 @@ function doBootstrap() {
                     $message=[];
                     for ($i=0;$i<=7;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank course";
-                    }elseif(!in_array($data[0],$courseList)){
-                        //check if course exist in course.csv
-                        $message[]="invalid course";
-                    }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank section";
-                    }elseif($data[1][0]!="S" || substr($data[1],1)<1 || substr($data[1],1)>99){
-                        //check if first character is not a "S" and check numbers is between 1 to 99
-                        $message[]="invalid section";
-                    }
-                    if (strlen($data[2])==0){
-                        //check for empty cell
-                        $message[]="blank day";
-                    }elseif($data[2]<1 ||$data[2]>7){
-                        $message[]="invalid day";
-                    }
-                    $dateFormat= True;
-                    if (strlen($data[3])==0){
-                        //check for empty cell
-                        $message[]="blank start";
-                    }elseif($data[3]!=date("G:i",strtotime($data[3])) ){
-                        //Hours with no leading 0 use G 
-                        //check if time format is in HH:MM eg 15:30
-                        $message[]="invalid start";
-                        $dateFormat=False;
-                    }
-                    if (strlen($data[4])==0){
-                        //check for empty cell
-                        $message[]="blank end";
-                    }elseif($data[4]!=date("G:i",strtotime($data[4])) ){
-                        //Hours with no leading 0 use G 
-                        //check if time format is in HH:MM eg 15:30
-                        $message[]="invalid end";
-                        $dateFormat=False;
-                    }
-                    if($dateFormat and (strtotime($data[4])-strtotime($data[3]))<=0){
-                        //Check if date is in right format and different between end and start is positive
-                        $message[]="invalid end";
-                    }
+                    if (isEmpty($message)){
+                        if(!in_array($data[0],$courseList)){
+                            //check if course exist in course.csv
+                            $message[]="invalid course";
+                        }
+                        if($data[1][0]!="S" || substr($data[1],1)<1 || substr($data[1],1)>99){
+                            //check if first character is not a "S" and check numbers is between 1 to 99
+                            $message[]="invalid section";
+                        }
+                        if($data[2]<1 ||$data[2]>7){
+                            $message[]="invalid day";
+                        }
+                        $dateFormat= True;
+                        if($data[3]!=date("G:i",strtotime($data[3])) and $data[3]!=date("H:i",strtotime($data[3]))){
+                            //Hours with no leading 0 use G 
+                            //Hours with leading 0 use H 
+                            //check if time format is in HH:MM eg 15:30
+                            $message[]="invalid start";
+                            $dateFormat=False;
+                        }
+                        if($data[4]!=date("G:i",strtotime($data[4])) and $data[4]!=date("H:i",strtotime($data[4]))){
+                            //Hours with no leading 0 use G 
+                            //Hours with leading 0 use H 
+                            //check if time format is in HH:MM eg 15:30
+                            $message[]="invalid end";
+                            $dateFormat=False;
+                        }
+                        if($dateFormat and (strtotime($data[4])-strtotime($data[3]))<=0){
+                            //Check if date is in right format and different between end and start is positive
+                            $message[]="invalid end";
+                        }
 
-                    if (strlen($data[5])==0){
-                        //check for empty cell
-                        $message[]="blank instructor";
-                    }elseif(strlen($data[5])>100){
-                        //check if length of text is more than 100
-                        $message[]="invalid instructor";
-                    }
+                        if(strlen($data[5])>100){
+                            //check if length of text is more than 100
+                            $message[]="invalid instructor";
+                        }
 
-                    if (strlen($data[6])==0){
-                        //check for empty cell
-                        $message[]="blank venue";
-                    }elseif(strlen($data[6])>100){
-                        //check if length of text is more than 100
-                        $message[]="invalid venue";
+                        if(strlen($data[6])>100){
+                            //check if length of text is more than 100
+                            $message[]="invalid venue";
+                        }
+                        if($data[7]<1){
+                            //check if variable is positive
+                            $message[]="invalid size";
+                        }
                     }
-                    if (strlen($data[7])==0){
-                        //check for empty cell and variable not equal to 0
-                        $message[]="blank size";
-                    }elseif($data[7]<1){
-                        //check if variable is positive
-                        $message[]="invalid size";
-                    }
-                    
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"section.csv",
@@ -368,29 +327,29 @@ function doBootstrap() {
 
                 // Prerequisite
                 $line=2;
-                $data =fgetcsv($prerequisite);
+                $header =fgetcsv($prerequisite);
 
                 while (($data=fgetcsv($prerequisite))!==false){
                     //$data[0]=>course, $data[1]=>prerequisite
                     $message=[];
                     for ($i=0;$i<=1;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank course";
-                    }elseif(!in_array($data[0],$courseList)){
-                        //check for course in course.csv
-                        $message[]="invalid course";
+                    if (isEmpty($message)){
+                        if(!in_array($data[0],$courseList)){
+                            //check for course in course.csv
+                            $message[]="invalid course";
+                        }
+                        if(!in_array($data[1],$courseList)){
+                            //check for prerequisite in course.csv
+                            $message[]="invalid prerequisite";
+                        }
                     }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank prerequisite";
-                    }elseif(!in_array($data[1],$courseList)){
-                        //check for prerequisite in course.csv
-                        $message[]="invalid prerequisite";
-                    }
-
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"prerequisite.csv",
@@ -412,7 +371,7 @@ function doBootstrap() {
                 @unlink($prerequisite_path);
 
                 // course_completed
-                $data =fgetcsv($course_completed);
+                $header =fgetcsv($course_completed);
                 $line=2;
                 
                 while (($data=fgetcsv($course_completed))!==false){
@@ -420,24 +379,26 @@ function doBootstrap() {
                     $message=[];
                     for ($i=0;$i<=1;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank userid";
-                    }elseif(!in_array($data[0],$useridList)){
-                        //check userid exist in student.csv
-                        $message[]="invalid userid";
-                    }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank course";
-                    }elseif(!in_array($data[1],$courseList)){
-                        //check course exist in course.csv
-                        $message[]="invalid course";
+                    if (isEmpty($message)){
+                        if(!in_array($data[0],$useridList)){
+                            //check userid exist in student.csv
+                            $message[]="invalid userid";
+                        }
+                        if(!in_array($data[1],$courseList)){
+                            //check course exist in course.csv
+                            $message[]="invalid course";
+                        }
                     }
                     if (isEmpty($message) and !CheckForCompletedPrerequisites($data[0],$data[1])){
                         $message[]="invalid course completed";
                     }
+
                     if (!isEmpty($message)){
                         $lineError=
                             ["file"=>"course_completed.csv",
@@ -459,7 +420,7 @@ function doBootstrap() {
                 @unlink($course_completed_path);
 
                 // Bid
-                $data =fgetcsv($bid);
+                $header =fgetcsv($bid);
                 $line=2;
                 
                 while (($data=fgetcsv($bid))!==false){
@@ -467,38 +428,31 @@ function doBootstrap() {
                     $message=[];
                     for ($i=0;$i<=3;$i++){
                         $data[$i]=trim($data[$i]);
+                        if (strlen($data[$i])==0){
+                            //check for empty cell
+                            $message[]="blank $header[$i]";
+                            break;
+                        }
                     }
-                    if (strlen($data[0])==0){
-                        //check for empty cell
-                        $message[]="blank userid";
-                    }elseif(!in_array($data[0],$useridList)){
-                        // check if userid exist in student.csv
-                        $message[]="invalid userid";
-                    }
-                    if (strlen($data[1])==0){
-                        //check for empty cell
-                        $message[]="blank amount";
-                    }elseif(!is_numeric($data[1]) || ($data[1]<10) || $data[1]!=number_format($data[1],2,'.','')){
-                        //check if is numeric value, value less than 10  and not more 2 decimal point
-                        $message[]="invalid amount";
-                    }
-                    $courseValid=TRUE;
-                    if (strlen($data[2])==0){
-                        //check for empty cell
-                        $message[]="blank course";
-                        $courseValid=FALSE;
-                    }elseif(!in_array($data[2],$courseList)){
-                        // check if code exist in student.csv
-                        $message[]="invalid course";
-                        $courseValid=FALSE;
-                    }
-                    if (strlen($data[3])==0){
-                        //check for empty cell
-                        $message[]="blank section";
-                    }
-                    if($courseValid && !in_array($data[3],$sectionList[$data[2]])){
-                        // check if code exist in student.csv
-                        $message[]="invalid section";
+                    if (isEmpty($message)){
+                        if(!in_array($data[0],$useridList)){
+                            // check if userid exist in student.csv
+                            $message[]="invalid userid";
+                        }
+                        if(!is_numeric($data[1]) || ($data[1]<10) || $data[1]!=number_format($data[1],2,'.','')){
+                            //check if is numeric value, value less than 10  and not more 2 decimal point
+                            $message[]="invalid amount";
+                        }
+                        $courseValid=TRUE;
+                        if(!in_array($data[2],$courseList)){
+                            // check if code exist in student.csv
+                            $message[]="invalid course";
+                            $courseValid=FALSE;
+                        }
+                        if($courseValid && !in_array($data[3],$sectionList[$data[2]])){
+                            // check if code exist in student.csv
+                            $message[]="invalid section";
+                        }
                     }
                     if (isEmpty($message)){
                         if (!CheckForOwnSchool($data[0],$data[2])){
@@ -539,7 +493,6 @@ function doBootstrap() {
                     $line++;
                 }
 				// process each line, check for errors, then insert if no errors
-                
                 // clean up
                 fclose($bid);
                 @unlink($bid_path);
