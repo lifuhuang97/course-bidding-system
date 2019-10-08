@@ -61,3 +61,20 @@ create table BID (
 	CONSTRAINT BID_FK1 foreign key(userid) references STUDENT(userid),
 	CONSTRAINT BID_FK2 foreign key(code,section) references SECTION(coursesID,sectionID)
 );
+
+create table ADMIN_ROUND (
+
+
+    adminID varchar(100) not null,
+    adminPW varchar(100) not null,
+    adminTK varchar(300),
+    roundID int(1) not null,
+    roundStatus varchar(50) not null,
+    r1Start timestamp,
+    r1End timestamp,
+    r2Start timestamp,
+    r2End timestamp,
+    CONSTRAINT ADMIN_ROUND primary key (adminID,adminPW)
+);
+
+insert into ADMIN_ROUND VALUES ("admin", "P@ssw0rd!547", null, 1, "Not Started", null, null, null, null);
