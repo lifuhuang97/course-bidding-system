@@ -2,6 +2,8 @@
     #$_SESSION['success'] = $userid;
      require_once 'include/common.php';
      require_once 'include/function.php';
+     require_once 'include/protect.php';
+     
      if (!isset($_SESSION['success'])){
          header('Location: login.php');
          exit; 
@@ -48,7 +50,7 @@
      Credit Left: <?=$edollar?>
      <hr>
      Please place your bid here:
-    <form action="processBid.php" method="POST">
+    <form action="processBid.php?token=<?php echo $_GET['token']?>" method="POST">
         <input type='hidden' name='eCredit' value="<?=$edollar?>">
         <table>
             <tr>
@@ -65,8 +67,31 @@
             </tr>
         </table>
         <input type='submit'>
+        
     </form>
-
+<?php
+    if (isset($_SESSION['errors1'])) {
+        foreach ($_SESSION['errors1'] as $errors){
+            print $errors;
+            print "<br>";
+        }
+        unset ($_SESSION['errors1']);
+    }
+    #if (isset($_SESSION['errors2'])) {
+    #    foreach ($_SESSION['errors2'] as $errors){
+    #        print $errors;
+    #        print "<br>";
+    #    }
+    #    unset ($_SESSION['errors2']);
+    #}
+    #if (isset($_SESSION['errors3'])) {
+    #    foreach ($_SESSION['errors3'] as $errors){
+    #        print $errors;
+    #        print "<br>";
+    #    }
+    #    unset ($_SESSION['errors3']);
+    #}
+?>
 <hr>
 Available Course to Bid
 <?php
@@ -83,12 +108,16 @@ if (count($courses)==0){
         <th>Lesson End Time</th>
         <th>Instructor</th>
         <th>Size</th> 
+        <th>Exam Date</th>
+        <th>Exam Start Time</th>
+        <th>Exam End Time</th>
     </tr>";
+
+    $currentavailable = [];
     foreach ($courses as $course){
         // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
         if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
             //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
-            var_dump($course);
             echo"<tr>
             <td>{$course->getCourseid()}</td>
             <td>{$course->getTitle()}</td>
@@ -98,12 +127,21 @@ if (count($courses)==0){
             <td>{$course->getEnd()}</td>
             <td>{$course->getInstructor()}</td>
             <td>{$course->getSize()}</td>
+            <td>{$course->getExamDate()}</td>
+            <td>{$course->getExamStart()}</td>
+            <td>{$course->getExamEnd()}</td>
             </td>";
+            //storing the available courses 
+            array_push($currentavailable, [$course->getCourseid() , $course->getTitle() , $course->getSectionid() , $course->getDay(), 
+            $course->getStart(), $course->getEnd() , $course->getInstructor() , $course->getSize() , $course->getExamDate() , 
+            $course->getExamStart() , $course->getExamEnd()] );
         }
     }
     echo"</table>";
+    $_SESSION['availablecourses'] = $currentavailable;
 }
 ?>
 
 </body>
 </html>
+<a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
