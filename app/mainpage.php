@@ -139,7 +139,7 @@
                                     ?>
                             <tr>
                                 <td><a href='makebid.php?token=<?php echo $_GET['token']?>'>Make a Bid</a></td>
-                                <td><a href='editbid.php'>Edit a Bid</a></td>
+                                <td><a href='editBid.php?token=<?php echo $_GET['token']?>'>Edit a Bid</a></td>
                                 <td><a href='deletebid.php'>Cancel/Drop Bid</a></td>          
                             </tr>
                             <tr>
