@@ -15,31 +15,33 @@
         $school = $student->getSchool(); #get school
         $edollar = $student->getEdollar(); #get edollar
 
-        $biddingDAO = new BidDAO();
-        $modules = $biddingDAO->getBidInfo($userid);
-        $biddedModule = $biddingDAO->getBidInfo($_SESSION['success']);
+        $biddingDAO = New BidDAO();
+        $modules = $biddingDAO->getBidInfo($_SESSION['success']);
     }
 
 	if (isset($_POST['code']) && isset($_POST['newBidAmt']) && isset($_POST['section'])) {
 		$code = $_POST['code'];
 		$section = $_POST['section'];
 		$newBidAmt = $_POST['newBidAmt'];
-		$status = $biddingDAO->update($userid, $code, $section, $newBidAmt);
-		if ($status) {
-			$biddedAmt = 0;
-			foreach ($modules as $mods) {
-				$c = $mods->getAmount();
-				$biddedAmt += $c;
+		foreach ($modules as $mods) {
+			$checkMod = $mods->getCode();
+			$checkSec = $mods->getSection();
+			$checkAmt = $mods->getAmount();
+			if ($code == $checkMod && $section == $checkSec && $newBidAmt != $checkAmt) {
+				$status = $biddingDAO->update($userid, $code, $section, $newBidAmt);
 			}
-			$remainCredit = 200 - $biddedAmt;
-			$_SESSION['remain'] = $biddedAmt;
-			$studentDAO = new StudentDAO();
-	        $status = $studentDAO->updateDollar($userid, $remainCredit);
-	        header("Location: mainpage.php?token={$_GET['token']}");
-	        exit;
 		}
-		elseif ($status == False) {
-			echo "Update not successful. Try again.";
+		$modules = $biddingDAO->getBidInfo($_SESSION['success']);
+		$biddedAmt = 0;
+		foreach ($modules as $mods) {
+			$c = $mods->getAmount();
+			$biddedAmt += $c;
 		}
+		$remainCredit = 200 - $biddedAmt;
+		$_SESSION['remain'] = $biddedAmt;
+		$studentDAO = new StudentDAO();
+	    $status = $studentDAO->updateDollar($userid, $remainCredit);
+	    header("Location: mainpage.php?token={$_GET['token']}");
+	    exit;
 	}
 ?>

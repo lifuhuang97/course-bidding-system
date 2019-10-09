@@ -11,16 +11,13 @@
         $student = $_SESSION['student']; 
         $userid = $student->getUserid(); #get userid
         $password = $student->getPassword(); #get password
-        $name = $student->getName(); #get name
-        $school = $student->getSchool(); #get school
         $edollar = $student->getEdollar(); #get edollar
 
         $biddingDAO = new BidDAO();
-        $modules = $biddingDAO->getBidInfo($userid);
         $biddedModule = $biddingDAO->getBidInfo($_SESSION['success']);
 
         $biddedmodsarray = [];
-        foreach ($modules as $mods) {
+        foreach ($biddedModule as $mods) {
             $b = ($mods->getCode());
             array_push($biddedmodsarray, $b);
         }

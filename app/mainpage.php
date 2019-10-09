@@ -45,8 +45,8 @@
                     </div>
                 </div>
                 <div class="navbar-left__completed">COMPLETED</div>
-                <div class="navbar-left__addCourse">ADD COURSE</div>
-                <div class="navbar-left__editBid">EDIT BIDS</div>
+                <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID</div></a>
+                <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID</div></a>
                 <div class="navbar-left__dropCourse">DROP COURSE</div>
                 <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT</div></a>
                 <div class="navbar-left__smuLogo">
@@ -138,8 +138,6 @@
                                         }
                                     ?>
                             <tr>
-                                <td><a href='makebid.php?token=<?php echo $_GET['token']?>'>Make a Bid</a></td>
-                                <td><a href='editBid.php?token=<?php echo $_GET['token']?>'>Edit a Bid</a></td>
                                 <td><a href='deletebid.php'>Cancel/Drop Bid</a></td>          
                             </tr>
                             <tr>
@@ -163,6 +161,5 @@
                 </div>
             </div>
         </div>
-        
     </body>
 </html>
