@@ -78,6 +78,16 @@ echo "<tr>
 
 </table>
 
+<?php
+
+include 'processRounds.php';
+ 
+?>
+<br>
+<br>
+<br>
+<a href="logout.php">Logout</a>
+
 </body>
 
 </form>

@@ -31,6 +31,26 @@ class BidDAO {
         return $status; // Boolean True or False
     }
 
+    public function getAllBids($section){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        $coursesID=$section[0];
+        $sectionID=$section[1];
+
+        $sql = "select * from bid where code = '$coursesID' and section = '$sectionID' order by amount desc;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        $bids = [];
+        while ($row = $stmt->fetch() ) {
+            $bids[] = new Bid ( $row['userid'], $row['amount'], $row['code'], $row['section']);
+        }
+        return $bids;
+
+    }
+
     public function add($bid) {
         // Connect to Database
         $connMgr = new ConnectionManager();
@@ -62,7 +82,31 @@ class BidDAO {
 
         return $status; // Boolean True or False
     }
+    
+    public function drop($id,$courseid, $sectionid) {
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
 
+        // Prepare SQL
+        $sql = "DELETE from BID WHERE userid=:id and code=:code and section=:sectionid";
+        
+        // Run Query
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->bindParam(':code',$courseid,PDO::PARAM_STR);
+        $stmt->bindParam(':sectionid',$sectionid,PDO::PARAM_STR);
+        $status = False;
+        if ($stmt->execute()){
+            $status=True;
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+
+        return $status; // Boolean True or False
+    }
 
     public function removeAll() {
         // $sql = 'TRUNCATE TABLE BID';
@@ -101,7 +145,6 @@ class BidDAO {
         if (!$status){ //if ($status==False)
             //if there is error
             $err=$stmt->errorinfo();
-            var_dump($err);
         }
         // Retrieve Query Results (if any)
         $mod=[];

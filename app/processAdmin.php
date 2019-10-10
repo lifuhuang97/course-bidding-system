@@ -34,7 +34,7 @@ if ($_SESSION['roundaction'] == "Start Round"){
 
 if ($_SESSION['roundaction'] == "Clear Round"){
     $adminRoundDAO->clearRound();
-    header('Location: adminMainpage.php');
+    header('Location: processRounds.php');
 }
 
 if ($_SESSION['roundaction'] == "Reset Round"){
