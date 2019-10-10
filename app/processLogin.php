@@ -17,7 +17,8 @@
         if ($_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!547') {
                 $_SESSION['success'] = $_POST['username'];
-                header('Location: bootstrap.php?token='.$token);
+                header('Location: adminMainPage.php');
+                // header('Location: bootstrap.php?token='.$token);
                 exit;
             } else {
                 array_push($_SESSION['errors'], 'Password is incorrect!');

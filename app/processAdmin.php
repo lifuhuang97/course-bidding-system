@@ -16,24 +16,20 @@ $adminRoundDAO = new adminRoundDAO();
 
 $roundProcessing = $adminRoundDAO->RetrieveRoundDetail();
 
-var_dump($roundProcessing);
-
-var_dump($_SESSION['roundaction']);
-
-var_dump($roundProcessing->getR1Start());
-
-
 if ($_SESSION['roundaction'] == "Start Round"){
-
-    // //Draw link to bootstrap
-    // if($roundProcessing->getR1Start() == null){
-    //     header('Location: bootstrap.php');
-    // }
 
     $adminRoundDAO->startRound();
 
+    $roundNo = $roundProcessing->getRoundID();
+    $roundStatus = $roundProcessing->getRoundStatus();
+
+    if($roundNo == 1 && $roundStatus == "Not Started"){
+        
+        header('Location: bootstrap.php');
+    }else{
 
     header('Location: adminMainpage.php');
+    }
 }
 
 if ($_SESSION['roundaction'] == "Clear Round"){
@@ -44,7 +40,6 @@ if ($_SESSION['roundaction'] == "Clear Round"){
 if ($_SESSION['roundaction'] == "Reset Round"){
     $adminRoundDAO->resetRound();
 
-    //Draw link to bootstrap
     header('Location: adminMainpage.php');
 }
 

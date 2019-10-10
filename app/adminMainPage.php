@@ -39,8 +39,8 @@ $roundStatus = $round->getRoundStatus();
 <?php
 echo "<table>
     <tr>
-        <th>Round:{$roundNumber}</th>
-        <th>Status:{$roundStatus}</th>
+        <th>Round: {$roundNumber}</th>
+        <th>Status: {$roundStatus}</th>
     </tr>"
 
 
@@ -48,12 +48,21 @@ echo "<table>
 
 <?php
 $disableButton = "disabled value='true'";
+
 if ($roundStatus == "Started"){
     $startStatus = $disableButton;
     $clearStatus = '';
 }else{
-    $startStatus = '';
-    $clearStatus = $disableButton;
+    if ($roundNumber == 1){
+        $startStatus = '';
+        $clearStatus = $disableButton;
+    }else if($roundNumber == 2 && $roundStatus == "Finished"){
+        $startStatus = $disableButton;
+        $clearStatus = $disableButton; 
+    }else{
+        $startStatus = '';
+        $clearStatus = $disableButton;
+    }
 }
 
 echo "<tr>

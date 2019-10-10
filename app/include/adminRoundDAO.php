@@ -57,13 +57,17 @@ class adminRoundDAO {
 
         $round = $roundDetails->getRoundID();
 
-        $addRound = "roundID = 2,";
-
         if ($round == 1){
-            $sql = "";
+            $addRound = 'roundID = 2, ';
+            $newStatus = 'roundStatus = "Not Started", ';
+        }elseif ($round == 2){
+            $addRound = ' ';
+            $newStatus = 'roundStatus = "Finished", ';
         }
+        var_dump($addRound);
+        var_dump($newStatus);
 
-        $sql = "update ADMIN_ROUND set {$addRound} roundStatus = 'Not Started', r{$round}End = CURRENT_TIMESTAMP"; 
+        $sql = "update ADMIN_ROUND set {$addRound} {$newStatus} r{$round}End = CURRENT_TIMESTAMP"; 
         
         $stmt = $pdo->prepare($sql);
 
