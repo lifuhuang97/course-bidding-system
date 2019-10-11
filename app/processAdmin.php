@@ -12,6 +12,7 @@ if (isset($_POST['submit'])) {
  * Reset Round
  */
 
+$bidDAO = new BidDAO();
 $adminRoundDAO = new adminRoundDAO();
 
 $roundProcessing = $adminRoundDAO->RetrieveRoundDetail();
@@ -27,7 +28,7 @@ if ($_SESSION['roundaction'] == "Start Round"){
         
         header('Location: bootstrap.php');
     }else{
-
+    $bidDAO->removeAll();
     header('Location: adminMainpage.php');
     }
 }

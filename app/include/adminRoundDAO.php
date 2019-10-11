@@ -1,8 +1,9 @@
 <?php
 
 require_once 'common.php';
+require_once 'function.php';
 
-class adminRoundDAO {
+class AdminRoundDAO {
 
 
     public function RetrieveRoundDetail() {
@@ -55,6 +56,7 @@ class adminRoundDAO {
 
         $bidDAO = new BidDAO();
         $sectDAO = new SectionDAO();
+        $successBidsDAO = new StudentSectionDAO();
 
         $sections = $sectDAO->getAllSections();
 
@@ -84,7 +86,6 @@ class adminRoundDAO {
                     foreach ($selected as $bid){
 
                         $bid = [$bid->getUserid(), $bid->getAmount(), $bid->getCode(), $bid->getSection()];
-                        
                             if($count == 0){
 
                                 $prevAmt = $bid[1];
@@ -113,10 +114,17 @@ class adminRoundDAO {
                             }
                             $count++; 
                             $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bidStatus</td></tr>";
+
+                            if($bidStatus = "Successful" ){
+                                var_dump($bid);
+                                $successBidsDAO->addSuccessfulBid($bid[0],$bid[1],$bid[2],$bid[3]);
+
+                            // }
                               
                         }
-                        
+                    }
                 }
+                var_dump($bidDataTable);
                 return $bidDataTable;
             }
         }
@@ -126,6 +134,8 @@ class adminRoundDAO {
         $connMgr = new ConnectionManager();           
         $pdo = $connMgr->getConnection();
         
+        $successfulBids = new StudentSectionDAO();
+
         $roundDetails = $this->RetrieveRoundDetail();
 
         $round = $roundDetails->getRoundID();
@@ -136,6 +146,7 @@ class adminRoundDAO {
         }elseif ($round == 2){
             $addRound = ' ';
             $newStatus = 'roundStatus = "Finished", ';
+            $successfulBids->removeAll();
         }
 
         $sql = "update ADMIN_ROUND set {$addRound} {$newStatus} r{$round}End = CURRENT_TIMESTAMP"; 

@@ -4,10 +4,14 @@
 <?php
 require_once 'include/common.php';
 
+$successBidDAO = new StudentSectionDAO();
+
+$allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
+
 $adminRoundDAO = new adminRoundDAO();
 $round = $adminRoundDAO->RetrieveRoundDetail();
 
-if ($round->getRoundID() != 1 && $round->getRoundStatus() != "Started"){
+if ($round->getRoundID() != 1 && $round->getRoundStatus() != "Started" && $allSuccessfulBids != []){
     $bidResults = $adminRoundDAO->clearRoundBids();
 } 
 
@@ -29,7 +33,9 @@ Bidding Results
 <?php
 
 
+
 if(isset($bidResults)){
+    var_dump($bidResults);
     foreach($bidResults as $result){
         echo "$result";
     }
@@ -44,7 +50,7 @@ if(isset($bidResults)){
 
 </html>
 
-
+<a href="adminMainPage.php">Back</a>
 
 <?php
 
