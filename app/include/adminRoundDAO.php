@@ -48,6 +48,79 @@ class adminRoundDAO {
     }
 
 
+    public function clearRoundBids(){
+        
+        $connMgr = new ConnectionManager();           
+        $pdo = $connMgr->getConnection();
+
+        $bidDAO = new BidDAO();
+        $sectDAO = new SectionDAO();
+
+        $sections = $sectDAO->getAllSections();
+
+        $bidDataTable = [];
+        
+
+        foreach($sections as $section){
+            $conclude = false;
+            $selected = $bidDAO->getAllBids($section);
+            
+            $totalBidCount = count($selected);
+
+            if ($totalBidCount < $section[2]){
+                foreach($selected as $bid){
+                    $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Successful'</td></tr>";
+                }
+            }else{
+                $bidStatus = "Successful";
+                $vacancy = $section[2];
+                $count = 1;
+                $prevAmt = 0;
+                $prevID = "";
+                $clearingAmtCount = 0;
+                $clearingAmt = 0;
+                
+                
+                    foreach ($selected as $bid){
+
+                        $bid = [$bid->getUserid(), $bid->getAmount(), $bid->getCode(), $bid->getSection()];
+                        
+                            if($count == 0){
+
+                                $prevAmt = $bid[1];
+                                $prevID = $bid[0];
+
+                            }elseif($bid[1] < $prevAmt){
+
+                                $prevAmt = $bid[1];
+                                $prevID = $bid[0];
+                            }
+
+
+                            if($count >= $vacancy){
+
+                                if( $bid[1] < $clearingAmt){
+                                    $bidStatus = "Unsuccessful";
+                                }
+
+                                if($bid[1] < $prevAmt){
+                                    $clearingAmtCount += 1;
+                                    $clearingAmt = $bid[1];
+                                }
+                                if($bid[1] == $clearingAmt){
+                                    $clearingAmtCount += 1;
+                                }
+                            }
+                            $count++; 
+                            $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bidStatus</td></tr>";
+                              
+                        }
+                        
+                }
+                return $bidDataTable;
+            }
+        }
+        
 
     public function clearRound() {
         $connMgr = new ConnectionManager();           
@@ -57,13 +130,15 @@ class adminRoundDAO {
 
         $round = $roundDetails->getRoundID();
 
-        $addRound = "roundID = 2,";
-
         if ($round == 1){
-            $sql = "";
+            $addRound = 'roundID = 2, ';
+            $newStatus = 'roundStatus = "Not Started", ';
+        }elseif ($round == 2){
+            $addRound = ' ';
+            $newStatus = 'roundStatus = "Finished", ';
         }
 
-        $sql = "update ADMIN_ROUND set {$addRound} roundStatus = 'Not Started', r{$round}End = CURRENT_TIMESTAMP"; 
+        $sql = "update ADMIN_ROUND set {$addRound} {$newStatus} r{$round}End = CURRENT_TIMESTAMP"; 
         
         $stmt = $pdo->prepare($sql);
 
