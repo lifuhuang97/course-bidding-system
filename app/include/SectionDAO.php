@@ -43,6 +43,25 @@ class SectionDAO {
         return $status; // Boolean True or False
     }
 
+    public function getAllSections(){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        $sql = "SELECT coursesID,sectionID,size from section LIMIT 2,1";
+        // $sql = "SELECT coursesID, sectionID from section";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        $sections = [];
+        while ($row = $stmt->fetch() ) {
+            $sections[] = [$row['coursesID'],$row['sectionID'],$row['size']];
+        }
+        return $sections;
+
+    }
+
+
     public function removeAll() { // Removing everything from Section
         // $sql = 'TRUNCATE TABLE SECTION';
         $sql = 'DELETE FROM SECTION';
