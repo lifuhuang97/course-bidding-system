@@ -11,7 +11,7 @@ $allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
 $adminRoundDAO = new adminRoundDAO();
 $round = $adminRoundDAO->RetrieveRoundDetail();
 
-if ($round->getRoundID() != 1 && $round->getRoundStatus() != "Started" && $allSuccessfulBids != []){
+if ($round->getRoundID() != 1 && $round->getRoundStatus() != "Started"){
     $bidResults = $adminRoundDAO->clearRoundBids();
 } 
 
@@ -35,7 +35,6 @@ Bidding Results
 
 
 if(isset($bidResults)){
-    var_dump($bidResults);
     foreach($bidResults as $result){
         echo "$result";
     }
