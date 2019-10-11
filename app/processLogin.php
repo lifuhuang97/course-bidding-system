@@ -17,6 +17,7 @@
         if ($_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!547') {
                 $_SESSION['success'] = $_POST['username'];
+                $token=generate_token($userid);
                 header('Location: adminMainPage.php');
                 // header('Location: bootstrap.php?token='.$token);
                 exit;
