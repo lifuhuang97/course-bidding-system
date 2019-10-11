@@ -4,6 +4,30 @@ require_once 'common.php';
 
 class BidDAO {
 
+    public function drop($id, $courseid, $sectionid){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "DELETE FROM bid WHERE userid=:id and code=:courseid and section=:sectionid"; 
+
+        // Run Query
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->bindParam(':courseid',$courseid,PDO::PARAM_STR);
+        $stmt->bindParam(':sectionid',$sectionid,PDO::PARAM_STR);
+        $status = False;
+
+        if ($stmt->execute()){
+            $status=True;
+        }
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+
+        return $status; // Boolean True or False
+    }
     public function update($id, $courseid, $sectionid, $amount) {
 
         // Connect to Database
@@ -88,7 +112,7 @@ class BidDAO {
         // Write & Prepare SQL Query (take care of Param Binding if necessary)
         $sql = "SELECT * 
                 FROM BID 
-                WHERE 
+                WHERE   
                     userid=:userid
                 ";
         $stmt = $conn->prepare($sql);
