@@ -449,8 +449,7 @@ function doBootstrap() {
                             $message[]="invalid course";
                             $courseValid=FALSE;
                         }
-                        if($courseValid && !in_array($data[3],$sectionList[$data[2]])){
-                            // check if code exist in student.csv
+                        if($courseValid && (!array_key_exists($data[2],$sectionList) || !in_array($data[3],$sectionList[$data[2]]))){                            // check if code exist in student.csv
                             $message[]="invalid section";
                         }
                     }
