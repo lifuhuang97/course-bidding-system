@@ -28,6 +28,7 @@
     <head>
         <title>BOSS Bidding</title>
         <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+        <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="container">
@@ -44,11 +45,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="navbar-left__completed">COMPLETED</div>
-                <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID</div></a>
-                <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID</div></a>
-                <div class="navbar-left__dropCourse">DROP COURSE</div>
-                <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT</div></a>
+                <div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div>
+                <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID <i class="far fa-calendar-plus"></i></div></a>
+                <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID <i class="fas fa-pen-square"></i></div></a>
+                <a href='deletebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropCourse">DROP BID <i class="far fa-calendar-times"></i></div></a>
+                <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
                 <div class="navbar-left__smuLogo">
                     <img src="css/smulogo.png">
                 </div>
@@ -137,9 +138,6 @@
                                                     </tr>";
                                         }
                                     ?>
-                            <tr>
-                                <td><a href='deletebid.php?token=<?php echo $_GET['token']?>'>Cancel/Drop Bid</a></td>          
-                            </tr>
                             <tr>
                                 <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td>
                             </tr>

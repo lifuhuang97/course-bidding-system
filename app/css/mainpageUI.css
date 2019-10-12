@@ -15,6 +15,7 @@
 }
 .navbar-left__profile, .navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout, .navbar-left__smuLogo{
 	padding: 20px;
+	text-align: right;
 }
 .profile-picture{
 	display: flex;
