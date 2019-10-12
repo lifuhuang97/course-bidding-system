@@ -46,7 +46,7 @@ class SectionDAO {
     public function getAllSections(){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-
+        // limits selection to ONLY IS100
         $sql = "SELECT coursesID,sectionID,size from section LIMIT 2,1";
         // $sql = "SELECT coursesID, sectionID from section";
         $stmt = $conn->prepare($sql);

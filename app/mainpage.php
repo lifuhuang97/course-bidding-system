@@ -11,12 +11,14 @@
         if ($_SESSION['success']!='admin'){
             $studentDAO = New StudentDAO();
             $student = $studentDAO->retrieveStudent($_SESSION['success']);
+            $loginID = $student->getUserid();
             $_SESSION['student'] = $student;
             $name = $student->getName();
             $school = $student->getSchool();
             $eCredit = $student->getEdollar();
             $bidDAO = New BidDAO();
             $biddedModule = $bidDAO->getBidInfo($_SESSION['success']);
+            $bidresultsDAO = New StudentSectionDAO();
         }else{
             $name = $_SESSION['success'];
             $school = '-';
@@ -114,20 +116,27 @@
                                                     <th>Lesson End Time</th>
                                                     <th>Instructor</th>
                                                     <th>Amount</th>
+                                                    <th>Bid Status</th>
                                                     </tr>";
                                                 foreach ($biddedModule as $module){
+                                                    
                                                     echo "<tr><td>";
                                                     $code = $module->getCode();
+                                                    $bidAmt = $module->getAmount();
+                                                    $bidSection = $module->getSection();
                                                     echo "$code</td>";
                                                     echo "<td>";
                                                     $course = $module->getCourseDetailsByCourseSection();
+                                                    $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
+                                                   
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
                                                         <td>{$course->getDay()}</td>
                                                         <td>{$course->getStart()}</td>
                                                         <td>{$course->getEnd()}</td>
                                                         <td>{$course->getInstructor()}</td>
-                                                        <td>{$module->getAmount()}</td>";
+                                                        <td>{$module->getAmount()}</td>
+                                                        <td>{$bidresult[0]}</td>";
                                                     echo "</tr>";
                                                 }
                                             }

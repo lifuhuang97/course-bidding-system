@@ -62,21 +62,20 @@ class AdminRoundDAO {
 
         $bidDataTable = [];
         
-
+        if($successBidsDAO->getAllSuccessfulBids() == []){
         foreach($sections as $section){
             $conclude = false;
             $selected = $bidDAO->getAllBids($section);
-
             $totalBidCount = count($selected);
-
             if ($totalBidCount < $section[2]){
                 foreach($selected as $bid){
                     $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Successful'</td></tr>";
+                    $successBidsDAO->addSuccessfulBid($bid[0],$bid[1],$bid[2],$bid[3]);
                 }
             }else{
                 $bidStatus = "Successful";
                 $vacancy = $section[2];
-                $count = 1;
+                $count = 0;
                 $prevAmt = 0;
                 $prevID = "";
                 $clearingAmtCount = 0;
@@ -84,48 +83,80 @@ class AdminRoundDAO {
                 
                 
                     foreach ($selected as $bid){
-
+                        $count++; 
                         $bid = [$bid->getUserid(), $bid->getAmount(), $bid->getCode(), $bid->getSection()];
+                        $bidID = $bid[0];
+                        $bidAmt = $bid[1];
+                        $bidCourse = $bid[2];
+                        $bidSection = $bid[3];
+
                             if($count == 0){
 
-                                $prevAmt = $bid[1];
-                                $prevID = $bid[0];
+                                $prevAmt = $bidAmt;
+                                $prevID = $bidID;
 
-                            }elseif($bid[1] < $prevAmt){
+                            }elseif($bidAmt < $prevAmt){
 
-                                $prevAmt = $bid[1];
-                                $prevID = $bid[0];
+                                $prevAmt = $bidAmt;
+                                $prevID = $bidID;
                             }
 
 
                             if($count >= $vacancy){
 
-                                if( $bid[1] < $clearingAmt){
+                                if($clearingAmt == 0){
+                                    $clearingAmt = $bidAmt;
+                                    $clearingAmtCount += 1;
+                                }
+
+                                if( $bidAmt < $clearingAmt){
+                                    $prevAmt = $clearingAmt;
+                                    $bidStatus = "Unsuccessful";
+                                }else if($bidAmt == $clearingAmt && $clearingAmtCount == 2){
+                                    $tempDataTable = $bidDataTable;
                                     $bidStatus = "Unsuccessful";
                                 }
-
-                                if($bid[1] < $prevAmt){
+                                if($bidAmt == $clearingAmt){
                                     $clearingAmtCount += 1;
-                                    $clearingAmt = $bid[1];
-                                }
-                                if($bid[1] == $clearingAmt){
-                                    $clearingAmtCount += 1;
-                                }
                             }
-                            $count++; 
-                            $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bidStatus</td></tr>";
-
-                            if($bidStatus = "Successful" ){
-                                $successBidsDAO->addSuccessfulBid($bid[0],$bid[1],$bid[2],$bid[3]);
-
-                              
                         }
+                            $bidDataTableArray[] = [$bidID,$bidAmt,$bidCourse,$bidSection,$bidStatus];
+                        }
+                         
                     }
                 }
+
+            if(isset($clearingAmtCount)){
+                $counter = 0;
+                foreach($bidDataTableArray as $bid){
+                    $counter++;
+                    if($bid[1] == $clearingAmt){
+                        $changeState = array(4=>"Unsuccessful");
+                        $bid = array_replace($bid, $changeState);
+                        $bidDataTableArray[$counter-1] = $bid;
+                    }
+                }
+            }
+            if(isset($bidDataTableArray)){
+            foreach($bidDataTableArray as $bid){
+
+                if($bid[4] == "Unsuccessful"){
+                    $tempbid = new Bid($bid[0],$bid[1],$bid[2],$bid[3]);
+                    $studentDAO = new StudentDAO();
+                    $theStudent = $studentDAO->retrieveStudent($bid[0]);
+                    $oldDollar = $theStudent->getEdollar();
+                    $newDollar = $oldDollar + $bid[1];
+                    $studentDAO->updateDollar($bid[0], $newDollar);
+                }
+
+                $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bid[4]</td></tr>";
+            
+                $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],$bid[4]);
+            }
+        }
                 return $bidDataTable;
             }
         }
-        
 
     public function clearRound() {
         $connMgr = new ConnectionManager();           
@@ -176,5 +207,6 @@ class AdminRoundDAO {
         return $status;
     }
 }
+
 
 ?>
