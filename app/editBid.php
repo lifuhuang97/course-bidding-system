@@ -29,6 +29,23 @@
 	<title>Edit Bid</title>
 </head>
 <body>
+	<?php
+		if (isset($_SESSION['errors1'])) {
+			foreach ($_SESSION['errors1'] as $error) {
+				print $error;
+				print "<br>";
+			}
+			unset($_SESSION['errors1']);
+		}
+		if (isset($_SESSION['errors2'])) {
+			foreach ($_SESSION['errors2'] as $error) {
+				echo $error;
+				echo "<br>";
+			}
+			unset($_SESSION['errors2']);
+		}
+
+	?>
 	<form action="editBidProcess.php?token=<?php echo $_GET['token']?>" method="POST">
 		<table>
 			<tr>
