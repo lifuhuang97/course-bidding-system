@@ -104,6 +104,34 @@ class CourseDAO {
         // return (if any)
         return $course;
     }
+    
+    public function RetrieveAll(){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    
+        $sql = "SELECT * FROM COURSE ORDER BY courseID";
+        $stmt = $conn->prepare($sql);
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        //Retrieve Query Results (if any)
+        $course=[];
+        while ($row=$stmt->fetch()){
+            $course[]=new Course($row['courseID'],$row['school'],$row['title'],$row['description'],$row['examDate'],$row['examStart'],$row['examEnd']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $course;
+    }
 }
 
 

@@ -104,6 +104,33 @@ class CourseCompletedDAO {
         
         return $status;
     }
+    public function RetrieveAll(){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    
+        $sql = "SELECT * FROM course_completed ORDER BY code,userid";
+        $stmt = $conn->prepare($sql);
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        //Retrieve Query Results (if any)
+        $CourseCompleted=[];
+        while ($row=$stmt->fetch()){
+            $CourseCompleted[]=new CourseCompleted($row['userid'],$row['code']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $CourseCompleted;
+    }
 }
 
 

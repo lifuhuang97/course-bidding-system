@@ -77,6 +77,33 @@ class SectionDAO {
         $stmt = null;
         $conn = null; 
     }
+    public function RetrieveAll(){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    
+        $sql = "SELECT * FROM SECTION ORDER BY coursesID, sectionID";
+        $stmt = $conn->prepare($sql);
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        //Retrieve Query Results (if any)
+        $section=[];
+        while ($row=$stmt->fetch()){
+            $section[]=new Section($row['coursesID'],$row['sectionID'],$row['day'],$row['start'],$row['end'],$row['instructor'],$row['venue'],$row['size']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $section;
+    }
 }
 
 

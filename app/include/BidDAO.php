@@ -158,7 +158,33 @@ class BidDAO {
         // Step 6 - Return (if any)
         return $mod;
     }
+    public function RetrieveAll(){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    
+        $sql = "SELECT * FROM BID ORDER BY code,section,amount desc,userid";
+        $stmt = $conn->prepare($sql);
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
 
+        //Retrieve Query Results (if any)
+        $bid=[];
+        while ($row=$stmt->fetch()){
+            $bid[]=new Bid($row['userid'],$row['amount'],$row['code'],$row['section']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $bid;
+    }
 }
 
 ?>
