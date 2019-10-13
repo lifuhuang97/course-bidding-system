@@ -64,7 +64,7 @@ if ($roundStatus == "Started"){
     if ($roundNumber == 1){
         $startStatus = '';
         $clearStatus = $disableButton;
-    }else if($roundNumber == 2 && $roundStatus == "Finished"){
+    }elseif($roundNumber == 2 && $roundStatus == "Finished"){
         $startStatus = $disableButton;
         $clearStatus = $disableButton; 
     }else{

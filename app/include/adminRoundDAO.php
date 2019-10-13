@@ -115,7 +115,7 @@ class AdminRoundDAO {
                                 if( $bidAmt < $clearingAmt){
                                     $prevAmt = $clearingAmt;
                                     $bidStatus = "Fail";
-                                }else if($bidAmt == $clearingAmt && $clearingAmtCount == 2){
+                                }elseif($bidAmt == $clearingAmt && $clearingAmtCount == 2){
                                     $tempDataTable = $bidDataTable;
                                     $bidStatus = "Fail";
                                 }
