@@ -24,7 +24,7 @@
             $school = '-';
             $eCredit = '-';
         }
-    }
+    } 
 ?>
 <html>
     <head>
@@ -70,21 +70,48 @@
                                 <th>End Time</th>
                             </tr>
                             <tr>
-                                <th>Round 2A Window 1</th>
-                                <td>26-Aug-19 17:00</td>
-                                <td>28-Aug-19 10:00</td>
+<?php 
+
+    $RoundStatusDAO = new adminRoundDAO();
+    $roundstatus = $RoundStatusDAO->RetrieveRoundDetail();
+
+    $roundID = $roundstatus->getRoundID();
+    $roundStatus = $roundstatus->getRoundStatus();
+    $round1Start = $roundstatus->getR1Start();
+    $round1End = $roundstatus->getR1End();
+    $round2Start = $roundstatus->getR2Start();
+    $round2End = $roundstatus->getR2End();
+
+
+    $roundStartEndTimes = [$round1Start,$round1End,$round2Start,$round2End];
+
+    if($round1Start != null && $round1End == null){
+        $roundStartEndTimes[1] = "Ongoing";
+    }
+    if($round2Start != null && $round2End == null){
+        $roundStartEndTimes[3] = "Ongoing";
+    }
+    for($i = 0; $i < 4; $i++){
+        if($roundStartEndTimes[$i] == null){
+            $roundStartEndTimes[$i] = "Not Started";
+        }
+    }
+
+    var_dump($roundStartEndTimes);
+
+    echo"
+                                <th>Round 1</th>
+                                <td>$roundStartEndTimes[0]</td>
+                                <td>$roundStartEndTimes[1]</td>
                             </tr>
                             <tr>
                                 <th>Round 2A Window 2</th>
-                                <td>28-Aug-19 17:00</td>
-                                <td>30-Aug-19 10:00</td>
+                                <td>$roundStartEndTimes[2]</td>
+                                <td>$roundStartEndTimes[3]</td>
                             </tr>
-                            <tr>
-                                <th>Round 2A Window 3</th>
-                                <td>30-Aug-19 17:00</td>
-                                <td>02-Sep-19 10:00</td>
-                                </tr>
-                            </tr>
+                            </tr>";
+
+?>
                         </table> 
                     </div>
                     <div class="display-right__table-cart">
@@ -94,10 +121,10 @@
                             </tr>
                             <tr>
                                 <th colspan="8">
-                                    Round 2A Window 1 is open from
-                                    26-Aug-2019 17:00 to 28-Aug-2019 10:00 
-                                </th>
-                            </tr>
+                                <?php echo "
+                                    Round {$roundID} is {$roundStatus}" ?>
+                                </th></tr>
+
                             <tr></tr>
                                     <?php
                                         if (isset($biddedModule)){
@@ -135,8 +162,12 @@
                                                         <td>{$course->getStart()}</td>
                                                         <td>{$course->getEnd()}</td>
                                                         <td>{$course->getInstructor()}</td>
-                                                        <td>{$module->getAmount()}</td>
+                                                        <td>{$module->getAmount()}</td>";
+                                                        if(!isempty($bidresult)){echo "
                                                         <td>{$bidresult[0]}</td>";
+                                                        }else{
+                                                            echo "<td>Pending</td>";
+                                                        }
                                                     echo "</tr>";
                                                 }
                                             }

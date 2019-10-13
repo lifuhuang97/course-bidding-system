@@ -6,12 +6,17 @@ class StudentSection {
     private $amount;
     private $course;
     private $section;
+    private $bidstatus;
+    private $bidround;
     
-    public function __construct($userid, $amount, $course, $section) {
+    
+    public function __construct($userid, $amount, $course, $section, $bidstatus, $bidround) {
         $this->userid = $userid;
         $this->amount = $amount;
         $this->course = $course;
         $this->section = $section;
+        $this->bidstatus = $bidstatus;
+        $this->bidround = $bidround;
     }
 
     public function getUserid() {
@@ -28,6 +33,10 @@ class StudentSection {
 
     public function getSection() {
         return $this->section;
+    }
+
+    public function getBidStatus() {
+        return $this->bidstatus;
     }
 
 }

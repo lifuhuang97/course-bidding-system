@@ -5,7 +5,7 @@ require_once 'function.php';
 
 class AdminRoundDAO {
 
-
+    // Get latest round status
     public function RetrieveRoundDetail() {
         $connMgr = new ConnectionManager();
         $pdo = $connMgr->getConnection();
@@ -27,7 +27,7 @@ class AdminRoundDAO {
     }
 }
 
-
+    // update round status to reflect that round has started. Record time.
     public function startRound() {
         $connMgr = new ConnectionManager();           
         $pdo = $connMgr->getConnection();
@@ -48,7 +48,7 @@ class AdminRoundDAO {
         return $status;
     }
 
-
+    // Clear all bids & store their success/fail in new table
     public function clearRoundBids(){
         
         $connMgr = new ConnectionManager();           
@@ -57,6 +57,9 @@ class AdminRoundDAO {
         $bidDAO = new BidDAO();
         $sectDAO = new SectionDAO();
         $successBidsDAO = new StudentSectionDAO();
+
+        $roundStatus = $this->RetrieveRoundDetail();
+        $roundNumber = $roundStatus->getRoundID() - 1;
 
         $sections = $sectDAO->getAllSections();
 
@@ -102,7 +105,7 @@ class AdminRoundDAO {
                             }
 
 
-                            if($count >= $vacancy){
+                            if($count > $vacancy){
 
                                 if($clearingAmt == 0){
                                     $clearingAmt = $bidAmt;
@@ -120,7 +123,7 @@ class AdminRoundDAO {
                                     $clearingAmtCount += 1;
                             }
                         }
-                            $bidDataTableArray[] = [$bidID,$bidAmt,$bidCourse,$bidSection,$bidStatus];
+                            $bidDataTableArray[] = [$bidID,$bidAmt,$bidCourse,$bidSection,$bidStatus,$roundNumber];
                         }
                          
                     }
@@ -151,13 +154,14 @@ class AdminRoundDAO {
 
                 $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bid[4]</td></tr>";
             
-                $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],$bid[4]);
+                $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],$bid[4], $bid[5]);
             }
         }
                 return $bidDataTable;
             }
         }
 
+        // Update round status after round is cleared
     public function clearRound() {
         $connMgr = new ConnectionManager();           
         $pdo = $connMgr->getConnection();
@@ -174,7 +178,6 @@ class AdminRoundDAO {
         }elseif ($round == 2){
             $addRound = ' ';
             $newStatus = 'roundStatus = "Finished", ';
-            $successfulBids->removeAll();
         }
 
         $sql = "update ADMIN_ROUND set {$addRound} {$newStatus} r{$round}End = CURRENT_TIMESTAMP"; 
@@ -189,9 +192,12 @@ class AdminRoundDAO {
         return $status;
     }
 
+    // Reset round status to clean slate
     public function resetRound() {
         $connMgr = new ConnectionManager();           
         $pdo = $connMgr->getConnection();
+        $successfulBids = new StudentSectionDAO();
+        $successfulBids->removeAll();
 
         $addRound = "roundID = 2,";
 
