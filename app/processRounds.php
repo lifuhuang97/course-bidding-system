@@ -39,8 +39,7 @@ if(isset($bidResults)){
     foreach($bidResults as $result){
         echo "$result";
     }
-}elseif((isempty($allBidsWithStatus)) || ($round->getRoundID() == 2 && !isset($bidResults))){
-    
+}elseif((isempty($allBidsWithStatus)) || ($round->getRoundID() == 2 && !isempty($bidResults))){
     echo "<tr><th colspan = 5>Round is currently ongoing / inactive. </th></tr>";
 }
 

@@ -15,7 +15,7 @@ if (isset($_REQUEST['r'])){
         $section=$request['section'];
     }
 }else{
-    $errors = [ isMissingOrEmpty ('course'),
+    $errors = [isMissingOrEmpty ('course'),
             isMissingOrEmpty ('section') ];
     $errors = array_filter($errors);
     if (isEmpty($errors)) {
@@ -58,6 +58,7 @@ else{
             "status" => "success",
             "students" => $StudentList
             ];
+
     }
 }
 header('Content-Type: application/json');

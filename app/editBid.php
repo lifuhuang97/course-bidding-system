@@ -1,9 +1,11 @@
 <?php
+
+
 	require_once 'include/common.php';
     require_once 'include/function.php';
-    require_once 'include/protect.php';
+//    require_once 'include/protect.php';
 
-    $adminRoundDAO = new AdminRoundDAO();
+    $adminRoundDAO = new adminRoundDAO();
     $adminRoundStatus = $adminRoundDAO->RetrieveRoundDetail();
     if ($adminRoundStatus->getRoundStatus() != "Started") {
     	echo "Edit Bid is not allowed at the moment. ";

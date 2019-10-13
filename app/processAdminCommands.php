@@ -30,14 +30,14 @@ if ($_SESSION['roundaction'] == "Start Round"){
     }else{
     // clear existing bids when moving into round 2
     $bidDAO->removeAll();
-    header('Location: adminMainpage.php');
+    header('Location: adminMainPage.php');
     }
 }
 
 // Update round status & go to admin page
 if ($_SESSION['roundaction'] == "Clear Round"){
     $adminRoundDAO->clearRound();
-    header('Location: adminMainpage.php');
+    header('Location: adminMainPage.php');
 }
 
 // Update round status, Reset rounds to clean slate (require bootstrap again)
@@ -45,7 +45,7 @@ if ($_SESSION['roundaction'] == "Reset Round"){
     $adminRoundDAO->resetRound();
     $StudentSectionDAO->removeAll();
     $bidDAO->removeAll();
-    header('Location: adminMainpage.php');
+    header('Location: adminMainPage.php');
 }
 
 

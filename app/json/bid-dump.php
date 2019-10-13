@@ -47,7 +47,7 @@ else{
             "message" => array_values($errors)
             ];
     }else{
-        $bidDAO=new bidDAO();
+        $bidDAO=new BidDAO();
         $AllBids=$bidDAO->getAllBids([$course,$section]);
         $minBid=CheckMinBid($course,$section)[0];
         $bidList=[];

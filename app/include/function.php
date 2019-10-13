@@ -218,7 +218,7 @@ function CheckMinBid($course,$section){
 }
 
 function DropSectionUpdateEdollar($userid,$course,$dollar){
-    $studentDAO=new studentDAO();
+    $studentDAO=new StudentDAO();
     $student=$studentDAO->retrieveStudent($userid);
     $eDollar=$student->getEdollar();
     $studentSectionDAO= new StudentSectionDAO();
