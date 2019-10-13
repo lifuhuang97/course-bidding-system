@@ -16,9 +16,17 @@
         $school = $student->getSchool(); #get school
         $edollar = $student->getEdollar(); #get edollar
 
+        //getting the round ID and roundstat
+        $adminround = new adminRoundDAO();
+        $roundDetail = $adminround->RetrieveRoundDetail();
+        $roundID = $roundDetail->getRoundID();
+        $roundstat = $roundDetail->getRoundStatus();
+
+
         //preparing for removing modules that user alr completed
         $courseDAO= new CourseDAO();
         $courses=$courseDAO->RetrieveAllCourseDetail('', '', $school);
+        
 
         $completedcourseDAO= new CourseCompletedDAO();
         $completed_courses=$completedcourseDAO->getallcoursecomplete($userid);
@@ -95,50 +103,56 @@
 <hr>
 Available Course to Bid
 <?php
-if (count($courses)==0){
-    echo "No available course";
-}else {
-    echo"<table border='1px'>
-    <tr>
-        <th>Course ID</th>
-        <th>Title</th>
-        <th>Section ID</th>
-        <th>Day</th>
-        <th>Lesson Start Time</th>
-        <th>Lesson End Time</th>
-        <th>Instructor</th>
-        <th>Size</th> 
-        <th>Exam Date</th>
-        <th>Exam Start Time</th>
-        <th>Exam End Time</th>
-    </tr>";
+if ($roundID==1){
+    if (count($courses)==0){
+        echo "No available course";
+    }else {
+        echo"<table border='1px'>
+        <tr>
+            <th>Course ID</th>
+            <th>Title</th>
+            <th>Section ID</th>
+            <th>Day</th>
+            <th>Lesson Start Time</th>
+            <th>Lesson End Time</th>
+            <th>Instructor</th>
+            <th>Size</th> 
+            <th>Exam Date</th>
+            <th>Exam Start Time</th>
+            <th>Exam End Time</th>
+        </tr>";
 
-    $currentavailable = [];
-    foreach ($courses as $course){
-        // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
-        if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
-            //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
-            echo"<tr>
-            <td>{$course->getCourseid()}</td>
-            <td>{$course->getTitle()}</td>
-            <td>{$course->getSectionid()}</td>
-            <td>{$course->getDay()}</td>
-            <td>{$course->getStart()}</td>
-            <td>{$course->getEnd()}</td>
-            <td>{$course->getInstructor()}</td>
-            <td>{$course->getSize()}</td>
-            <td>{$course->getExamDate()}</td>
-            <td>{$course->getExamStart()}</td>
-            <td>{$course->getExamEnd()}</td>
-            </td>";
-            //storing the available courses 
-            array_push($currentavailable, [$course->getCourseid() , $course->getTitle() , $course->getSectionid() , $course->getDay(), 
-            $course->getStart(), $course->getEnd() , $course->getInstructor() , $course->getSize() , $course->getExamDate() , 
-            $course->getExamStart() , $course->getExamEnd()] );
+        $currentavailable = [];
+        foreach ($courses as $course){
+            // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
+            if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
+                //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
+                echo"<tr>
+                <td>{$course->getCourseid()}</td>
+                <td>{$course->getTitle()}</td>
+                <td>{$course->getSectionid()}</td>
+                <td>{$course->getDay()}</td>
+                <td>{$course->getStart()}</td>
+                <td>{$course->getEnd()}</td>
+                <td>{$course->getInstructor()}</td>
+                <td>{$course->getSize()}</td>
+                <td>{$course->getExamDate()}</td>
+                <td>{$course->getExamStart()}</td>
+                <td>{$course->getExamEnd()}</td>
+                </td>";
+                //storing the available courses 
+                array_push($currentavailable, [$course->getCourseid() , $course->getTitle() , $course->getSectionid() , $course->getDay(), 
+                $course->getStart(), $course->getEnd() , $course->getInstructor() , $course->getSize() , $course->getExamDate() , 
+                $course->getExamStart() , $course->getExamEnd()] );
+            }
         }
+        echo"</table>";
+        $_SESSION['availablecourses'] = $currentavailable;
     }
-    echo"</table>";
-    $_SESSION['availablecourses'] = $currentavailable;
+}elseif ($roundID==2){
+    print('Incomplete, should show all courses that is available for the user,should include the validation stuffs as well ');
+    //should show all courses that is available for the user 
+    //should include the validation stuffs as well
 }
 ?>
 
