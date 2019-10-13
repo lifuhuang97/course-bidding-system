@@ -17,6 +17,12 @@
 
     $bidDAO = New BidDAO();
     $biddedModule = $bidDAO->getBidInfo($userid);
+
+    //getting the round ID and roundstat
+    $adminround = new adminRoundDAO();
+    $roundDetail = $adminround->RetrieveRoundDetail();
+    $roundID = $roundDetail->getRoundID();
+    $roundstat = $roundDetail->getRoundStatus();
 ?>
 <html>  
 <body>
@@ -39,6 +45,7 @@
             </tr>
         </table>
         <input type='submit'>
+        <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
         <br>
         <br>
     <?php
@@ -52,6 +59,7 @@
     ?>
     </form>
     <hr>
+    
     All bidded courses
 </body>
 </html>
