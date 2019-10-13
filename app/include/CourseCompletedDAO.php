@@ -90,7 +90,6 @@ class CourseCompletedDAO {
         if (!$status){ //if ($status==False)
             //if there is error
             $err=$stmt->errorinfo();
-            var_dump($err);
         }
         $status=FALSE;
         if ($row=$stmt->fetch()){

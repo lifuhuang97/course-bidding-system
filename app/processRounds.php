@@ -13,6 +13,7 @@ $adminRoundDAO = new adminRoundDAO();
 $round = $adminRoundDAO->RetrieveRoundDetail();
 $roundStatus = $round->getRoundStatus();
 
+
 // Process bid results after "Clear round" is clicked
 if ($round->getRoundID() != 1 && $roundStatus != "Started"){
     $bidResults = $adminRoundDAO->clearRoundBids();
@@ -38,7 +39,7 @@ if(isset($bidResults)){
     foreach($bidResults as $result){
         echo "$result";
     }
-}elseif(isempty($allBidsWithStatus)){
+}elseif((isempty($allBidsWithStatus)) || ($round->getRoundID() == 2 && !isset($bidResults))){
     
     echo "<tr><th colspan = 5>Round is currently ongoing / inactive. </th></tr>";
 }

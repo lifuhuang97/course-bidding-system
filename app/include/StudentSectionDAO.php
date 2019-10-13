@@ -123,6 +123,82 @@ class StudentSectionDAO {
         $conn = null; 
     }
 
+    function DropSection($userid,$courseid){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Prepare SQL
+        $sql = "DELETE FROM STUDENT_SECTION WHERE userid=:userid and course=:courseid"; 
+    
+        // Run Query
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+        $stmt->bindParam(':courseid',$courseid,PDO::PARAM_STR);
+    
+        $status = False;
+    
+        if ($stmt->execute()){
+            $status=True;
+        }
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+    
+        return $status; // Boolean True or False
+    
+    }
+    
+    public function RetrieveAllStudentByCourseSection($course,$section){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        $sql = "SELECT * from STUDENT_SECTION WHERE course=:course AND section=:section order by userid asc";
+        // $sql = "SELECT coursesID, sectionID from section";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':course',$course,PDO::PARAM_STR);
+        $stmt->bindParam(':section',$section,PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        $studentList = [];
+        while ($row = $stmt->fetch() ) {
+            $studentList[] = new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section']);
+        }
+
+        $stmt = null;
+        $conn = null;
+        return $studentList;
+
+    }
+
+    public function RetrieveAll(){
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    
+        $sql = "SELECT * FROM STUDENT_SECTION ORDER BY course,userid";
+        $stmt = $conn->prepare($sql);
+                
+        //Execute SQL Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        //Retrieve Query Results (if any)
+        $students=[];
+        while ($row=$stmt->fetch()){
+            $students[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section']);
+        }
+        
+        // Clear Resources $stmt, $conn
+        $stmt = null;
+        $conn = null;
+    
+        // return (if any)
+        return $students;
+    }
+
 }
 
 ?>

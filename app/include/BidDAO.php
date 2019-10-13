@@ -62,7 +62,7 @@ class BidDAO {
         $coursesID=$section[0];
         $sectionID=$section[1];
 
-        $sql = "select * from bid where code = '$coursesID' and section = '$sectionID' order by amount desc;";
+        $sql = "select * from bid where code = '$coursesID' and section = '$sectionID' order by amount desc, userid;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);

@@ -46,6 +46,9 @@
     //check for course ID
     //check for section ID
     //check for bidding amount
+    //making sure all char is upper case
+    $courseId = strtoupper($courseId);
+    $sectionId = strtoupper($sectionId);
     foreach ($currentavailablecourses as $items){
         if ($items[0] == $courseId){
             $coursecounter += 1;

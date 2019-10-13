@@ -1,5 +1,236 @@
 <?php
 require_once 'common.php';
+function CheckStudentExist($userid){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM STUDENT WHERE userid=:userid";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $status=FALSE;
+    if ($row=$stmt->fetch()){
+        $status=TRUE;
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    return $status; //return true if student exist
+}
+function CheckCourseExist($courseid){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM COURSE WHERE courseID=:courseid";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':courseid',$courseid ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $status=FALSE;
+    if ($row=$stmt->fetch()){
+        $status=TRUE;
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    return $status; //return true if course exist
+}
+
+function CheckSectionExist($courseid,$sectionid){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM SECTION WHERE coursesID=:courseid AND sectionID=:sectionid";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':courseid',$courseid ,PDO::PARAM_STR);
+    $stmt->bindParam(':sectionid',$sectionid ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $status=FALSE;
+    if ($row=$stmt->fetch()){
+        $status=TRUE;
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    return $status; // return true if section exist
+}
+function CheckBidExist($userid,$course){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM BID WHERE userid=:userid AND code=:course";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid ,PDO::PARAM_STR);
+    $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $status=FALSE;
+    if ($row=$stmt->fetch()){
+        $status=$row['amount'];
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    return $status;// return bid amount of the course that used bidded
+}
+function CheckCourseEnrolled($userid,$course){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM STUDENT_SECTION WHERE userid=:userid AND course=:course";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid ,PDO::PARAM_STR);
+    $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $status=FALSE;
+    if ($row=$stmt->fetch()){
+        $status=$row['amount'];
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    return $status;// return amount if course enrolled
+}
+function CheckVacancy($course,$section,$retrieveValue=FALSE){
+
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM SECTION WHERE coursesID=:course AND sectionID=:section";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
+    $stmt->bindParam(':section',$section ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status=$stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $size=0;
+    if ($row=$stmt->fetch()){
+        $size=$row['size'];
+    }
+    
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
+
+    // return (if any)
+    if ($retrieveValue){
+        return $size;
+    }else{
+        return $size>1;// return true if there is vanancy
+    }
+    
+}
+function CheckMinBid($course,$section){
+    $vacancy=CheckVacancy($course,$section,TRUE);
+    $bidDAO= new BidDAO();
+    $allBid=$bidDAO->getAllBids([$course,$section]);
+    if (count($allBid)==0){
+        return 0;
+    }else{
+        $count=0;
+        $prevAmt = '';
+        $clearingAmt='';
+        $clearingID='';
+        $prevID = '';
+        while($count<count($allBid)){
+            if ($prevID==''){
+                $prevID=$count;
+                $prevAmt=$allBid[$count]->getAmount();
+            }elseif($allBid[$count]->getAmount()<$prevAmt){
+                if ($count<=$vacancy){
+                    if($clearingAmt=='' or $prevAmt<$clearingAmt){
+                        $clearingAmt=$prevAmt;
+                        $clearingID=$prevID;
+                    } 
+                }else{
+                    return [$clearingAmt,($vacancy-$clearingID-1)];//return minBid and remainingSize
+                } 
+                $prevID=$count;
+                $prevAmt=$allBid[$count]->getAmount();
+            }
+            $count++;
+        }
+        if ($clearingAmt!=''){
+            return [$clearingAmt,($vacancy-$clearingID-1)];//return minBid and remainingSize
+        }else{
+            return [$prevAmt+0.01,$vacancy];//return minBid+0.01 and remainingSize
+        }
+        
+    }
+}
+
+function DropSectionUpdateEdollar($userid,$course,$dollar){
+    $studentDAO=new studentDAO();
+    $student=$studentDAO->retrieveStudent($userid);
+    $eDollar=$student->getEdollar();
+    $studentSectionDAO= new StudentSectionDAO();
+    $status=$studentSectionDAO->DropSection($userid,$course);
+    if ($status){
+        $TotalAmt=$eDollar+$dollar;
+        $status=$studentDAO->updateDollar($userid,$TotalAmt);
+    }
+    return $status;
+
+}
+
 function CheckForCompletedPrerequisites($userid,$course){
     $prerequisiteDAO = new PrerequisiteDAO();
     $course_completedDAO=new CourseCompletedDAO();
@@ -31,7 +262,6 @@ function CheckForOwnSchool($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $status=FALSE;
     if ($row=$stmt->fetch()){
@@ -67,7 +297,6 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $info=[];
     if ($row=$stmt->fetch()){
@@ -87,14 +316,13 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $status=TRUE;
     while ($row=$stmt->fetch()){
-        if ($row['code']==$courseid){
+        if ($row['code']==$courseid && $row['section']==$sectionid){
             return TRUE;
         }
-        if ($row['day']==$info['day']){
+        if ($row['code']!=$courseid && $row['day']==$info['day']){
             if ($row['start']>=$info['start'] and $row['end']<=$info['end']){
                 // if the incoming fall inbetween the existing timetable
                 $status=FALSE;
@@ -136,7 +364,6 @@ function CheckExamTimeTable($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $info=[];
     if ($row=$stmt->fetch()){
@@ -156,7 +383,6 @@ function CheckExamTimeTable($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
 
     $status=TRUE;
@@ -212,7 +438,6 @@ function CheckForExceedOfBidSection($userid,$course){
         if (!$status){ //if ($status==False)
             //if there is error
             $err=$stmt->errorinfo();
-            var_dump($err);
         }
         $status=FALSE;
         $count=0;
@@ -249,7 +474,6 @@ function CheckForEdollar($userid, $amount, $course, $retrieveValue=FALSE){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $amt=0;
     if ($row=$stmt->fetch()){
@@ -271,7 +495,6 @@ function CheckForEdollar($userid, $amount, $course, $retrieveValue=FALSE){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $userEdollar=0;
     if ($row=$stmt->fetch()){

@@ -29,6 +29,9 @@
         exit;
     }
 
+    //making sure all char is upper case
+    $deletemod = strtoupper($deletemod);
+    $deletesection = strtoupper($deletesection);
     foreach ($biddedModule as $module){
         if ($module->getCode() == $deletemod){
             $modulecounter += 1;
