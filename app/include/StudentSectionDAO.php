@@ -106,8 +106,29 @@ class StudentSectionDAO {
 
     }
 
+    // Get successful results with bid status according to user id
+
+    public function getSuccessfulBidsByID($userid){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        $sql = "SELECT * from STUDENT_SECTION where userid = :userid and bidstatus = 'Success' order by bidstatus asc, amount desc";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        $bids = [];
+        while ($row = $stmt->fetch()) {
+            $bids[] = [$row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'], $row['bidround']];
+        }
+        return $bids;
+
+    }
+
     // Wipe table
-    
+
     public function removeAll() {
         // $sql = 'TRUNCATE TABLE BID';
         $sql = 'DELETE FROM STUDENT_SECTION';
