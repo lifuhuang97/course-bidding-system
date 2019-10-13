@@ -97,7 +97,6 @@
         }
     }
 
-    var_dump($roundStartEndTimes);
 
     echo"
                                 <th>Round 1</th>
