@@ -91,10 +91,10 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
     }
     $status=TRUE;
     while ($row=$stmt->fetch()){
-        if ($row['code']==$courseid){
+        if ($row['code']==$courseid && $row['section']==$sectionid){
             return TRUE;
         }
-        if ($row['day']==$info['day']){
+        if ($row['code']!=$courseid && $row['day']==$info['day']){
             if ($row['start']>=$info['start'] and $row['end']<=$info['end']){
                 // if the incoming fall inbetween the existing timetable
                 $status=FALSE;

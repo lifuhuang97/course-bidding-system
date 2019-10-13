@@ -44,6 +44,9 @@
 	        header("Location: editBid.php?token={$_GET['token']}");
 	        exit;
 		} else {
+			//making sure all char is upper case
+			$code = strtoupper($code);
+			$section = strtoupper($section);
 			foreach ($modules as $mods) {
 				$checkMod = $mods->getCode();
 				$checkSec = $mods->getSection();
