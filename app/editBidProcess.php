@@ -19,6 +19,12 @@
 
         $biddingDAO = New BidDAO();
         $modules = $biddingDAO->getBidInfo($_SESSION['success']);
+        $biddedCourse = [];
+        $biddedSection = [];
+        foreach ($modules as $mods) {
+        	array_push($biddedCourse, $mods->getCode());
+        	array_push($biddedSection, $mods->getSection());
+        }
     }
 
 	$code = $_POST['code'];
@@ -47,6 +53,13 @@
 			//making sure all char is upper case
 			$code = strtoupper($code);
 			$section = strtoupper($section);
+
+			if (!in_array($code, $biddedCourse)) {
+				array_push($_SESSION['errors2'], 'Please enter a valid Course ID');
+			} elseif (!in_array($section, $biddedSection)) {
+				array_push($_SESSION['errors2'], 'Please enter a valid Section ID');
+			}
+
 			foreach ($modules as $mods) {
 				$checkMod = $mods->getCode();
 				$checkSec = $mods->getSection();
@@ -59,6 +72,7 @@
 					}
 				}
 			}
+
 			if (count($_SESSION['errors2']) > 0) {
 				header("Location: editBid.php?token={$_GET['token']}");
 	        	exit;
