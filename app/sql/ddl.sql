@@ -63,8 +63,6 @@ create table BID (
 );
 
 create table ADMIN_ROUND (
-
-
     adminID varchar(100) not null,
     adminPW varchar(100) not null,
     adminTK varchar(300),
@@ -79,11 +77,14 @@ create table ADMIN_ROUND (
 
 insert into ADMIN_ROUND VALUES ("admin", "P@ssw0rd!547", null, 1, "Not Started", null, null, null, null);
 
-
 create table STUDENT_SECTION (
     userid varchar(128) not null,
     amount decimal(5,2) not null,
     course varchar(100) not null,
     section varchar(2) not null,
-	CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section)
+    bidstatus varchar(50),
+    bidround varchar(1),
+  CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section)
 );
+
+
