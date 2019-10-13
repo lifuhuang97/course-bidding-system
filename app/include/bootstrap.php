@@ -120,7 +120,10 @@ function doBootstrap() {
                     //$data[0]=>userid, $data[1]=>password, $data[2]=>name, $data[3]=>school, $data[4]=>edollar
                     $message=[];
                     for ($i=0;$i<=4;$i++){
-                        $data[$i]=strtoupper(trim($data[$i]));
+                        if($i == 3){
+                            $data[$i]=strtoupper(trim($data[$i]));
+                            }
+                            $data[$i]=trim($data[$i]);
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
@@ -177,7 +180,10 @@ function doBootstrap() {
                     //$data[0]=>Course, $data[1]=>School, $data[2]=>Title, $data[3]=>Description, $data[4]=>ExamDate, $data[5]=>ExamStart, $data[6]=>ExamEnd
                     $message=[];
                     for ($i=0;$i<=6;$i++){
+                        if($i == 0 or $i == 1){
                         $data[$i]=strtoupper(trim($data[$i]));
+                        }
+                        $data[$i]=trim($data[$i]);
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
@@ -247,7 +253,10 @@ function doBootstrap() {
                     //$data[0]=>Course, $data[1]=>Section, $data[2]=>Day, $data[3]=>Start, $data[4]=>End, $data[5]=>Instructor, $data[6]=>Venue, $data[7]=>Size
                     $message=[];
                     for ($i=0;$i<=7;$i++){
-                        $data[$i]=strtoupper(trim($data[$i]));
+                        if($i == 0 or $i == 1){
+                            $data[$i]=strtoupper(trim($data[$i]));
+                            }
+                            $data[$i]=trim($data[$i]);
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
@@ -378,7 +387,10 @@ function doBootstrap() {
                     //$data[0]=>userid, $data[1]=>code
                     $message=[];
                     for ($i=0;$i<=1;$i++){
-                        $data[$i]=strtoupper(trim($data[$i]));
+                        if($i == 1){
+                            $data[$i]=strtoupper(trim($data[$i]));
+                            }
+                            $data[$i]=trim($data[$i]);
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
@@ -427,7 +439,10 @@ function doBootstrap() {
                     //$data[0]=>userid, $data[1]=>amount, $data[2]=>code, $data[3]=>section
                     $message=[];
                     for ($i=0;$i<=3;$i++){
-                        $data[$i]=strtoupper(trim($data[$i]));
+                        if($i == 2 or $i == 3){
+                            $data[$i]=strtoupper(trim($data[$i]));
+                            }
+                            $data[$i]=trim($data[$i]);
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
@@ -533,8 +548,8 @@ function doBootstrap() {
             $result["error"]=$inputRowError;
         }
 	}
-	// header('Content-Type: application/json');
-	// echo json_encode($result, JSON_PRETTY_PRINT);
+	header('Content-Type: application/json');
+	echo json_encode($result, JSON_PRETTY_PRINT);
 
 }
 ?>

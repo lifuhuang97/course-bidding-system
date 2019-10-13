@@ -142,7 +142,7 @@
                                                     <th>Lesson End Time</th>
                                                     <th>Instructor</th>
                                                     <th>Amount</th>
-                                                    <th>Bid Status</th>
+                                                    <th>Bid Result</th>
                                                     </tr>";
                                                 foreach ($biddedModule as $module){
                                                     
@@ -191,6 +191,14 @@
                                 <td>Enrolled TimeTable</td>
                             </tr>
                             <tr>
+<?php
+
+// $EnrolledCourses = $bidresultsDAO->getSuccessfulBidsByID($loginID);
+// foreach($EnrolledCourses as $course){
+//     var_dump($course);
+// }
+
+?>
                                 <td><a href='dropSection.php'>Drop a section</a></td>
                             </tr>
                         </table>

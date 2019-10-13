@@ -72,11 +72,11 @@ class AdminRoundDAO {
             $totalBidCount = count($selected);
             if ($totalBidCount < $section[2]){
                 foreach($selected as $bid){
-                    $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Successful'</td></tr>";
+                    $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Success'</td></tr>";
                     $successBidsDAO->addSuccessfulBid($bid[0],$bid[1],$bid[2],$bid[3]);
                 }
             }else{
-                $bidStatus = "Successful";
+                $bidStatus = "Success";
                 $vacancy = $section[2];
                 $count = 0;
                 $prevAmt = 0;
@@ -114,10 +114,10 @@ class AdminRoundDAO {
 
                                 if( $bidAmt < $clearingAmt){
                                     $prevAmt = $clearingAmt;
-                                    $bidStatus = "Unsuccessful";
+                                    $bidStatus = "Fail";
                                 }else if($bidAmt == $clearingAmt && $clearingAmtCount == 2){
                                     $tempDataTable = $bidDataTable;
-                                    $bidStatus = "Unsuccessful";
+                                    $bidStatus = "Fail";
                                 }
                                 if($bidAmt == $clearingAmt){
                                     $clearingAmtCount += 1;
@@ -134,7 +134,7 @@ class AdminRoundDAO {
                 foreach($bidDataTableArray as $bid){
                     $counter++;
                     if($bid[1] == $clearingAmt){
-                        $changeState = array(4=>"Unsuccessful");
+                        $changeState = array(4=>"Fail");
                         $bid = array_replace($bid, $changeState);
                         $bidDataTableArray[$counter-1] = $bid;
                     }
@@ -143,7 +143,7 @@ class AdminRoundDAO {
             if(isset($bidDataTableArray)){
             foreach($bidDataTableArray as $bid){
 
-                if($bid[4] == "Unsuccessful"){
+                if($bid[4] == "Fail"){
                     $tempbid = new Bid($bid[0],$bid[1],$bid[2],$bid[3]);
                     $studentDAO = new StudentDAO();
                     $theStudent = $studentDAO->retrieveStudent($bid[0]);

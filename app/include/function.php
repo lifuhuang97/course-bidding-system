@@ -31,7 +31,6 @@ function CheckForOwnSchool($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $status=FALSE;
     if ($row=$stmt->fetch()){
@@ -67,7 +66,6 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $info=[];
     if ($row=$stmt->fetch()){
@@ -87,7 +85,6 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $status=TRUE;
     while ($row=$stmt->fetch()){
@@ -136,7 +133,6 @@ function CheckExamTimeTable($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $info=[];
     if ($row=$stmt->fetch()){
@@ -156,7 +152,6 @@ function CheckExamTimeTable($userid,$courseid){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
 
     $status=TRUE;
@@ -212,7 +207,6 @@ function CheckForExceedOfBidSection($userid,$course){
         if (!$status){ //if ($status==False)
             //if there is error
             $err=$stmt->errorinfo();
-            var_dump($err);
         }
         $status=FALSE;
         $count=0;
@@ -249,7 +243,6 @@ function CheckForEdollar($userid, $amount, $course, $retrieveValue=FALSE){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $amt=0;
     if ($row=$stmt->fetch()){
@@ -271,7 +264,6 @@ function CheckForEdollar($userid, $amount, $course, $retrieveValue=FALSE){
     if (!$status){ //if ($status==False)
         //if there is error
         $err=$stmt->errorinfo();
-        var_dump($err);
     }
     $userEdollar=0;
     if ($row=$stmt->fetch()){
