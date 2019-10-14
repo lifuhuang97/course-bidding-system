@@ -82,12 +82,16 @@ class StudentSectionDAO {
 
         $bids = [];
         while ($row = $stmt->fetch() ) {
-            $bids[] = [$row['userid'],$row['amount'],$row['course'],$row['section']];
+            // $bids[] = [$row['userid'],$row['amount'],$row['course'],$row['section']];
+            $bids[] = new Bid($row['userid'],$row['amount'],$row['course'],$row['section']);
         }
         return $bids;
 
     }
     
+    
+
+
     // Get all successful results with bid status
     public function getAllBidsWithStatus(){
         $connMgr = new ConnectionManager();
@@ -183,7 +187,7 @@ class StudentSectionDAO {
 
         $studentList = [];
         while ($row = $stmt->fetch() ) {
-            $studentList[] = new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section']);
+            $studentList[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
         }
 
         $stmt = null;
@@ -209,7 +213,7 @@ class StudentSectionDAO {
         //Retrieve Query Results (if any)
         $students=[];
         while ($row=$stmt->fetch()){
-            $students[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section']);
+            $students[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
         }
         
         // Clear Resources $stmt, $conn

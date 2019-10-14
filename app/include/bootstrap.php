@@ -268,7 +268,7 @@ function doBootstrap() {
                             //check if course exist in course.csv
                             $message[]="invalid course";
                         }
-                        if($data[1][0]!="S" || substr($data[1],1)<1 || substr($data[1],1)>99){
+                        if($data[1][0]!="S" || !is_numeric(substr($data[1],1)) || substr($data[1],1)<1 || substr($data[1],1)>99){
                             //check if first character is not a "S" and check numbers is between 1 to 99
                             $message[]="invalid section";
                         }

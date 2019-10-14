@@ -72,8 +72,14 @@ class AdminRoundDAO {
             $totalBidCount = count($selected);
             if ($totalBidCount < $section[2]){
                 foreach($selected as $bid){
+                    $tempbid = [];
+                    $tempbid[] = $bid->getUserid();
+                    $tempbid[] = $bid->getAmount();
+                    $tempbid[] = $bid->getCode();
+                    $tempbid[] = $bid->getSection();
+                    $bid = $tempbid;
                     $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Success'</td></tr>";
-                    $successBidsDAO->addSuccessfulBid($bid[0],$bid[1],$bid[2],$bid[3]);
+                    $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],'Success',$roundNumber);
                 }
             }else{
                 $bidStatus = "Success";

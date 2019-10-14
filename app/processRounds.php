@@ -34,12 +34,13 @@ Bidding Results
 </tr>
 
 <?php
+
 // If round is cleared, print bid results to admin
 if(isset($bidResults)){
     foreach($bidResults as $result){
         echo "$result";
     }
-}elseif((isempty($allBidsWithStatus)) || ($round->getRoundID() == 2 && !isempty($bidResults))){
+}elseif($roundStatus == "Started"){
     echo "<tr><th colspan = 5>Round is currently ongoing / inactive. </th></tr>";
 }
 
