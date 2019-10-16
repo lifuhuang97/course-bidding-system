@@ -547,9 +547,20 @@ function doBootstrap() {
             $result["status"]="error";
             $result["error"]=$inputRowError;
         }
-	}
-	header('Content-Type: application/json');
-	echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+    $pathSegments = explode('/',$_SERVER['PHP_SELF']); # Current url
+    $numSegment = count($pathSegments);
+    $currentFolder = $pathSegments[$numSegment - 2]; # Current folder
+    $page = $pathSegments[$numSegment -1]; # Current page
+    
+    if ($currentFolder == "json"){	
+        # if we're in JSON, then we should return JSON
+        header('Content-Type: application/json');
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }elseif ($page == "bootstrap-process.php"){
+        # If page is coming from bootstrap-process.php
+        return $result;
+    }
 
 }
 ?>
