@@ -9,6 +9,13 @@ class Sort {
 	function bootstrap($a, $b)
 	{
 		return strcmp(end($a),end($b));
+    }
+    
+    function field($a, $b)
+	{
+        $aValue=substr($a,strrpos($a,' '));
+        $bValue=substr($b,strrpos($b,' '));
+		return strcmp($aValue,$bValue);
 	}
 	
 

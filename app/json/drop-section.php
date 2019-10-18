@@ -1,28 +1,39 @@
 <?php
 require_once '../include/common.php';
-require_once '../include/function.php';
+require_once '../include/drop-section.php';
+require_once '../include/protect.php';
+
 if (isset($_REQUEST['r'])){
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
-    if (!isset($request['userid']) || strlen(trim($request['userid']))==0){
+    if (!isset($request['userid'])){
         $errors[]="missing userid";
+    }elseif(strlen(trim($request['userid']))==0){
+        $errors[]="blank userid";
     }else{
         $userid=$request['userid'];
     }
-    if (!isset($request['course']) || strlen(trim($request['course']))==0){
+    if (!isset($request['course'])){
         $errors[]="missing course";
+    }elseif(strlen(trim($request['course']))==0){
+        $errors[]="blank course";
     }else{
         $course=$request['course'];
     }
-    if (!isset($request['section']) || strlen(trim($request['section']))==0){
+    if (!isset($request['section'])){
         $errors[]="missing section";
+    }elseif(strlen(trim($request['section']))==0){
+        $errors[]="blank section";
     }else{
         $section=$request['section'];
     }
+    // if (isset($tokenError)){
+    //     $errors=array_merge ($tokenError,$errors);
+    // }
 }else{
-    $errors = [ isMissingOrEmpty ('userid'), 
-            isMissingOrEmpty ('course'),
-            isMissingOrEmpty ('section') ];
+    $errors = array_merge ($tokenError,[ isMissingOrEmpty ('userid'), 
+                                        isMissingOrEmpty ('course'),
+                                        isMissingOrEmpty ('section') ]);
     $errors = array_filter($errors);
     if (isEmpty($errors)) {
         $userid = $_REQUEST['userid'];
@@ -31,53 +42,15 @@ if (isset($_REQUEST['r'])){
     }
 }
 if (!isEmpty($errors)) {
+    $sortclass = new Sort();
+    $errors = $sortclass->sort_it($errors,"field");
     $result = [
         "status" => "error",
         "message" => array_values($errors)
         ];
 }
 else{
-    //validate
-    $courseValid=TRUE;
-    if(!CheckCourseExist($course)){
-        // check if code exist in course table
-        $errors[]="invalid course";
-        $courseValid=FALSE;
-    }
-    if(!CheckStudentExist($userid)){
-        // check if userid exist in student table
-        $errors[]="invalid userid";
-    }
-    if($courseValid && !CheckSectionExist($course,$section)){
-        // check if section exist in section table
-        $errors[]="invalid section";
-    }
-    $adminRoundDAO=new adminRoundDAO();
-    $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
-    $roundID=$roundDetail->getRoundID();
-    $roundStatus=$roundDetail->getRoundStatus();
-    if ($roundStatus=="Not Started" && $roundID==1){
-        $errors[]="round not active";
-    }
-    //no such bid
-    if (isEmpty($errors)){
-        $status=CheckCourseEnrolled($userid,$course);
-        if ($status===FALSE){
-            $errors[]="no such enrollment record";
-        }else{
-            $status=DropSectionUpdateEdollar($userid,$course,$status);
-        }
-    }
-    if (!isEmpty($errors)){
-        $result = [
-            "status" => "error",
-            "message" => array_values($errors)
-            ];
-    }else{
-        $result = [
-            "status" => "success"
-            ];
-    }
+    $result=doDropSection($userid,$course,$section);
 }
 header('Content-Type: application/json');
 echo json_encode($result, JSON_PRETTY_PRINT);

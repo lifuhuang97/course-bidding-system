@@ -1,22 +1,31 @@
 <?php
 require_once '../include/common.php';
-require_once '../include/function.php';
+require_once '../include/section-dump.php';
+require_once '../include/protect.php';
+
 if (isset($_REQUEST['r'])){
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
-    if (!isset($request['course']) || strlen(trim($request['course']))==0){
+    if (!isset($request['course'])){
         $errors[]="missing course";
+    }elseif(strlen(trim($request['course']))==0){
+        $errors[]="blank course";
     }else{
         $course=$request['course'];
     }
-    if (!isset($request['section']) || strlen(trim($request['section']))==0){
+    if (!isset($request['section'])){
         $errors[]="missing section";
+    }elseif(strlen(trim($request['section']))==0){
+        $errors[]="blank section";
     }else{
         $section=$request['section'];
     }
+    // if (isset($tokenError)){
+    //     $errors=array_merge ($tokenError,$errors);
+    // }
 }else{
-    $errors = [isMissingOrEmpty ('course'),
-            isMissingOrEmpty ('section') ];
+    $errors = array_merge ($tokenError,[isMissingOrEmpty ('course'),
+                                        isMissingOrEmpty ('section') ]);
     $errors = array_filter($errors);
     if (isEmpty($errors)) {
         $course = $_REQUEST['course'];
@@ -24,42 +33,15 @@ if (isset($_REQUEST['r'])){
     }
 }
 if (!isEmpty($errors)) {
+    $sortclass = new Sort();
+    $errors = $sortclass->sort_it($errors,"field");
     $result = [
         "status" => "error",
         "message" => array_values($errors)
         ];
 }
 else{
-    //validate
-    $courseValid=TRUE;
-    if(!CheckCourseExist($course)){
-        // check if code exist in course table
-        $errors[]="invalid course";
-        $courseValid=FALSE;
-    }
-    if($courseValid && !CheckSectionExist($course,$section)){
-        // check if section exist in section table
-        $errors[]="invalid section";
-    }
-    if (!isEmpty($errors)){
-        $result = [
-            "status" => "error",
-            "message" => array_values($errors)
-            ];
-    }else{
-        $StudentSectionDAO=new StudentSectionDAO();
-        $students=$StudentSectionDAO->RetrieveAllStudentByCourseSection($course,$section);
-        $StudentList=[];
-        foreach ($students as $student){
-            $StudentList[]=["userid"=>$student->getUserid(),
-                        "amount"=>$student->getAmount()];
-        }
-        $result = [
-            "status" => "success",
-            "students" => $StudentList
-            ];
-
-    }
+    $result=doSectionDump($course,$section);
 }
 header('Content-Type: application/json');
 echo json_encode($result, JSON_PRETTY_PRINT);

@@ -5,7 +5,7 @@ require_once 'function.php';
 
 function doBootstrap() {
 		
-	$errors = array();
+    $errors = array();
 	# need tmp_name -a temporary name create for the file and stored inside apache temporary folder- for proper read address
 	$zip_file = $_FILES["bootstrap-file"]["tmp_name"];
 
@@ -524,7 +524,7 @@ function doBootstrap() {
 		$errors = $sortclass->sort_it($errors,"bootstrap");
 		$result = [ 
 			"status" => "error",
-			"messages" => $errors
+			"message" => $errors
 		];
 	}
 	else
@@ -548,19 +548,6 @@ function doBootstrap() {
             $result["error"]=$inputRowError;
         }
     }
-    $pathSegments = explode('/',$_SERVER['PHP_SELF']); # Current url
-    $numSegment = count($pathSegments);
-    $currentFolder = $pathSegments[$numSegment - 2]; # Current folder
-    $page = $pathSegments[$numSegment -1]; # Current page
-    
-    if ($currentFolder == "json"){	
-        # if we're in JSON, then we should return JSON
-        header('Content-Type: application/json');
-        echo json_encode($result, JSON_PRETTY_PRINT);
-    }elseif ($page == "bootstrap-process.php"){
-        # If page is coming from bootstrap-process.php
-        return $result;
-    }
-
+    return $result;
 }
 ?>

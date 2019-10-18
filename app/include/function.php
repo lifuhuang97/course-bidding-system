@@ -208,8 +208,10 @@ function CheckMinBid($course,$section){
             }
             $count++;
         }
-        if ($clearingAmt!=''){
+        if ($clearingAmt!='' && $count>$vacancy){
             return [$clearingAmt,($vacancy-$clearingID-1)];//return minBid and remainingSize
+        }elseif($clearingAmt!=''){
+            return [$prevAmt,($vacancy-$prevID-1)];//return minBid and remainingSize
         }else{
             return [$prevAmt+0.01,$vacancy];//return minBid+0.01 and remainingSize
         }
