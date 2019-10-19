@@ -14,8 +14,11 @@
 	background: linear-gradient(#2a0845, #6441A5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .navbar-left__profile, .navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout, .navbar-left__smuLogo{
-	padding: 20px;
+	padding: 15px;
 	text-align: right;
+}
+.navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout{
+	font-size: small;
 }
 .profile-picture{
 	display: flex;
@@ -37,7 +40,7 @@
 .navbar-left__completed:hover, .navbar-left__addCourse:hover, .navbar-left__editBid:hover, .navbar-left__dropCourse:hover, .navbar-left__logout:hover{
 	background: white;
 	color: #6441A5;
-	border-radius: 30px;
+	/*border-radius: 30px;*/
 }
 .display-right__table-dates, .display-right__table-cart, .display-right__table-enrolment{
 	padding: 20px;
@@ -53,4 +56,42 @@ table{
 th, td{
 	text-align: center;
 	width: 10em;
+}
+.form-container{
+	padding: 2em;
+    width: 25em;
+    height: 17em;
+}
+.form-container form{
+	border: 1px solid #6441A5;
+}
+.form-header{
+	width: 100%;
+    height: 3em;
+    background: #6441A5;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(#2a0845, #6441A5);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(#2a0845, #6441A5);
+	color: white;
+}
+.form-group{
+	padding: 0.5em;
+}
+.form-header p{
+	margin: 0;
+    font-size: larger;
+    padding-top: 0.5em;
+    padding-left: 1em;
+}
+.form-control{
+	width: 15em;
+    height: 2em;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+.submit-btn{
+	width: 5em;
+    height: 2em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 }
