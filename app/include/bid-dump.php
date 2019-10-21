@@ -19,17 +19,27 @@ function doBidDump($course,$section) {
             "message" => array_values($errors)
             ];
     }else{
+        $adminRoundDAO = new adminRoundDAO();
+        $roundDetail = $adminRoundDAO->RetrieveRoundDetail();
+        $roundID=$roundDetail->getRoundID();
+        $roundStatus=$roundDetail->getRoundStatus();
+
         $bidDAO=new BidDAO();
         $AllBids=$bidDAO->getAllBids([$course,$section]);
         $minBid=CheckMinBid($course,$section)[0];
         $bidList=[];
         $index=1;
         foreach ($AllBids as $onebid){
-            if ($onebid->getAmount()>=$minBid){
-                $result='in';
+            if ($roundID==1 && $roundStatus=='Started'){
+                $result='-';
             }else{
-                $result="out";
+                if ($onebid->getAmount()>=$minBid){
+                    $result='in';
+                }else{
+                    $result="out";
+                }
             }
+            
             $bidList[]=["row"=>$index,
                         "userid"=>$onebid->getUserid(),
                         "amount"=>$onebid->getAmount(),
