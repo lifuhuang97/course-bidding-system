@@ -183,12 +183,14 @@ function CheckMinBid($course,$section){
     $bidDAO= new BidDAO();
     $allBid=$bidDAO->getAllBids([$course,$section]);
     if (count($allBid)==0){
-        return 0;
+        return 10;
     }else{
         $count=0;
+        //previous amount, the initial amount 
         $prevAmt = '';
         $clearingAmt='';
         $clearingID='';
+        //storing of count value
         $prevID = '';
         while($count<count($allBid)){
             if ($prevID==''){
@@ -216,6 +218,39 @@ function CheckMinBid($course,$section){
             return [$prevAmt+0.01,$vacancy];//return minBid+0.01 and remainingSize
         }
         
+    }
+}
+
+function CheckMinBid1($course,$section){
+    $vacancy=CheckVacancy($course,$section,TRUE);
+    $bidDAO= new BidDAO();
+    $allBid=$bidDAO->getAllBids([$course,$section]);
+    $value = 10.00;
+    $isequal = False;
+    $ismorethan = False;
+    if ($vacancy > count($allBid)){
+        return [$value];
+    }
+    if ($vacancy == count($allBid)){
+        $count=0;
+        $valuearray = [];
+        while($count<count($allBid)){
+            array_push($valuearray,$allBid[$count]->getAmount());
+            $count +=1;
+        }
+        return [$valuearray[$vacancy-1]+1];
+    }
+    if ($vacancy < count($allBid)){
+        $count=0;
+        $valuearray = [];
+        while($count<count($allBid)){
+            array_push($valuearray,$allBid[$count]->getAmount());
+            $count +=1;
+        }
+        $ismorethan = True;
+    }
+    if ($valuearray[$vacancy-1] >= $valuearray[$vacancy]){
+        return [$valuearray[$vacancy-1]+1];
     }
 }
 
@@ -441,12 +476,29 @@ function CheckForExceedOfBidSection($userid,$course){
             //if there is error
             $err=$stmt->errorinfo();
         }
-        $status=FALSE;
         $count=0;
         while ($row=$stmt->fetch()){
             if ($row['code']!=$course){
                 $count++;
             }
+        }
+
+        // Prepare SQL
+        $sql = "SELECT *  FROM student_section where userid=:userid"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+        // Run Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status = $stmt->execute();
+    
+        // check if query fail
+        if (!$status){ //if ($status==False)
+            //if there is error
+            $err=$stmt->errorinfo();
+        }
+        while ($row=$stmt->fetch()){
+            $count++;
         }
 
         // Close Query/Connection

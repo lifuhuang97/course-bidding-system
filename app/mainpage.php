@@ -3,7 +3,7 @@
     require_once 'include/protect.php';
 
     if (!isset($_SESSION['success'])){
-        header('Location.php');
+        header('Location:login.php');
         exit;
     }
     else{
@@ -126,6 +126,9 @@
 
                             <tr></tr>
                                     <?php
+                                        //getting the round ID and roundstat
+                                        //print ($roundID);
+
                                         if (isset($biddedModule)){
                                             if (count($biddedModule)==0){
                                                 echo "<tr>
@@ -142,8 +145,13 @@
                                                     <th>Lesson End Time</th>
                                                     <th>Instructor</th>
                                                     <th>Amount</th>
-                                                    <th>Bid Result</th>
-                                                    </tr>";
+                                                    <th>Bid Result</th>";
+                                                    if ($roundID==2){
+                                                        //should the round be started then they start to show the min bid?
+                                                        echo "<th>Min Bid Required</th>";
+                                                    };
+                                                    echo "</tr>";
+
                                                 foreach ($biddedModule as $module){
                                                     
                                                     echo "<tr><td>";
@@ -155,6 +163,9 @@
                                                     $course = $module->getCourseDetailsByCourseSection();
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
+                                                    //retrieve minimum bid
+                                                    $minbid = CheckMinBid1($course->getCourseid(),$course->getSectionid());
+
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
                                                         <td>{$course->getDay()}</td>
@@ -167,6 +178,11 @@
                                                         }else{
                                                             echo "<td>Pending</td>";
                                                         }
+                                                        if ($roundID==2){
+                                                            //should the round be started then they start to show the min bid?
+                                                            echo "<td>$minbid[0]</td>";
+                                                        }; 
+                                                        
                                                     echo "</tr>";
                                                 }
                                             }
@@ -178,6 +194,7 @@
                                         }
                                     ?>
                             <tr>
+                                <td colspan='8' align='center'><a href='search.php?token=<?php echo $_GET['token']?>'>Search</a></td>
                                 <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td>
                             </tr>
                         </table>

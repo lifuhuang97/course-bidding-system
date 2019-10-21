@@ -85,6 +85,13 @@ class CourseDAO {
             ";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':school',$school ,PDO::PARAM_STR);
+        }else{
+            $sql = "SELECT * 
+                FROM COURSE c, SECTION s
+                WHERE 
+                    c.courseID=s.coursesID;
+            ";
+            $stmt = $conn->prepare($sql);
         }
                 
         //Execute SQL Query

@@ -58,7 +58,7 @@
     $sectionId = strtoupper($sectionId);
 
     //------------------------------------------------------------------------------------------------------------------------
-    if ($roundID == 1 && $roundstat == 'Started'){
+    if ($roundID == 1 || $roundID == 2 && $roundstat == 'Started'){
         foreach ($currentavailablecourses as $items){
             if ($items[0] == $courseId){
                 $coursecounter += 1;
