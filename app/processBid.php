@@ -46,7 +46,16 @@
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
     }
+    //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
 
+    $valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
+    if (($bidAmt - $valuetwodecimalplace) > 0){
+        array_push($_SESSION['errors1'], 'Please enter a value and round up to 2 decimal place');
+    }
+    if (count($_SESSION['errors1']) > 0) {
+        header("Location: makebid.php?token={$_GET['token']}");
+        exit;
+    }
     //check phase 2
     //after making sure that the inputs by the users are not empty/blank 
     //we can do the following checks,
@@ -83,6 +92,13 @@
             array_push($_SESSION['errors1'], 'Insufficient Balance');
         }
 
+        //check if use bid equal or more than the min required bid
+        if ($roundID==2){
+            $minbid = CheckMinBid1($courseId,$sectionId);
+            if ($bidAmt <= $minbid){
+                array_push($_SESSION['errors1'], 'Please bid higher than the Minimum Required Bid.');
+            }
+        }
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
             exit;

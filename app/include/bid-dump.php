@@ -3,6 +3,8 @@ require_once 'common.php';
 require_once 'function.php';
 function doBidDump($course,$section) {
     $errors=array();
+    $course=strtoupper($course);
+    $section=strtoupper($section);
     $courseValid=TRUE;
     if(!CheckCourseExist($course)){
         // check if code exist in course table
@@ -26,7 +28,7 @@ function doBidDump($course,$section) {
 
         $bidDAO=new BidDAO();
         $AllBids=$bidDAO->getAllBids([$course,$section]);
-        $minBid=CheckMinBid($course,$section)[0];
+        $minBid=CheckMinBid($course,$section,FALSE);
         $bidList=[];
         $index=1;
         foreach ($AllBids as $onebid){

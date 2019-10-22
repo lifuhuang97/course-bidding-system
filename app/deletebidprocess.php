@@ -16,7 +16,7 @@
     $modulecounter = 0;
     $sectioncounter = 0;
 
-    //getting the round ID and roundstat
+    //Phase1 getting the round ID and roundstat
     $adminround = new adminRoundDAO();
     $roundDetail = $adminround->RetrieveRoundDetail();
     $roundID = $roundDetail->getRoundID();
@@ -35,6 +35,15 @@
         exit;
     }
 
+    //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
+    $valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
+    if (($bidAmt - $valuetwodecimalplace) > 0){
+        array_push($_SESSION['errors1'], 'Please enter a value and round up to 2 decimal place');
+    }
+    if (count($_SESSION['errors1']) > 0) {
+        header("Location: makebid.php?token={$_GET['token']}");
+        exit;
+    }
     //making sure all char is upper case
     $deletemod = strtoupper($deletemod);
     $deletesection = strtoupper($deletesection);

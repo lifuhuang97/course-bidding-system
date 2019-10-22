@@ -4,6 +4,8 @@ require_once 'function.php';
 
 function doUpdateBid($userid,$amount,$course,$section) {
     $errors=array();
+    $course=strtoupper($course);
+    $section=strtoupper($section);
     if(!is_numeric($amount) || ($amount<10) || $amount!=number_format($amount,2,'.','')){
         //check if is numeric value, value less than 10  and not more 2 decimal point
         $errors[]="invalid amount";
@@ -23,7 +25,12 @@ function doUpdateBid($userid,$amount,$course,$section) {
         $errors[]="invalid userid";
     }
     if (isEmpty($errors)){
-        if (CheckMinBid($course,$section)[0]>$amount){
+        //round 
+        $adminRoundDAO=new adminRoundDAO();
+        $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
+        $roundID=$roundDetail->getRoundID();
+        $roundStatus=$roundDetail->getRoundStatus();
+        if ($roundID==2 && CheckMinBid($course,$section)>$amount){
             $errors[]="bid too low";
         }
         if (!CheckForEdollar($userid,$amount,$course)){
@@ -38,11 +45,6 @@ function doUpdateBid($userid,$amount,$course,$section) {
         if (!CheckForCompletedPrerequisites($userid,$course)){
             $errors[]="incomplete prerequisites";
         }
-        //round ended
-        $adminRoundDAO=new adminRoundDAO();
-        $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
-        $roundID=$roundDetail->getRoundID();
-        $roundStatus=$roundDetail->getRoundStatus();
         if ($roundStatus!="Started"){
             $errors[]="round ended";
         }

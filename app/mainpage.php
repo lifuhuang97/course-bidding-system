@@ -164,7 +164,7 @@
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
                                                     //retrieve minimum bid
-                                                    $minbid = CheckMinBid1($course->getCourseid(),$course->getSectionid());
+                                                    $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
 
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
@@ -180,7 +180,7 @@
                                                         }
                                                         if ($roundID==2){
                                                             //should the round be started then they start to show the min bid?
-                                                            echo "<td>$minbid[0]</td>";
+                                                            echo "<td>$minbid</td>";
                                                         }; 
                                                         
                                                     echo "</tr>";

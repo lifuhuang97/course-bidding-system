@@ -3,6 +3,8 @@ require_once 'common.php';
 require_once 'function.php';
 function doDropSection($userid,$course,$section) {
     $errors=array();
+    $course=strtoupper($course);
+    $section=strtoupper($section);
     $courseValid=TRUE;
     if(!CheckCourseExist($course)){
         // check if code exist in course table

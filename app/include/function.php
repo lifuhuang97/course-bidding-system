@@ -158,12 +158,26 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
       
     //Execute SQL Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $status=$stmt->execute();
+    $stmt->execute();
 
     //Retrieve Query Results (if any)
     $size=0;
     if ($row=$stmt->fetch()){
         $size=$row['size'];
+    }
+
+    $sql = "SELECT * FROM student_section WHERE course=:course AND section=:section";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
+    $stmt->bindParam(':section',$section ,PDO::PARAM_STR);
+      
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $stmt->execute();
+
+    //Retrieve Query Results (if any)
+    if ($row=$stmt->fetch()){
+        $size--;
     }
     
     // Clear Resources $stmt, $conn
@@ -174,62 +188,18 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
     if ($retrieveValue){
         return $size;
     }else{
-        return $size>1;// return true if there is vanancy
+        return $size>0;// return true if there is vanancy
     }
     
 }
-function CheckMinBid($course,$section){
-    $vacancy=CheckVacancy($course,$section,TRUE);
-    $bidDAO= new BidDAO();
-    $allBid=$bidDAO->getAllBids([$course,$section]);
-    if (count($allBid)==0){
-        return 10;
-    }else{
-        $count=0;
-        //previous amount, the initial amount 
-        $prevAmt = '';
-        $clearingAmt='';
-        $clearingID='';
-        //storing of count value
-        $prevID = '';
-        while($count<count($allBid)){
-            if ($prevID==''){
-                $prevID=$count;
-                $prevAmt=$allBid[$count]->getAmount();
-            }elseif($allBid[$count]->getAmount()<$prevAmt){
-                if ($count<=$vacancy){
-                    if($clearingAmt=='' or $prevAmt<$clearingAmt){
-                        $clearingAmt=$prevAmt;
-                        $clearingID=$prevID;
-                    } 
-                }else{
-                    return [$clearingAmt,($vacancy-$clearingID-1)];//return minBid and remainingSize
-                } 
-                $prevID=$count;
-                $prevAmt=$allBid[$count]->getAmount();
-            }
-            $count++;
-        }
-        if ($clearingAmt!='' && $count>$vacancy){
-            return [$clearingAmt,($vacancy-$clearingID-1)];//return minBid and remainingSize
-        }elseif($clearingAmt!=''){
-            return [$prevAmt,($vacancy-$prevID-1)];//return minBid and remainingSize
-        }else{
-            return [$prevAmt+0.01,$vacancy];//return minBid+0.01 and remainingSize
-        }
-        
-    }
-}
 
-function CheckMinBid1($course,$section){
+function CheckMinBid($course,$section,$user=TRUE){
     $vacancy=CheckVacancy($course,$section,TRUE);
     $bidDAO= new BidDAO();
     $allBid=$bidDAO->getAllBids([$course,$section]);
     $value = 10.00;
-    $isequal = False;
-    $ismorethan = False;
     if ($vacancy > count($allBid)){
-        return [$value];
+        return $value;
     }
     if ($vacancy == count($allBid)){
         $count=0;
@@ -238,7 +208,11 @@ function CheckMinBid1($course,$section){
             array_push($valuearray,$allBid[$count]->getAmount());
             $count +=1;
         }
-        return [$valuearray[$vacancy-1]+1];
+        if ($user){
+            return $valuearray[$vacancy-1]+1;
+        }else{
+            return $valuearray[$vacancy-1];
+        }
     }
     if ($vacancy < count($allBid)){
         $count=0;
@@ -247,10 +221,20 @@ function CheckMinBid1($course,$section){
             array_push($valuearray,$allBid[$count]->getAmount());
             $count +=1;
         }
-        $ismorethan = True;
     }
-    if ($valuearray[$vacancy-1] >= $valuearray[$vacancy]){
-        return [$valuearray[$vacancy-1]+1];
+    if ($valuearray[$vacancy-1] == $valuearray[$vacancy]){
+        if ($user){
+            return $valuearray[$vacancy-1]+1;
+        }else{
+            return $valuearray[$vacancy-1]+0.01;
+        }
+    }else{
+        //$valuearray[$vacancy-1] > $valuearray[$vacancy]
+        if ($user){
+            return $valuearray[$vacancy-1]+1;
+        }else{
+            return $valuearray[$vacancy-1];
+        }
     }
 }
 
@@ -328,13 +312,8 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
 
     // Run Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $status = $stmt->execute();
+    $stmt->execute();
 
-    // check if query fail
-    if (!$status){ //if ($status==False)
-        //if there is error
-        $err=$stmt->errorinfo();
-    }
     $info=[];
     if ($row=$stmt->fetch()){
         $info=['day'=>$row['day'],'start'=>$row['start'],'end'=>$row['end']];
@@ -347,13 +326,8 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
 
     // Run Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $status = $stmt->execute();
+    $stmt->execute();
 
-    // check if query fail
-    if (!$status){ //if ($status==False)
-        //if there is error
-        $err=$stmt->errorinfo();
-    }
     $status=TRUE;
     while ($row=$stmt->fetch()){
         if ($row['code']==$courseid && $row['section']==$sectionid){
@@ -375,6 +349,32 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
         }
     }
 
+    //check student section
+    // Prepare SQL
+    $sql = "SELECT * FROM student_section ss, section s where  ss.course=s.coursesID and ss.section=s.sectionID and userid=:userid"; 
+    $stmt=$conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+    // Run Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $stmt->execute();
+
+    while ($row=$stmt->fetch()){
+        if ($row['day']==$info['day']){
+            if ($row['start']>=$info['start'] and $row['end']<=$info['end']){
+                // if the incoming fall inbetween the existing timetable
+                $status=FALSE;
+            }
+            elseif ($row['start']<=$info['end'] and $row['end']>=$info['end']){
+                // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
+                $status=FALSE;
+            }
+            elseif ($row['start']<=$info['start'] and $row['end']>=$info['start']){
+                // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
+                $status=FALSE;
+            }
+        }
+    }
     // Close Query/Connection
     $stmt = null;
     $conn = null;
@@ -395,13 +395,8 @@ function CheckExamTimeTable($userid,$courseid){
 
     // Run Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $status = $stmt->execute();
+    $stmt->execute();
 
-    // check if query fail
-    if (!$status){ //if ($status==False)
-        //if there is error
-        $err=$stmt->errorinfo();
-    }
     $info=[];
     if ($row=$stmt->fetch()){
         $info=['examDate'=>$row['examDate'],'examStart'=>$row['examStart'],'examEnd'=>$row['examEnd']];
@@ -414,19 +409,40 @@ function CheckExamTimeTable($userid,$courseid){
 
     // Run Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    $status = $stmt->execute();
-
-    // check if query fail
-    if (!$status){ //if ($status==False)
-        //if there is error
-        $err=$stmt->errorinfo();
-    }
+    $stmt->execute();
 
     $status=TRUE;
     while ($row=$stmt->fetch()){
         if ($row['code']==$courseid){
             return TRUE;
         }
+        if ($row['examDate']==$info['examDate']){
+            if ($row['examStart']>=$info['examStart'] and $row['examEnd']<=$info['examEnd']){
+                // if the incoming fall inbetween the existing exam timetable
+                $status=FALSE;
+            }
+            elseif ($row['examStart']<=$info['examEnd'] and $row['examEnd']>=$info['examEnd']){
+                // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
+                $status=FALSE;
+            }
+            elseif ($row['examStart']<=$info['examStart'] and $row['examEnd']>=$info['examStart']){
+                // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
+                $status=FALSE;
+            }
+        } 
+    }
+
+    //check student section
+    // Prepare SQL
+    $sql = "SELECT * FROM student_section s, course c where  s.course=c.courseid and userid=:userid;"; 
+    $stmt=$conn->prepare($sql);
+    $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
+
+    // Run Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $stmt->execute();
+
+    while ($row=$stmt->fetch()){
         if ($row['examDate']==$info['examDate']){
             if ($row['examStart']>=$info['examStart'] and $row['examEnd']<=$info['examEnd']){
                 // if the incoming fall inbetween the existing exam timetable
