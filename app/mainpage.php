@@ -62,7 +62,7 @@
                     <div class="display-right__table-dates">
                         <table>
                             <tr>
-                                <th class="table-title" colspan="3">Boss Date</th>
+                                <th class="table-title"><span style="border-bottom: 3px solid #0D1060">Boss Date</span></th>
                             </tr>
                             <tr>
                                 <th>Event</th>
@@ -116,10 +116,10 @@
                     <div class="display-right__table-cart">
                         <table>
                             <tr>
-                                <th class="table-title" colspan="8">Bidding Cart</th>
+                                <th class="table-title"><span style="border-bottom: 3px solid #0D1060">Bidding Cart</span></th>
                             </tr>
                             <tr>
-                                <th colspan="8">
+                                <th>
                                 <?php echo "
                                     Round {$roundID} is {$roundStatus}" ?>
                                 </th></tr>

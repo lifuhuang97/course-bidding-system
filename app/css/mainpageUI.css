@@ -5,13 +5,15 @@
 	display: grid;
 	grid-template-areas: "navbar-left display-right";
 	grid-template-columns: 0.5fr 3fr;
+	width: 100%;
+	height: 100%;
 }
 .navbar-left{
 	height: 100%;
 	color: white;
-	background: #6441A5;
-	background: -webkit-linear-gradient(#2a0845, #6441A5);  /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(#2a0845, #6441A5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	background: #0D1060;
+	background: -webkit-linear-gradient(#8380B8, #0D1060);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(#8380B8, #0D1060); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .navbar-left__profile, .navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout, .navbar-left__smuLogo{
 	padding: 15px;
@@ -30,8 +32,8 @@
 	margin: 0;
 }
 .profpic{
-	height: 7em;
-	width: 7em;
+	height: 5em;
+	width: 5em;
 	border-radius: 50%;
 }
 .navbar-left__smuLogo img{
@@ -39,22 +41,28 @@
 }
 .navbar-left__completed:hover, .navbar-left__addCourse:hover, .navbar-left__editBid:hover, .navbar-left__dropCourse:hover, .navbar-left__logout:hover{
 	background: white;
-	color: #6441A5;
+	color: #0D1060;
 }
 .display-right__table-dates, .display-right__table-cart, .display-right__table-enrolment{
 	padding: 20px;
 }
 table{
-	border: 2px solid #6441A5;
+	border: 1px solid #D6D5E4;
+	-webkit-box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
+	-moz-box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
+	box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
 }
 .table-title{
-	text-align: center;
+	/*text-align: center;*/
     font-size: x-large;
-    color:#6441A5;
+    color: #0D1060;
 }
 th, td{
-	text-align: center;
-	width: 10em;
+	/*text-align: center;*/
+	/*width: 10em;*/
+}
+th{
+	text-align: start;
 }
 .form-container{
 	padding: 2em;
@@ -62,14 +70,14 @@ th, td{
     height: 17em;
 }
 .form-container form{
-	border: 1px solid #6441A5;
+	border: 1px solid #0D1060;
 }
 .form-header{
 	width: 100%;
     height: 3em;
-    background: #6441A5;  /* fallback for old browsers */
-	background: -webkit-linear-gradient(#2a0845, #6441A5);  /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(#2a0845, #6441A5);
+    background: #0D1060;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(#8380B8, #0D1060);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(#8380B8, #0D1060);
 	color: white;
 }
 .form-group{
