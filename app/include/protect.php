@@ -15,7 +15,7 @@ if ($currentFolder == "json")
     $tokenError = array_filter($tokenError);
     if (isEmpty($tokenError)) {
         $token = $_REQUEST['token'];
-        if (!verify_token($token)){
+        if (verify_token($token)!='admin'){
             $tokenError=["invalid token"];
         }
     }

@@ -1,6 +1,6 @@
 {
     "status": "error",
     "messages": [
-        "missing username"
+        "blank username"
     ]
 }

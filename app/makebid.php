@@ -214,7 +214,7 @@ if ($roundID==1 && $roundstat=='Started'){
             // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
             if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
                 //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
-                $minbid = CheckMinBid1($course->getCourseid(),$course->getSectionid());
+                $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
                 $nowcourse = $course->getCourseid();
                 $nowsection = $course->getSectionid();
                 
@@ -231,7 +231,7 @@ if ($roundID==1 && $roundstat=='Started'){
                 <td>{$course->getExamStart()}</td>
                 <td>{$course->getExamEnd()}</td>
                 <td><a href = 'makebid.php?token={$_GET['token']}&code=$nowcourse&sectionID=$nowsection'>Add</td>
-                <td>$minbid[0]</td>     
+                <td>$minbid</td>     
                 <td><a href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
                 </tr>";
                 //storing the available courses 

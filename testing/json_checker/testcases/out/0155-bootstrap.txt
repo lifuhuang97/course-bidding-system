@@ -1,7 +1,7 @@
 {
     "status": "success",
     "num-record-loaded": {
-        "bid.csv": 11,
+        "bid.csv": 14,
         "course.csv": 24,
         "course_completed.csv": 4,
         "prerequisite.csv": 8,
