@@ -1,9 +1,3 @@
-<html>
-    <h1>
-        Drop Existing Bid
-    </h1>
-</html>
-
 <?php
      require_once 'include/common.php';
      require_once 'include/function.php';
@@ -24,8 +18,19 @@
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 ?>
-<html>  
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drop Exisiting Bid</title>
+<link rel="stylesheet" type="text/css" href="css/deletebid.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
 <body>
+    <h1>
+        Drop Existing Bid
+    </h1>
     Welcome, <?=$name?><br>
     School: <?=$school?><br>
     Credit Left: <?=$edollar?>
@@ -61,8 +66,8 @@
     <hr>
     
     All bidded courses
-</body>
-</html>
+
+
 
 <?php
     if (count($biddedModule)==0){
@@ -81,6 +86,8 @@
             <th>Delete</th>
         </tr>";
         foreach ($biddedModule as $module){
+            $i = 1;
+
             echo "<tr><td>";
             $code = $module->getCode();
             echo "$code</td>";
@@ -92,13 +99,46 @@
                 <td>{$course->getStart()}</td>
                 <td>{$course->getEnd()}</td>
                 <td>{$course->getInstructor()}</td>
-                <td>{$module->getAmount()}</td>
-                <td><a href = 'deletebidprocess.php?token={$_GET['token']}&code=$code&section={$module->getSection()}'>Drop</td>";
+                <td>{$module->getAmount()}</td>";
+                ?>
+            
+            <td>
+            <button id="<?= $code?>" class="trigger">Drop</button>
+            <div class="modal" id="modal<?= $code?>">
+                <div class="modal-content">
+                    <h3>Are you sure you want to drop bid?
+                    </h3>
+                    <span class="close-button">Close</span>
+                    <a class="drop-button" href="deletebidprocess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$module->getSection()?>">Confirm</a>
+                    
+                </div>
+            </div>
+            </td>
+
+
+
+
+            <?php
             echo "</tr>";
+
+            $i +=1;
         }
     }
 
-
-
-
 ?>
+</body>
+<script>
+
+$(".trigger").click(function(e){
+    var id = e.target.id
+    $('#modal' + id).addClass('show-modal');
+});
+
+$('.close-button').click(function(){
+    $(this).parent().parent().removeClass('show-modal');
+});
+
+</script>
+</html>
+
+
