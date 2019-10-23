@@ -70,7 +70,9 @@ th{
     height: 17em;
 }
 .form-container form{
-	border: 1px solid #0D1060;
+	-webkit-box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
+	-moz-box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
+	box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
 }
 .form-header{
 	width: 100%;
@@ -101,4 +103,5 @@ th{
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    margin-bottom: 5px;
 }
