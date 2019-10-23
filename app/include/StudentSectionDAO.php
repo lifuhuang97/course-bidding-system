@@ -5,35 +5,7 @@ require_once 'common.php';
 class StudentSectionDAO {
     // Get whether a bid is success or fail
 
-    public function getBidStatus($userid,$amount,$course,$section){
-        $connMgr = new ConnectionManager();
-        $conn = $connMgr->getConnection();
-
-        $sql = "SELECT bidstatus FROM STUDENT_SECTION where userid=:userid and amount=:amount and course=:course and section=:section"; 
-        
-        $stmt=$conn->prepare($sql);
-        $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
-        $stmt->bindParam(':amount',$amount,PDO::PARAM_STR);
-        $stmt->bindParam(':course',$course,PDO::PARAM_STR);
-        $stmt->bindParam(':section',$section,PDO::PARAM_STR);
-
-       
-
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
-        $result = [];
-
-        while ($row = $stmt->fetch() ) {
-            $result[] = $row['bidstatus'];
-        }
-
-        $stmt = null;
-        $conn = null;        
-        
-        return $result;
-    }
-    
+ 
     // Add bid result record
 
     public function addBidResults($userid,$amount,$course,$section,$bidstatus, $bidround) {

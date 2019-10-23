@@ -57,6 +57,7 @@ class AdminRoundDAO {
         $bidDAO = new BidDAO();
         $sectDAO = new SectionDAO();
         $successBidsDAO = new StudentSectionDAO();
+        $processBidsDAO = new BidProcessorDAO();
 
         $roundStatus = $this->RetrieveRoundDetail();
         $roundNumber = $roundStatus->getRoundID() - 1;
@@ -65,7 +66,7 @@ class AdminRoundDAO {
 
         $bidDataTable = [];
         
-        if($successBidsDAO->getAllSuccessfulBids() == []){
+        if($successBidsDAO->getAllBidsWithStatus() == []){
         foreach($sections as $section){
             $conclude = false;
             $selected = $bidDAO->getAllBids($section);
@@ -79,6 +80,7 @@ class AdminRoundDAO {
                     $tempbid[] = $bid->getSection();
                     $bid = $tempbid;
                     $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>'Success'</td></tr>";
+                    $processBidsDAO->updateBidStatus($bid[0],$bid[1],$bid[2],$bid[3],true);
                     $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],'Success',$roundNumber);
                 }
             }else{
@@ -159,8 +161,12 @@ class AdminRoundDAO {
                 }
 
                 $bidDataTable[] = "<tr><td>$bid[0]</td><td>$bid[1]</td><td>$bid[2]</td><td>$bid[3]</td><td>$bid[4]</td></tr>";
-            
-                $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],$bid[4], $bid[5]);
+                if($bid[4] == "Fail"){
+                    $processBidsDAO->updateBidStatus($bid[0],$bid[1],$bid[2],$bid[3],false);
+                }elseif($bid[4] == "Success"){
+                    $processBidsDAO->updateBidStatus($bid[0],$bid[1],$bid[2],$bid[3],true);
+                    $successBidsDAO->addBidResults($bid[0],$bid[1],$bid[2],$bid[3],$bid[4], $bid[5]);
+                }
             }
         }
                 return $bidDataTable;

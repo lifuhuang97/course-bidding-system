@@ -87,4 +87,14 @@ create table STUDENT_SECTION (
   CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section)
 );
 
+create table BID_PROCESSOR (
+    userid varchar(128) not null,
+    amount decimal(5,2) not null,
+    course varchar(100) not null,
+    section varchar(2) not null,
+    bidstatus varchar(50),
+    bidround int(1),
+	CONSTRAINT BID_PROCESSOR_PK primary key (userid,amount,course,section)
+);
+
 

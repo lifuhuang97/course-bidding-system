@@ -222,8 +222,10 @@ function CheckMinBid($course,$section,$user=TRUE){
             $count +=1;
         }
     }
+
     if ($valuearray[$vacancy-1] == $valuearray[$vacancy]){
         if ($user){
+            
             return $valuearray[$vacancy-1]+1;
         }else{
             return $valuearray[$vacancy-1]+0.01;

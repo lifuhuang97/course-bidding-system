@@ -18,7 +18,7 @@
             $eCredit = $student->getEdollar();
             $bidDAO = New BidDAO();
             $biddedModule = $bidDAO->getBidInfo($_SESSION['success']);
-            $bidresultsDAO = New StudentSectionDAO();
+            $bidresultsDAO = New BidProcessorDAO();
         }else{
             $name = $_SESSION['success'];
             $school = '-';
@@ -104,7 +104,7 @@
                                 <td>$roundStartEndTimes[1]</td>
                             </tr>
                             <tr>
-                                <th>Round 2A Window 2</th>
+                                <th>Round 2</th>
                                 <td>$roundStartEndTimes[2]</td>
                                 <td>$roundStartEndTimes[3]</td>
                             </tr>

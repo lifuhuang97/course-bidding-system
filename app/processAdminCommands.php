@@ -16,6 +16,7 @@ if (isset($_POST['submit'])) {
 $bidDAO = new BidDAO();
 $adminRoundDAO = new adminRoundDAO();
 $StudentSectionDAO = new StudentSectionDAO();
+$bidprocessorDAO = new BidProcessorDAO();
 
 $roundProcessing = $adminRoundDAO->RetrieveRoundDetail();
 
@@ -44,6 +45,7 @@ if ($_SESSION['roundaction'] == "Clear Round"){
 if ($_SESSION['roundaction'] == "Reset Round"){
     $adminRoundDAO->resetRound();
     $StudentSectionDAO->removeAll();
+    $bidprocessorDAO->removeAll();
     $bidDAO->removeAll();
     header('Location: adminMainPage.php');
 }
