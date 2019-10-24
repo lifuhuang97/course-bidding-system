@@ -166,7 +166,7 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
         $size=$row['size'];
     }
 
-    $sql = "SELECT * FROM student_section WHERE course=:course AND section=:section";
+    $sql = "SELECT count(*) as remain FROM student_section WHERE course=:course AND section=:section";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
     $stmt->bindParam(':section',$section ,PDO::PARAM_STR);
@@ -177,7 +177,7 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
 
     //Retrieve Query Results (if any)
     if ($row=$stmt->fetch()){
-        $size--;
+        $size=$size-$row['remain'];
     }
     
     // Clear Resources $stmt, $conn
@@ -189,12 +189,67 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
         return $size;
     }else{
         return $size>0;// return true if there is vanancy
+    } 
+}
+
+function CheckMinBidFromBiddingResult($course,$section){
+        // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Write & Prepare SQL Query (take care of Param Binding if necessary)
+    $sql = "SELECT * FROM SECTION WHERE coursesID=:course AND sectionID=:section";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
+    $stmt->bindParam(':section',$section ,PDO::PARAM_STR);
+        
+    //Execute SQL Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $stmt->execute();
+
+    //Retrieve Query Results (if any)
+    $vacancy=0;
+    if ($row=$stmt->fetch()){
+        $vacancy=$row['size'];
     }
-    
+    //student section
+    $bidDAO= new BidDAO();
+    $allBid=$bidDAO->getAllBids([$course,$section]);
+
+    $value = 10.00;
+    if ($vacancy > count($allBid)){
+        return $value;
+    }
+    if ($vacancy == count($allBid)){
+        $count=0;
+        $valuearray = [];
+        while($count<count($allBid)){
+            array_push($valuearray,$allBid[$count]->getAmount());
+            $count +=1;
+        }
+        return $valuearray[$vacancy-1];
+    }
+    if ($vacancy < count($allBid)){
+        $count=0;
+        $valuearray = [];
+        while($count<count($allBid)){
+            array_push($valuearray,$allBid[$count]->getAmount());
+            $count +=1;
+        }
+    }
+    if ($valuearray[$vacancy-1] == $valuearray[$vacancy]){
+        return $valuearray[$vacancy-1]+0.01;
+    }else{
+        //$valuearray[$vacancy-1] > $valuearray[$vacancy]
+        return $valuearray[$vacancy-1];
+    }
 }
 
 function CheckMinBid($course,$section,$user=TRUE){
     $vacancy=CheckVacancy($course,$section,TRUE);
+    if ($vacancy==0){
+        return '-';
+    }
     $bidDAO= new BidDAO();
     $allBid=$bidDAO->getAllBids([$course,$section]);
     $value = 10.00;
@@ -222,10 +277,8 @@ function CheckMinBid($course,$section,$user=TRUE){
             $count +=1;
         }
     }
-
     if ($valuearray[$vacancy-1] == $valuearray[$vacancy]){
         if ($user){
-            
             return $valuearray[$vacancy-1]+1;
         }else{
             return $valuearray[$vacancy-1]+0.01;

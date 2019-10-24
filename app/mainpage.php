@@ -18,7 +18,8 @@
             $eCredit = $student->getEdollar();
             $bidDAO = New BidDAO();
             $biddedModule = $bidDAO->getBidInfo($_SESSION['success']);
-            $bidresultsDAO = New BidProcessorDAO();
+            $bidresultsDAO = New StudentSectionDAO();
+            $successModules=$bidresultsDAO->retrieveAllByUser($loginID);
         }else{
             $name = $_SESSION['success'];
             $school = '-';
@@ -62,7 +63,7 @@
                     <div class="display-right__table-dates">
                         <table>
                             <tr>
-                                <th class="table-title"><span style="border-bottom: 3px solid #0D1060">Boss Date</span></th>
+                                <th class="table-title" colspan="3">Boss Date</th>
                             </tr>
                             <tr>
                                 <th>Event</th>
@@ -104,7 +105,7 @@
                                 <td>$roundStartEndTimes[1]</td>
                             </tr>
                             <tr>
-                                <th>Round 2</th>
+                                <th>Round 2A Window 2</th>
                                 <td>$roundStartEndTimes[2]</td>
                                 <td>$roundStartEndTimes[3]</td>
                             </tr>
@@ -116,10 +117,10 @@
                     <div class="display-right__table-cart">
                         <table>
                             <tr>
-                                <th class="table-title"><span style="border-bottom: 3px solid #0D1060">Bidding Cart</span></th>
+                                <th class="table-title" colspan="8">Bidding Cart</th>
                             </tr>
                             <tr>
-                                <th>
+                                <th colspan="8">
                                 <?php echo "
                                     Round {$roundID} is {$roundStatus}" ?>
                                 </th></tr>
@@ -163,7 +164,7 @@
                                                     $course = $module->getCourseDetailsByCourseSection();
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
-                                                    //retrieve minimum bid
+                                                    //retrieve minimum bid                  
                                                     $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
 
                                                     echo "{$course->getTitle()}</td>
@@ -205,7 +206,41 @@
                                 <th class="table-title">Enrolment</th>
                             </tr>
                             <tr>
-                                <td>Enrolled TimeTable</td>
+                                <td>
+                                <?php
+                                    if (count($successModules)>0){
+                                        echo"<table border='1'>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Title</th>
+                                            <th>Section</th>
+                                            <th>Day</th>
+                                            <th>Lesson Start Time</th>
+                                            <th>Lesson End Time</th>
+                                            <th>Instructor</th>
+                                            <th>Amount</th>
+                                        </tr>";
+                                        foreach ($successModules as $module){
+                                            $courseDAO= new CourseDAO();
+                                            $course=$courseDAO->RetrieveAllCourseDetail($module[1],$module[2])[0];
+                                            echo "<tr>
+                                            <td>{$module[1]}</td>
+                                            <td>{$course->getTitle()}</td>
+                                            <td>{$module[2]}</td>
+                                            <td>{$course->getDay()}</td>
+                                            <td>{$course->getStart()}</td>
+                                            <td>{$course->getEnd()}</td>
+                                            <td>{$course->getInstructor()}</td>
+                                            <td>{$module[0]}</td>
+                                        </tr>";
+                                        }
+                                        echo"</table>";
+                                    }
+                                    else{
+                                        echo "No Enrolled Course";
+                                    }
+                                ?>
+                                </td>
                             </tr>
                             <tr>
 <?php
@@ -216,7 +251,7 @@
 // }
 
 ?>
-                                <td><a href='dropSection.php'>Drop a section</a></td>
+                                <td><a href='dropSection.php?token=<?php echo $_GET['token']?>'>Drop a section</a></td>
                             </tr>
                         </table>
                     </div>
