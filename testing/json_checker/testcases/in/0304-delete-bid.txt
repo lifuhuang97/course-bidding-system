@@ -1,0 +1,3 @@
+userid=123
+course=IS100
+section=S1
