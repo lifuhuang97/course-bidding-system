@@ -231,6 +231,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     <th>Amount</th>
                                                     <th>Bid Result</th>";
                                                     if ($roundID == 2 && $roundStatus != "Not Started"){
+                                                        $round2Activated = true;
                                                         //should the round be started then they start to show the min bid?
                                                         echo "<th>Min Bid Required</th>";
                                                     };
@@ -257,10 +258,17 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>{$course->getEnd()}</td>
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
+                                                        if($round2Activated != true){
                                                         if(!isempty($bidresult)){echo "
                                                         <td>{$bidresult[0]}</td>";
                                                         }else{
                                                             echo "<td>Pending</td>";
+                                                        }}else{
+                                                            if($module->getAmount() <= $minbid){
+                                                                echo "<td>Unsuccessful. Bid too low.</td>";
+                                                            }else{
+                                                                echo "<td>Successful</td>";
+                                                            }
                                                         }
                                                         if ($roundID==2 && $roundStatus != "Not Started"){
                                                             //should the round be started then they start to show the min bid?
