@@ -168,11 +168,11 @@ class bidProcessorDAO {
 
       // Get successful results with bid status according to user id
 
-      public function getSuccessfulBidsByID($userid){
+      public function getBidsByID($userid){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
-        $sql = "SELECT * from BID_PROCESSOR where userid = :userid and bidstatus = 'Success' order by bidstatus asc, amount desc";
+        $sql = "SELECT * from BID_PROCESSOR where userid = :userid order by bidstatus asc, amount desc";
         
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);

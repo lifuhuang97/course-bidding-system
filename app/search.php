@@ -224,9 +224,9 @@
     }
 ?>
 
-
-
-
+<br>
+<a href="makebid.php?token=<?php echo $_GET['token']?>">Bid</a>
+<br>
 </body>
 </html>
 <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>

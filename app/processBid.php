@@ -94,7 +94,7 @@
 
         //check if use bid equal or more than the min required bid
         if ($roundID==2){
-            $minbid = CheckMinBid1($courseId,$sectionId);
+            $minbid = CheckMinBid($courseId,$sectionId);
             if ($bidAmt <= $minbid){
                 array_push($_SESSION['errors1'], 'Please bid higher than the Minimum Required Bid.');
             }
