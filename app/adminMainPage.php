@@ -34,7 +34,7 @@
 // Get up-to-date round details
 $adminRoundDAO = new adminRoundDAO();
 $round = $adminRoundDAO->RetrieveRoundDetail();
-$roundNumber = $round->getRoundID();
+$roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 
 ?>
@@ -47,12 +47,11 @@ $roundStatus = $round->getRoundStatus();
 echo "<table>
 <tr><th colspan='6'>Bid System Status</th></tr>
     <tr><th></th><th></th>
-        <th>Round: {$roundNumber}</th>
+        <th>Round: {$roundNo}</th>
         <th>Status: {$roundStatus}</th>
         <th></th>
         <th></th>
-    </tr>"
-
+    </tr>";
 
 ?>
 
@@ -65,10 +64,10 @@ if ($roundStatus == "Started"){
     $startStatus = $disableButton;
     $clearStatus = '';
 }else{
-    if ($roundNumber == 1){
+    if ($roundNo == 1){
         $startStatus = '';
         $clearStatus = $disableButton;
-    }elseif($roundNumber == 2 && $roundStatus == "Finished"){
+    }elseif($roundNo == 2 && $roundStatus == "Finished"){
         $startStatus = $disableButton;
         $clearStatus = $disableButton; 
     }else{
@@ -97,9 +96,102 @@ echo "<tr>
 
 /** Display bid results after round ends */
 
-include 'processRounds.php';
+$successBidDAO = new StudentSectionDAO();
+$allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
+
+$currentBidsDAO = new BidDAO();
+$allCurrentBids = $currentBidsDAO->RetrieveAll();
+
+
+$bidsRecordsDAO = new BidProcessorDAO();
+$sectDAO = new SectionDAO();
+$sections = $sectDAO->getAllSections();
+
+
+
+$roundDetector = $bidsRecordsDAO->RetrieveAll();
+
+// var_dump($roundNo);
+// var_dump($roundDetector);
+
+if($roundStatus == "Started"){
+    // echo "current bids, should be pending";
+    $bids = $currentBidsDAO->RetrieveAll();
+    
+    echo "
+    <table>
+    <tr>    
+    <th colspan = 6>
+    Bidding Results
+    </th>
+    </tr>
+    <tr>
+    <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
+    </tr>";
+
+    if($bids != []){
+
+    foreach($bids as $bid){
+
+        $bidID = $bid->getUserid();
+        $bidAmt = $bid->getAmount();
+        $bidCourse = $bid->getCode();
+        $bidSect = $bid->getSection();
+
+        echo "<tr>
+        <td>$bidID</td>
+        <td>$bidAmt</td>
+        <td>$bidCourse</td>
+        <td>$bidSect</td>
+        <td>Pending</td>
+        <td>$roundNo</td>
+        </tr>";
+    }
+    echo "</table>";
+}else{
+    echo "<tr><td colspan = 6>No Existing Bids</td></tr>";
+}
+}
+
+
+if($roundDetector != [] && $roundNo == 2 && $roundStatus != "Started"){
+    // echo "should show cleared round(s) bids";
+    echo "
+    <table>
+    <tr>
+    <th colspan = 5>
+    Current Bids
+    </th>
+    </tr>
+    <tr>
+    <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
+    </tr>";
+    
+    foreach($roundDetector as $bid){
+        $bidID = $bid->getUserid();
+        $bidAmt = $bid->getAmount();
+        $bidCourse = $bid->getCourse();
+        $bidSect = $bid->getSection();
+        $bidStatus = $bid->getBidStatus();
+        $bidRound = $bid->getBidRound();
+
+        echo "<tr>
+        <td>$bidID</td>
+        <td>$bidAmt</td>
+        <td>$bidCourse</td>
+        <td>$bidSect</td>
+        <td>$bidStatus</td>
+        <td>$bidRound</td>
+        </tr>
+        ";
+
+    }
+    echo "</table>";
+}
  
 ?>
+<br>
+<br>
 <br>
 <form action="adminMainPage.php" method="post">
 <input type='submit' name='navigation' value='Show All Data'>

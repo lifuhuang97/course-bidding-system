@@ -60,7 +60,7 @@ class AdminRoundDAO {
         $processBidsDAO = new BidProcessorDAO();
 
         $roundStatus = $this->RetrieveRoundDetail();
-        $roundNumber = $roundStatus->getRoundID() - 1;
+        $roundNumber = $roundStatus->getRoundID();
 
         $sections = $sectDAO->getAllSections();
 

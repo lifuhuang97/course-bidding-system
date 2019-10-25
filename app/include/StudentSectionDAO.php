@@ -38,13 +38,8 @@ class StudentSectionDAO {
 
     public function addBidResults($userid,$amount,$course,$section,$bidstatus, $bidround) {
 
-        if(!isset($bidstatus)){
-            $bidstatus = "Pending";
-        }
-
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-
 
         // Prepare SQL
         $sql = "INSERT INTO STUDENT_SECTION (userid, amount, course, section, bidstatus, bidround) VALUES

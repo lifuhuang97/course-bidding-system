@@ -7,13 +7,8 @@ class bidProcessorDAO {
     // Add bid result record
     public function addBidResults($userid,$amount,$course,$section,$bidstatus, $bidround) {
 
-        if(!isset($bidstatus)){
-            $bidstatus = "Pending";
-        }
-
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-
 
         // Prepare SQL
         $sql = "INSERT INTO BID_PROCESSOR (userid, amount, course, section, bidstatus, bidround) VALUES
@@ -22,11 +17,11 @@ class bidProcessorDAO {
         $stmt=$conn->prepare($sql);
         
         $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
-        $stmt->bindParam(':amount',$amount,PDO::PARAM_STR);
+        $stmt->bindParam(':amount',$amount,PDO::PARAM_INT);
         $stmt->bindParam(':course',$course,PDO::PARAM_STR);
         $stmt->bindParam(':section',$section,PDO::PARAM_STR);
         $stmt->bindParam(':bidstatus',$bidstatus,PDO::PARAM_STR);
-        $stmt->bindParam(':bidround',$bidround,PDO::PARAM_STR);
+        $stmt->bindParam(':bidround',$bidround,PDO::PARAM_INT);
         $status = False;
 
         if ($stmt->execute()){
@@ -134,7 +129,7 @@ class bidProcessorDAO {
 
         $studentList = [];
         while ($row = $stmt->fetch() ) {
-            $studentList[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
+            $studentList[]=new bidProcessor($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
         }
 
         $stmt = null;
@@ -150,7 +145,7 @@ class bidProcessorDAO {
     
         // Write & Prepare SQL Query (take care of Param Binding if necessary)
     
-        $sql = "SELECT * FROM BID_PROCESSOR ORDER BY course,userid";
+        $sql = "SELECT * FROM BID_PROCESSOR ORDER BY amount desc, course,userid";
         $stmt = $conn->prepare($sql);
                 
         //Execute SQL Query
@@ -160,7 +155,7 @@ class bidProcessorDAO {
         //Retrieve Query Results (if any)
         $students=[];
         while ($row=$stmt->fetch()){
-            $students[]=new StudentSection($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
+            $students[]=new bidProcessor($row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'],$row['bidround']);
         }
         
         // Clear Resources $stmt, $conn
@@ -192,16 +187,15 @@ class bidProcessorDAO {
 
     }
 
-
     // Update bid status of successful / failed bids
 
     public function updateBidStatus($userid, $amount, $course, $section, $passed = false){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
-        if($passed = true){
+        if($passed == true){
             $status = 'Success';
-        }elseif($passed = false){
+        }elseif($passed == false){
             $status = 'Fail';
         }
 
