@@ -2,6 +2,12 @@
 	require_once 'include/common.php';
     require_once 'include/function.php';
 //    require_once 'include/protect.php';
+    $student = $_SESSION['student']; 
+	$userid = $student->getUserid(); #get userid
+	$password = $student->getPassword(); #get password
+	$name = $student->getName(); #get name
+    $school = $student->getSchool();
+	$edollar = $student->getEdollar(); #get edollar
 
     $adminRoundDAO = new adminRoundDAO();
     $adminRoundStatus = $adminRoundDAO->RetrieveRoundDetail();

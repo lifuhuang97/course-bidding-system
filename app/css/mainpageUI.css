@@ -105,3 +105,6 @@ th{
     cursor: pointer;
     margin-bottom: 5px;
 }
+.content-container{
+	padding: 2em;
+}
