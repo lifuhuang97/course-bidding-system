@@ -30,8 +30,13 @@ function doUpdateBid($userid,$amount,$course,$section) {
         $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
         $roundID=$roundDetail->getRoundID();
         $roundStatus=$roundDetail->getRoundStatus();
-        if ($roundID==2 && CheckMinBid($course,$section)>$amount){
-            $errors[]="bid too low";
+        $sectionDAO=new SectionDAO();
+        
+        if ($roundID==2){
+            $currentMinBid=$sectionDAO->viewMinBid($course,$section);
+            if ($currentMinBid>$amount){
+                $errors[]="bid too low";
+            }
         }
         if (!CheckForEdollar($userid,$amount,$course)){
             $errors[]="insufficient e$";
@@ -71,6 +76,11 @@ function doUpdateBid($userid,$amount,$course,$section) {
             ];
     }else{
         $status=ChangeBidUpdateEdollar(new Bid($userid,$amount,$course,$section));
+        //update sectionTable
+        $minbid = CheckMinBid($courseId,$sectionId);
+        if ($roundID==2 && $minbid>$currentMinBid){
+            $SectionDAO->updateSectionMinBid($minbid,$courseId,$sectionId);
+        }
         if ($status){
             $result = [
                 "status" => "success"

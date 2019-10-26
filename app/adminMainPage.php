@@ -4,6 +4,7 @@
     require_once 'include/bid-dump.php';
     require_once 'include/section-dump.php';
     require_once 'include/common.php';
+    require_once 'include/function.php';
     // require_once 'include/protect.php';
     // if (!isset($_SESSION['success'])){
     //     header('Location: login.php');
@@ -96,98 +97,143 @@ echo "<tr>
 
 /** Display bid results after round ends */
 
-$successBidDAO = new StudentSectionDAO();
-$allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
+// $successBidDAO = new StudentSectionDAO();
+// $allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
 
-$currentBidsDAO = new BidDAO();
-$allCurrentBids = $currentBidsDAO->RetrieveAll();
-
-
-$bidsRecordsDAO = new BidProcessorDAO();
-$sectDAO = new SectionDAO();
-$sections = $sectDAO->getAllSections();
-
-
-
-$roundDetector = $bidsRecordsDAO->RetrieveAll();
-
-// var_dump($roundNo);
-// var_dump($roundDetector);
-
-if($roundStatus == "Started"){
-    // echo "current bids, should be pending";
-    $bids = $currentBidsDAO->RetrieveAll();
-    
-    echo "
-    <table>
+if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
+    $currentBidsDAO = new BidDAO();
+    $allBids = $currentBidsDAO->RetrieveAll();
+    echo "<table>
     <tr>    
-    <th colspan = 6>
-    Bidding Results
-    </th>
-    </tr>
-    <tr>
-    <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
-    </tr>";
-
-    if($bids != []){
-
-    foreach($bids as $bid){
-
-        $bidID = $bid->getUserid();
-        $bidAmt = $bid->getAmount();
-        $bidCourse = $bid->getCode();
-        $bidSect = $bid->getSection();
-
-        echo "<tr>
-        <td>$bidID</td>
-        <td>$bidAmt</td>
-        <td>$bidCourse</td>
-        <td>$bidSect</td>
-        <td>Pending</td>
-        <td>$roundNo</td>
+        <th colspan = 6>";
+    if ($roundStatus=="Started"){
+        echo"Current Bids";
+    }else{
+        echo"Bidding Results";
+    }
+    if (count($allBids)>0){
+        echo"</tr>
+        <tr>
+            <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th>
         </tr>";
+        foreach ($allBids as $bid){
+            $bidID = $bid->getUserid();
+            $bidAmt = $bid->getAmount();
+            $bidCourse = $bid->getCode();
+            $bidSect = $bid->getSection();
+            if ($roundNo==1){
+                $result="pending";
+            }else{
+                $minbid=CheckMinBid($bidCourse, $bidSect,FALSE);
+                if ($bidAmt>=$minbid){
+                    $result="success";
+                }else{
+                    $result="fail";
+                }
+            }
+            echo "<tr>
+                <td>$bidID</td>
+                <td>$bidAmt</td>
+                <td>$bidCourse</td>
+                <td>$bidSect</td>
+                <td>$result</td>
+            </tr>";
+        }
+    }else{
+        if ($roundStatus=="Started"){
+            echo "<tr><td colspan = 6>No Existing Bids</td></tr>";
+        }else{
+            echo "<tr><td colspan = 6>No Bids Available</td></tr>";
+        }
     }
-    echo "</table>";
-}else{
-    echo "<tr><td colspan = 6>No Existing Bids</td></tr>";
-}
+    echo"</table>";
 }
 
+// $bidsRecordsDAO = new BidProcessorDAO();
+// $sectDAO = new SectionDAO();
+// $sections = $sectDAO->getAllSections();
 
-if($roundDetector != [] && $roundNo == 2 && $roundStatus != "Started"){
-    // echo "should show cleared round(s) bids";
-    echo "
-    <table>
-    <tr>
-    <th colspan = 5>
-    Current Bids
-    </th>
-    </tr>
-    <tr>
-    <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
-    </tr>";
+
+
+// $roundDetector = $bidsRecordsDAO->RetrieveAll();
+
+// // var_dump($roundNo);
+// // var_dump($roundDetector);
+
+// if($roundStatus == "Started"){
+//     // echo "current bids, should be pending";
+//     $bids = $currentBidsDAO->RetrieveAll();
     
-    foreach($roundDetector as $bid){
-        $bidID = $bid->getUserid();
-        $bidAmt = $bid->getAmount();
-        $bidCourse = $bid->getCourse();
-        $bidSect = $bid->getSection();
-        $bidStatus = $bid->getBidStatus();
-        $bidRound = $bid->getBidRound();
+//     echo "
+//     <table>
+//     <tr>    
+//     <th colspan = 6>
+//     Bidding Results
+//     </th>
+//     </tr>
+//     <tr>
+//     <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
+//     </tr>";
 
-        echo "<tr>
-        <td>$bidID</td>
-        <td>$bidAmt</td>
-        <td>$bidCourse</td>
-        <td>$bidSect</td>
-        <td>$bidStatus</td>
-        <td>$bidRound</td>
-        </tr>
-        ";
+//     if($bids != []){
 
-    }
-    echo "</table>";
-}
+//     foreach($bids as $bid){
+
+//         $bidID = $bid->getUserid();
+//         $bidAmt = $bid->getAmount();
+//         $bidCourse = $bid->getCode();
+//         $bidSect = $bid->getSection();
+
+//         echo "<tr>
+//         <td>$bidID</td>
+//         <td>$bidAmt</td>
+//         <td>$bidCourse</td>
+//         <td>$bidSect</td>
+//         <td>Pending</td>
+//         <td>$roundNo</td>
+//         </tr>";
+//     }
+//     echo "</table>";
+// }else{
+//     echo "<tr><td colspan = 6>No Existing Bids</td></tr>";
+// }
+// }
+
+
+// if($roundDetector != [] && $roundNo == 2 && $roundStatus != "Started"){
+//     // echo "should show cleared round(s) bids";
+//     echo "
+//     <table>
+//     <tr>
+//     <th colspan = 5>
+//     Current Bids
+//     </th>
+//     </tr>
+//     <tr>
+//     <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
+//     </tr>";
+    
+//     foreach($roundDetector as $bid){
+//         $bidID = $bid->getUserid();
+//         $bidAmt = $bid->getAmount();
+//         $bidCourse = $bid->getCourse();
+//         $bidSect = $bid->getSection();
+//         $bidStatus = $bid->getBidStatus();
+//         $bidRound = $bid->getBidRound();
+
+//         echo "<tr>
+//         <td>$bidID</td>
+//         <td>$bidAmt</td>
+//         <td>$bidCourse</td>
+//         <td>$bidSect</td>
+//         <td>$bidStatus</td>
+//         <td>$bidRound</td>
+//         </tr>
+//         ";
+
+//     }
+//     echo "</table>";
+// }
  
 ?>
 <br>

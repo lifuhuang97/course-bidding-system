@@ -43,6 +43,80 @@ class SectionDAO {
         return $status; // Boolean True or False
     }
 
+    public function updateSectionMinBid($minbid,$course,$section) { // Adding a new section
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "UPDATE SECTION SET minbid=:minbid WHERE coursesID=:course and sectionID=:section"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':minbid',$minbid,PDO::PARAM_STR);
+        $stmt->bindParam(':course',$course,PDO::PARAM_STR);
+        $stmt->bindParam(':section',$section,PDO::PARAM_STR);
+
+        // Run Query
+        $status = False;
+        if ($stmt->execute()){
+            $status=True;
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $status; // Boolean True or False
+    }
+
+    public function resetSectionMinBid() { // Adding a new section
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "UPDATE SECTION SET minbid=NULL "; 
+        $stmt=$conn->prepare($sql);
+
+        // Run Query
+        $status = False;
+        if ($stmt->execute()){
+            $status=True;
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $status; // Boolean True or False
+    }
+
+    public function viewMinBid($course,$section) { // Adding a new section
+        // Connect to Database
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        // Prepare SQL
+        $sql = "SELECT minbid from section WHERE coursesID=:course and sectionID=:section"; 
+        $stmt=$conn->prepare($sql);
+        $stmt->bindParam(':course',$course,PDO::PARAM_STR);
+        $stmt->bindParam(':section',$section,PDO::PARAM_STR);
+
+        // Run Query
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+
+        $minbid='-';
+        while ($row = $stmt->fetch() ) {
+            $minbid = $row['minbid'];
+        }
+
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
+        
+        return $minbid; 
+    }
+
     public function getAllSections(){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();

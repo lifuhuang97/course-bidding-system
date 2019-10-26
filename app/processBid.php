@@ -94,8 +94,9 @@
 
         //check if use bid equal or more than the min required bid
         if ($roundID==2){
-            $minbid = CheckMinBid($courseId,$sectionId);
-            if ($bidAmt <= $minbid){
+            $SectionDAO = new SectionDAO();
+            $currentMinBid = $SectionDAO->viewMinBid($courseId,$sectionId);
+            if ($bidAmt < $currentMinBid){
                 array_push($_SESSION['errors1'], 'Please bid higher than the Minimum Required Bid.');
             }
         }
@@ -168,6 +169,11 @@
             $remainCredit=$edollar-$bidAmt;
             $studentDAO=new StudentDAO();
             $status=$studentDAO->updateDollar($userid,$remainCredit);
+            //update sectionTable
+            $minbid = CheckMinBid($courseId,$sectionId);
+            if ($roundID==2 && $minbid>$currentMinBid){
+                $SectionDAO->updateSectionMinBid($minbid,$courseId,$sectionId);
+            }
             //i believe this need some token to access 
             header("Location: mainpage.php?token={$_GET['token']}");
             exit;

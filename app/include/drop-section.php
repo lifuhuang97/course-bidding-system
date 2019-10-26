@@ -23,7 +23,7 @@ function doDropSection($userid,$course,$section) {
     $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
     $roundID=$roundDetail->getRoundID();
     $roundStatus=$roundDetail->getRoundStatus();
-    if ($roundStatus=="Not Started" && $roundID==1){
+    if ($roundStatus=="Not Started"){
         $errors[]="round not active";
     }
     //no such bid
@@ -33,6 +33,13 @@ function doDropSection($userid,$course,$section) {
             $errors[]="no such enrollment record";
         }else{
             $status=DropSectionUpdateEdollar($userid,$course,$status);
+            if ($roundID==2){
+                $vacancy=CheckVacancy($course,$section,TRUE);
+                if ($vacancy==1){
+                    $sectionDAO=new SectionDAO();
+                    $sectionDAO->updateSectionMinBid('10',$course,$section);
+                }
+            }
         }
     }
     if (!isEmpty($errors)){

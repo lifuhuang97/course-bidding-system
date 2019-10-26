@@ -108,7 +108,7 @@
                                 <td>$roundStartEndTimes[1]</td>
                             </tr>
                             <tr>
-                                <th>Round 2A Window 2</th>
+                                <th>Round 2</th>
                                 <td>$roundStartEndTimes[2]</td>
                                 <td>$roundStartEndTimes[3]</td>
                             </tr>
@@ -147,7 +147,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 <th>Bid Result</th>";
                                 if ($roundStatus == "Finished"){
                                     //should the round be started then they start to show the min bid?
-                                    echo "<th>Min Bid Required</th>";
+                                    echo "<th>Min Bid</th>";
                                 };
                                 echo "</tr>";
 
@@ -183,8 +183,8 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     if ($roundStatus== "Finished"){
                                         //should the round be started then they start to show the min bid?
                                         
-                                        $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
-                                        echo "<td>$minbid</td>";
+                                        // $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
+                                        // echo "<td>$minbid</td>";
                                     }
                                 }
                             }
@@ -212,7 +212,6 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     <?php
                                         //getting the round ID and roundstat
                                         //print ($roundID);
-
                                         if (isset($biddedModule)){
                                             if (count($biddedModule)==0){
                                                 echo "<tr>
@@ -231,7 +230,6 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     <th>Amount</th>
                                                     <th>Bid Result</th>";
                                                     if ($roundID == 2 && $roundStatus != "Not Started"){
-                                                        $round2Activated = true;
                                                         //should the round be started then they start to show the min bid?
                                                         echo "<th>Min Bid Required</th>";
                                                     };
@@ -249,7 +247,9 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
                                                     //retrieve minimum bid                  
-                                                    $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
+                                                    $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid(),FALSE);
+                                                    $SectionDAO = new SectionDAO();
+                                                    $currentMinBid = $SectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
 
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
@@ -258,21 +258,18 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>{$course->getEnd()}</td>
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
-                                                        if($round2Activated != true){
-                                                        if(!isempty($bidresult)){echo "
-                                                        <td>{$bidresult[0]}</td>";
+                                                        if($roundID == 2){
+                                                            if($module->getAmount() >= $minbid){
+                                                                echo "<td>Successful</td>";
+                                                            }else{
+                                                                echo "<td>Unsuccessful. Bid too low.</td>";
+                                                            }
                                                         }else{
                                                             echo "<td>Pending</td>";
-                                                        }}else{
-                                                            if($module->getAmount() <= $minbid){
-                                                                echo "<td>Unsuccessful. Bid too low.</td>";
-                                                            }else{
-                                                                echo "<td>Successful</td>";
-                                                            }
                                                         }
                                                         if ($roundID==2 && $roundStatus != "Not Started"){
-                                                            //should the round be started then they start to show the min bid?
-                                                            echo "<td>$minbid</td>";
+                                                            
+                                                            echo "<td>$currentMinBid</td>";
                                                         }; 
                                                         
                                                     echo "</tr>";
