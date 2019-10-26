@@ -96,7 +96,7 @@
         if ($roundID==2){
             $SectionDAO = new SectionDAO();
             $currentMinBid = $SectionDAO->viewMinBid($courseId,$sectionId);
-            if ($bidAmt < $currentMinBid){
+            if ($currentMinBid!='-' && $bidAmt < $currentMinBid){
                 array_push($_SESSION['errors1'], 'Please bid higher than the Minimum Required Bid.');
             }
         }

@@ -6,30 +6,33 @@ function doUpdateBid($userid,$amount,$course,$section) {
     $errors=array();
     $course=strtoupper($course);
     $section=strtoupper($section);
-    if(!is_numeric($amount) || ($amount<10) || $amount!=number_format($amount,2,'.','')){
-        //check if is numeric value, value less than 10  and not more 2 decimal point
-        $errors[]="invalid amount";
-    }
-    $courseValid=TRUE;
-    if(!CheckCourseExist($course)){
-         // check if code exist in course table
-        $errors[]="invalid course";
-        $courseValid=FALSE;
-    }
-    if($courseValid && (!CheckSectionExist($course,$section))){
-        // check if section exist in section table
-        $errors[]="invalid section";
-    }
-    if(!CheckStudentExist($userid)){
-        // check if userid exist in student table
-        $errors[]="invalid userid";
+    $adminRoundDAO=new adminRoundDAO();
+    $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
+    $roundID=$roundDetail->getRoundID();
+    $roundStatus=$roundDetail->getRoundStatus();
+    if ($roundStatus!="Started"){
+        $errors[]="round ended";
+    }else{
+        if(!is_numeric($amount) || ($amount<10) || $amount!=number_format($amount,2,'.','')){
+            //check if is numeric value, value less than 10  and not more 2 decimal point
+            $errors[]="invalid amount";
+        }
+        $courseValid=TRUE;
+        if(!CheckCourseExist($course)){
+            // check if code exist in course table
+            $errors[]="invalid course";
+            $courseValid=FALSE;
+        }
+        if($courseValid && (!CheckSectionExist($course,$section))){
+            // check if section exist in section table
+            $errors[]="invalid section";
+        }
+        if(!CheckStudentExist($userid)){
+            // check if userid exist in student table
+            $errors[]="invalid userid";
+        }
     }
     if (isEmpty($errors)){
-        //round 
-        $adminRoundDAO=new adminRoundDAO();
-        $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
-        $roundID=$roundDetail->getRoundID();
-        $roundStatus=$roundDetail->getRoundStatus();
         $sectionDAO=new SectionDAO();
         
         if ($roundID==2){
@@ -49,9 +52,6 @@ function doUpdateBid($userid,$amount,$course,$section) {
         }
         if (!CheckForCompletedPrerequisites($userid,$course)){
             $errors[]="incomplete prerequisites";
-        }
-        if ($roundStatus!="Started"){
-            $errors[]="round ended";
         }
         if (CheckForCompletedCourse($userid,$course)){
             $errors[]="course completed";
