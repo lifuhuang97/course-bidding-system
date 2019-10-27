@@ -293,6 +293,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     ?>
                             <tr>
                                 <td colspan='8' align='center'><a href='search.php?token=<?php echo $_GET['token']?>'>Search</a></td>
+                                <td colspan='8' align='center'><a href='completed.php?token=<?php echo $_GET['token']?>'>Completed</a></td>
                                 <!-- <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td> -->
                             </tr>
                         </table>

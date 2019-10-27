@@ -80,6 +80,12 @@
             </div>
         </div>
         <div class="display-right">
+			<?php
+                if(!isset($_GET['code'])){
+                    $_GET['code'] = '';
+                    $_GET['section'] = '';
+                }
+        	?>
             <div class="form-container">
                 <div class="form-header">
                     <p>Edit Bid Amount</p>
@@ -88,11 +94,11 @@
                     <input type='hidden' name='eCredit' value="<?=$edollar?>">
                     <div class="form-group">
                         <label for="code">Course Code: </label><br>
-                        <input class="form-control" type="text" name="code" required>
+                        <input class="form-control" type="text" name="code" required value=<?=$_GET['code']?>>
                     </div>
                     <div class="form-group">
                        <label for="sectionID">Section ID: </label><br>
-                        <input class="form-control" type="text" name="section" required>
+                        <input class="form-control" type="text" name="section" required value=<?=$_GET['section']?>>
                     </div>
                     <div class="form-group">
                         <label for="bidAmt">New Bid Amount: </label><br>
@@ -119,7 +125,8 @@
 							        <th>Lesson Start Time</th>
 							        <th>Lesson End Time</th>
 							        <th>Instructor</th>
-							        <th>Amount</th>
+									<th>Amount</th>
+									<th>Edit</th>
 							      </tr>";
 							foreach ($biddedModule as $module) {
 							    echo "<tr><td>";
@@ -133,7 +140,8 @@
 							        <td>{$course->getStart()}</td>
 							        <td>{$course->getEnd()}</td>
 							        <td>{$course->getInstructor()}</td>
-							        <td>{$module->getAmount()}</td>";
+									<td>{$module->getAmount()}</td>";
+									echo "<td><a href = 'editBid.php?token={$_GET['token']}&code={$module->getCode()}&section={$module->getSection()}'>Edit</td>";
 								echo "</tr>";
 							}
 						}

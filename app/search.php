@@ -24,8 +24,8 @@
             echo "<br>";
             echo "<br>";
             echo "Select:";
-            echo"<select name='course'>
-            <option disabled selected value=''> -- select an option -- </option>";
+            echo"<select name='course'>";
+            //<option disabled selected value=''> -- select an option -- </option>";
             $array= [];
             $allcourse1 = 'All course';
             foreach($section as $item){
@@ -42,7 +42,7 @@
                 }
                 
                 
-            }echo"<option value='$allcourse1'>$allcourse1</option>";
+            }echo"<option selected value='$allcourse1'>$allcourse1</option>";
             echo "</select>
             <input type='submit' name='courseSelect' value='Search'>";
             
@@ -97,8 +97,8 @@
             echo "<br>";
             echo "<br>";
             echo "Select:";
-            echo"<select name='faculty'>
-            <option disabled selected value=''> -- select an option -- </option>";
+            echo"<select name='faculty'>";
+            //<option disabled selected value=''> -- select an option -- </option>";
             $array1=[];
             $allcourse2 = 'All Faculty';
             foreach ($courses as $course){
@@ -113,7 +113,7 @@
                     echo">$sch</option>";
                 }
                 
-            }echo"<option value='$allcourse2'>$allcourse2</option>";
+            }echo"<option selected value='$allcourse2'>$allcourse2</option>";
             echo "</select>
             <input type='submit' name='selectfaculty' value='Search'>";
             echo '<br>';
@@ -152,8 +152,8 @@
             echo "<br>";
             echo "<br>";
             echo "Select:";
-            echo"<select name='coursename'>
-            <option disabled selected value=''> -- select an option -- </option>";
+            echo"<select name='coursename'>";
+            //<option disabled selected value=''> -- select an option -- </option>";
             $array2=[];
             $allcourse3 = 'All Title';
             foreach ($courses as $course){
@@ -168,7 +168,7 @@
                     echo">$title</option>";
                 }
                 
-            }echo"<option value='$allcourse3'>$allcourse3</option>";
+            }echo"<option selected value='$allcourse3'>$allcourse3</option>";
             echo "</select>
             <input type='submit' name='coursetitle' value='Search'>";
             echo '<br>';
