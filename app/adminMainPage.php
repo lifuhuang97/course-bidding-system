@@ -5,6 +5,10 @@
     require_once 'include/section-dump.php';
     require_once 'include/common.php';
     require_once 'include/function.php';
+    require_once 'include/bid-status.php';
+    require_once 'include/update-bid.php';
+    require_once 'include/delete-bid.php';
+    require_once 'include/drop-section.php';
     // require_once 'include/protect.php';
     // if (!isset($_SESSION['success'])){
     //     header('Location: login.php');
@@ -157,8 +161,13 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
 <input type='submit' name='navigation' value='Show Student'>
 <input type='submit' name='navigation' value='Show Bid By Section'>
 <input type='submit' name='navigation' value='Show All Student Section'>
+<input type='submit' name='navigation' value='Show Bid Status'>
+<input type='submit' name='navigation' value='Update bid'>
+<input type='submit' name='navigation' value='Delete bid'>
+<input type='submit' name='navigation' value='Drop Section'>
+
 <?php
-    if (isset($_POST['navigation']) || isset($_POST['studentSelect']) || isset($_POST['sectionSelect']) || isset($_POST['sectionsSelect'])){
+    if (isset($_POST['navigation']) || isset($_POST['studentSelect']) || isset($_POST['sectionSelect']) || isset($_POST['sectionsSelect']) || isset($_POST['bidStatusSelect']) || isset($_POST['updateBid']) || isset($_POST['deleteBid']) || isset($_POST['dropSection'])){
         if (isset($_POST['navigation']) && $_POST['navigation']=='Show All Data'){
             $result=doDump();
             echo "<br><table>
@@ -469,8 +478,142 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 }else{
                     echo"<br><p>No Student in this Section</p>";
                 }
+            } 
+               
+        }elseif(isset($_POST['bidStatusSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show Bid Status')){  
+            echo "<h3>Show Bid Status</h3>";
+            $sectionDAO= new SectionDAO();
+            $section=$sectionDAO->RetrieveAll();
+            echo"<select name='sectionb'>
+            <option disabled selected value=''> -- select an option -- </option>";
+            foreach($section as $item){
+                $cid=$item->getCourseid();
+                $sid=$item->getSectionid();
+                
+                echo "<option value='$cid $sid'";
+                if (isset($_POST['sectionb']) && $_POST['sectionb']=="$cid $sid"){
+                    echo "selected";
+                }
+                echo">$cid Section: $sid</option>";
+            }
+            echo "</select>
+            <input type='submit' name='bidStatusSelect' value='Search'>";
+            if (isset($_POST['sectionb'])){
+                $info=explode(' ',$_POST['sectionb']);
+                $result=doBidStatus($info[0],$info[1]);
+                if ($result['status']=='success'){
+                    echo"<table border='1'>
+                    <tr><th>vacancy</th><td>{$result['vacancy']}</td></tr>
+                    <tr><th>min-bid-amount</th><td>{$result['min-bid-amount']}</td></tr>
+                    <tr><th colspan='2'>students</th></tr>";
+                }
+                if(count($result['students'])>0){
+                    $count=1;
+                    echo "<tr><td colspan='2'><table border='1'><tr><th>Row</th><th>Userid</th><th>Amount</th><th>Balance</th><th>Status</th></tr>";
+                    foreach($result['students'] as $oneStudent){
+                        echo"<tr><td>$count</td><td>{$oneStudent['userid']}</td><td>{$oneStudent['amount']}</td><td>{$oneStudent['balance']}</td><td>{$oneStudent['status']}</td></tr>";
+                    }
+                    echo"</table></td></tr>";
+                }else{
+                    echo"<tr><td colspan='2'>No Student bid for this Section</td></th>";
+                }
+                echo"</table>";
             }
             
+        }elseif (isset($_POST['updateBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Update bid')){
+            echo "<h3>Update Bid</h3>";
+            echo "Userid: <input type='text' name='userid'><br>
+            Course: <input type='text' name='course'><br>
+            Section: <input type='text' name='section'><br>
+            Amount: <input type='text' name='amount'><br>
+            <input type='submit' name='updateBid' value='Update'><br>
+            ";
+            if(isset($_POST['updateBid'])){
+                $errors=[];
+                if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
+                    $errors[]='Please enter a Userid';
+                }
+                if(isset($_POST['course']) && strlen(trim($_POST['course'])) == 0){
+                    $errors[]='Please enter a Course';
+                }
+                if(isset($_POST['section']) && strlen(trim($_POST['section'])) == 0){
+                    $errors[]='Please enter a Section';
+                }
+                if(isset($_POST['amount']) && strlen(trim($_POST['amount'])) == 0){
+                    $errors[]='Please enter a Amount';
+                }
+                if (count($errors)==0){
+                    $result=doUpdateBid($_POST['userid'],$_POST['amount'],$_POST['course'],$_POST['section']);
+                    if($result['status']=="error"){
+                        $errors=array_merge( $errors,$result['message']);
+                    }else{
+                        echo "Successfully Updated";
+                    }
+                }
+                foreach ($errors as $error) {
+                    echo $error . "<br>";
+                }
+            }
+        }elseif (isset($_POST['deleteBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Delete bid')){
+            echo "<h3>Delete Bid</h3>";
+            echo "Userid: <input type='text' name='userid'><br>
+            Course: <input type='text' name='course'><br>
+            Section: <input type='text' name='section'><br>
+            <input type='submit' name='deleteBid' value='Delete Bid'><br>
+            ";
+            if(isset($_POST['deleteBid'])){
+                $errors=[];
+                if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
+                    $errors[]='Please enter a Userid';
+                }
+                if(isset($_POST['course']) && strlen(trim($_POST['course'])) == 0){
+                    $errors[]='Please enter a Course';
+                }
+                if(isset($_POST['section']) && strlen(trim($_POST['section'])) == 0){
+                    $errors[]='Please enter a Section';
+                }
+                if (count($errors)==0){
+                    $result=doDeleteBid($_POST['userid'],$_POST['course'],$_POST['section']);
+                    if($result['status']=="error"){
+                        $errors=array_merge( $errors,$result['message']);
+                    }else{
+                        echo "Successfully Deleted";
+                    }
+                }
+                foreach ($errors as $error) {
+                    echo $error . "<br>";
+                }
+            }
+        }elseif (isset($_POST['dropSection']) || (isset($_POST['navigation']) && $_POST['navigation']=='Drop Section')){
+            echo "<h3>Drop Section</h3>";
+            echo "Userid: <input type='text' name='userid'><br>
+            Course: <input type='text' name='course'><br>
+            Section: <input type='text' name='section'><br>
+            <input type='submit' name='dropSection' value='Drop Section'><br>
+            ";
+            if(isset($_POST['dropSection'])){
+                $errors=[];
+                if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
+                    $errors[]='Please enter a Userid';
+                }
+                if(isset($_POST['course']) && strlen(trim($_POST['course'])) == 0){
+                    $errors[]='Please enter a Course';
+                }
+                if(isset($_POST['section']) && strlen(trim($_POST['section'])) == 0){
+                    $errors[]='Please enter a Section';
+                }
+                if (count($errors)==0){
+                    $result=doDropSection($_POST['userid'],$_POST['course'],$_POST['section']);
+                    if($result['status']=="error"){
+                        $errors=array_merge( $errors,$result['message']);
+                    }else{
+                        echo "Successfully Dropped Section";
+                    }
+                }
+                foreach ($errors as $error) {
+                    echo $error . "<br>";
+                }
+            }
         }
        
         
