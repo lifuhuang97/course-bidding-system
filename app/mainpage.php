@@ -147,7 +147,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 <th>Bid Result</th>";
                                 if ($roundStatus == "Finished"){
                                     //should the round be started then they start to show the min bid?
-                                    echo "<th>Min Bid</th>";
+                                    // echo "<th>Min Bid</th>";
                                 };
                                 echo "</tr>";
 
@@ -259,11 +259,20 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
                                                         if($roundID == 2){
-                                                            if($module->getAmount() >= $minbid){
-                                                                echo "<td>Successful</td>";
+                                                            if ($roundStatus != "Finished"){
+                                                                if($module->getAmount() >= $minbid){
+                                                                    echo "<td>Successful</td>";
+                                                                }else{
+                                                                    echo "<td>Unsuccessful. Bid too low.</td>";
+                                                                }
                                                             }else{
-                                                                echo "<td>Unsuccessful. Bid too low.</td>";
+                                                                if (!CheckCourseEnrolled($loginID,$course->getCourseid())){
+                                                                    echo "<td>Unsuccessful. Bid too low.</td>";
+                                                                }else{
+                                                                    echo "<td>Successful</td>";
+                                                                }
                                                             }
+                                                            
                                                         }else{
                                                             echo "<td>Pending</td>";
                                                         }

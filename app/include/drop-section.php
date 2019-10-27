@@ -23,7 +23,7 @@ function doDropSection($userid,$course,$section) {
     $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
     $roundID=$roundDetail->getRoundID();
     $roundStatus=$roundDetail->getRoundStatus();
-    if ($roundStatus=="Not Started"){
+    if ($roundStatus!="Started"){
         $errors[]="round not active";
     }
     //no such bid

@@ -77,9 +77,10 @@ function doUpdateBid($userid,$amount,$course,$section) {
     }else{
         $status=ChangeBidUpdateEdollar(new Bid($userid,$amount,$course,$section));
         //update sectionTable
-        $minbid = CheckMinBid($courseId,$sectionId);
+        $minbid = CheckMinBid($course,$section);
         if ($roundID==2 && $minbid>$currentMinBid){
-            $SectionDAO->updateSectionMinBid($minbid,$courseId,$sectionId);
+            $SectionDAO=new SectionDAO();
+            $SectionDAO->updateSectionMinBid($minbid,$course,$section);
         }
         if ($status){
             $result = [

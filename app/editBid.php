@@ -44,13 +44,6 @@
 			}
 			unset($_SESSION['errors1']);
 		}
-		if (isset($_SESSION['errors2'])) {
-			foreach ($_SESSION['errors2'] as $error) {
-				echo $error;
-				echo "<br>";
-			}
-			unset($_SESSION['errors2']);
-		}
 	}
 ?>   
 <!DOCTYPE html>
@@ -103,7 +96,7 @@
                     </div>
                     <div class="form-group">
                         <label for="bidAmt">New Bid Amount: </label><br>
-                        <input class="form-control" type="number" name="newBidAmt" required>
+                        <input class="form-control" type="text" name="newBidAmt" required>
                     </div>
                     <input class="submit-btn" type='submit' name="submit">
                 </form>

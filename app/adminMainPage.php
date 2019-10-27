@@ -148,93 +148,6 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
     }
     echo"</table>";
 }
-
-// $bidsRecordsDAO = new BidProcessorDAO();
-// $sectDAO = new SectionDAO();
-// $sections = $sectDAO->getAllSections();
-
-
-
-// $roundDetector = $bidsRecordsDAO->RetrieveAll();
-
-// // var_dump($roundNo);
-// // var_dump($roundDetector);
-
-// if($roundStatus == "Started"){
-//     // echo "current bids, should be pending";
-//     $bids = $currentBidsDAO->RetrieveAll();
-    
-//     echo "
-//     <table>
-//     <tr>    
-//     <th colspan = 6>
-//     Bidding Results
-//     </th>
-//     </tr>
-//     <tr>
-//     <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
-//     </tr>";
-
-//     if($bids != []){
-
-//     foreach($bids as $bid){
-
-//         $bidID = $bid->getUserid();
-//         $bidAmt = $bid->getAmount();
-//         $bidCourse = $bid->getCode();
-//         $bidSect = $bid->getSection();
-
-//         echo "<tr>
-//         <td>$bidID</td>
-//         <td>$bidAmt</td>
-//         <td>$bidCourse</td>
-//         <td>$bidSect</td>
-//         <td>Pending</td>
-//         <td>$roundNo</td>
-//         </tr>";
-//     }
-//     echo "</table>";
-// }else{
-//     echo "<tr><td colspan = 6>No Existing Bids</td></tr>";
-// }
-// }
-
-
-// if($roundDetector != [] && $roundNo == 2 && $roundStatus != "Started"){
-//     // echo "should show cleared round(s) bids";
-//     echo "
-//     <table>
-//     <tr>
-//     <th colspan = 5>
-//     Current Bids
-//     </th>
-//     </tr>
-//     <tr>
-//     <th>User ID</th><th>Amount</th><th>Course</th><th>Section</th><th>Result</th><th>Round</th>
-//     </tr>";
-    
-//     foreach($roundDetector as $bid){
-//         $bidID = $bid->getUserid();
-//         $bidAmt = $bid->getAmount();
-//         $bidCourse = $bid->getCourse();
-//         $bidSect = $bid->getSection();
-//         $bidStatus = $bid->getBidStatus();
-//         $bidRound = $bid->getBidRound();
-
-//         echo "<tr>
-//         <td>$bidID</td>
-//         <td>$bidAmt</td>
-//         <td>$bidCourse</td>
-//         <td>$bidSect</td>
-//         <td>$bidStatus</td>
-//         <td>$bidRound</td>
-//         </tr>
-//         ";
-
-//     }
-//     echo "</table>";
-// }
- 
 ?>
 <br>
 <br>
@@ -272,18 +185,24 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Exam End</th>
             </tr>";
             $count=1;
-            foreach($result['course'] as $row){
+            if (count($result['course'])>0){
+                foreach($result['course'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['course']}</td>
+                        <td>{$row['school']}</td>
+                        <td>{$row['title']}</td>
+                        <td>{$row['school']}</td>
+                        <td>{$row['exam date']}</td>
+                        <td>{$row['exam start']}</td>
+                        <td>{$row['exam end']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['course']}</td>
-                    <td>{$row['school']}</td>
-                    <td>{$row['title']}</td>
-                    <td>{$row['school']}</td>
-                    <td>{$row['exam date']}</td>
-                    <td>{$row['exam start']}</td>
-                    <td>{$row['exam end']}</td>
+                <td colspan='8'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //section
@@ -301,20 +220,26 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Size</th>
             </tr>";
             $count=1;
-            foreach($result['section'] as $row){
-                $weekday=[1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+            if (count($result['section'])>0){
+                foreach($result['section'] as $row){
+                    $weekday=[1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['course']}</td>
+                        <td>{$row['section']}</td>
+                        <td> {$weekday[$row['day']]}</td>
+                        <td>{$row['start']}</td>
+                        <td>{$row['end']}</td>
+                        <td>{$row['instructor']}</td>
+                        <td>{$row['venue']}</td>
+                        <td>{$row['size']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['course']}</td>
-                    <td>{$row['section']}</td>
-                    <td> {$weekday[$row['day']]}</td>
-                    <td>{$row['start']}</td>
-                    <td>{$row['end']}</td>
-                    <td>{$row['instructor']}</td>
-                    <td>{$row['venue']}</td>
-                    <td>{$row['size']}</td>
+                <td colspan='9'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //student
@@ -329,16 +254,22 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Edollar</th>
             </tr>";
             $count=1;
-            foreach($result['student'] as $row){
+            if (count($result['student'])>0){
+                foreach($result['student'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['userid']}</td>
+                        <td>{$row['password']}</td>
+                        <td>{$row['name']}</td>
+                        <td>{$row['school']}</td>
+                        <td>{$row['edollar']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['userid']}</td>
-                    <td>{$row['password']}</td>
-                    <td>{$row['name']}</td>
-                    <td>{$row['school']}</td>
-                    <td>{$row['edollar']}</td>
+                <td colspan='6'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //prerequisite
@@ -350,13 +281,19 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Prerequisite</th>
             </tr>";
             $count=1;
-            foreach($result['prerequisite'] as $row){
+            if (count($result['prerequisite'])>0){
+                foreach($result['prerequisite'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['course']}</td>
+                        <td>{$row['prerequisite']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['course']}</td>
-                    <td>{$row['prerequisite']}</td>
+                <td colspan='3'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //bid
@@ -370,15 +307,21 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Section</th>
             </tr>";
             $count=1;
-            foreach($result['bid'] as $row){
+            if (count($result['bid'])>0){
+                foreach($result['bid'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['userid']}</td>
+                        <td>{$row['amount']}</td>
+                        <td>{$row['course']}</td>
+                        <td>{$row['section']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['userid']}</td>
-                    <td>{$row['amount']}</td>
-                    <td>{$row['course']}</td>
-                    <td>{$row['section']}</td>
+                <td colspan='5'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //completed-course
@@ -390,13 +333,19 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Course</th>
             </tr>";
             $count=1;
-            foreach($result['completed-course'] as $row){
+            if (count($result['completed-course'])>0){
+                foreach($result['completed-course'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['userid']}</td>
+                        <td>{$row['course']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['userid']}</td>
-                    <td>{$row['course']}</td>
+                <td colspan='3'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
             //section-student
@@ -410,15 +359,21 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                 <th>Amount</th>
             </tr>";
             $count=1;
-            foreach($result['section-student'] as $row){
+            if (count($result['section-student'])>0){
+                foreach($result['section-student'] as $row){
+                    echo"<tr>
+                        <td>$count</td>
+                        <td>{$row['userid']}</td>
+                        <td>{$row['course']}</td>
+                        <td>{$row['section']}</td>
+                        <td>{$row['amount']}</td>
+                    </tr>";
+                    $count++;
+                }
+            }else{
                 echo"<tr>
-                    <td>$count</td>
-                    <td>{$row['userid']}</td>
-                    <td>{$row['course']}</td>
-                    <td>{$row['section']}</td>
-                    <td>{$row['amount']}</td>
+                <td colspan='5'>no data</td>
                 </tr>";
-                $count++;
             }
             echo"</table>";
         }elseif(isset($_POST['studentSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show Student')){
@@ -503,7 +458,6 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
             if (isset($_POST['sections'])){
                 $info=explode(' ',$_POST['sections']);
                 $result=doSectionDump($info[0],$info[1]);
-                // var_dump($result);
                 if(count($result['students'])>0){
                     $count=1;
                     echo "<br><br><table border='1'><tr><th>Row</th><th>Userid</th><th>Amount</th></tr>";
