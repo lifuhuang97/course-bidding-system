@@ -213,8 +213,9 @@ function CheckMinBidFromBiddingResult($course,$section){
         $vacancy=$row['size'];
     }
     //student section
-    $bidDAO= new BidDAO();
-    $allBid=$bidDAO->getAllBids([$course,$section]);
+    
+    $BidProcessorDAO= new BidProcessorDAO();
+    $allBid=$BidProcessorDAO->RetrieveAllStudentByCourseSection($course,$section);
 
     $value = 10.00;
     if ($vacancy > count($allBid)){

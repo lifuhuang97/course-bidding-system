@@ -39,7 +39,10 @@
                 <div class="navbar-left__profile">
                     <div class="navbar-left__profile__container">
                         <div class="profile-picture">
-                            <img class="profpic" src="css/profpic1.png">
+                        <a href="mainpage.php?token=<?php echo $_GET['token']?>">
+                        <img class="profpic" src="css/profpic1.png">
+                        </a>
+                            
                         </div>
                         <div class="profile-details">
                             <p>Welcome, <?=$name?></p>
@@ -105,7 +108,7 @@
                                 <td>$roundStartEndTimes[1]</td>
                             </tr>
                             <tr>
-                                <th>Round 2A Window 2</th>
+                                <th>Round 2</th>
                                 <td>$roundStartEndTimes[2]</td>
                                 <td>$roundStartEndTimes[3]</td>
                             </tr>
@@ -113,7 +116,87 @@
 
 ?>
                         </table> 
+
+                        </div>
+                        
+                        <?php
+if($roundID == 2 && $roundStatus != "Started"){
+
+?>
+
+                    <div class="display-right__table-cart">
+                        <table>
+                            <tr>
+                                <th class="table-title" colspan="8">Round <?php $roundID?> Bidding Results</th>
+                            </tr>
+                            <tr>
+                                <th colspan="8">
+                                <?php 
+
+                                $bidDatabase = new BidProcessorDAO();
+                                $bidsByUser = $bidDatabase->getBidsByID($loginID);
+                                echo "<tr align='center'>
+                                <th>Code</th>
+                                <th>Title</th>
+                                <th>Section</th>
+                                <th>Day</th>
+                                <th>Lesson Start Time</th>
+                                <th>Lesson End Time</th>
+                                <th>Instructor</th>
+                                <th>Amount</th>
+                                <th>Bid Result</th>";
+                                if ($roundStatus == "Finished"){
+                                    //should the round be started then they start to show the min bid?
+                                    // echo "<th>Min Bid</th>";
+                                };
+                                echo "</tr>";
+
+                            foreach ($bidsByUser as $bid){
+                                
+                                echo "<tr><td>";
+                                    $code = $bid[2];
+                                    $bidAmt = $bid[1];
+                                    $bidSection = $bid[3];
+                                    if($roundID == 2 && $roundStatus == "Not Started"){
+                                        $biddedRound = 1;
+                                    }elseif($roundID==2){
+                                        $biddedRound = 2;
+                                    }
+                                    
+                                    $bidFromWhichRound = $bid[5];
+                                    if($biddedRound == $bidFromWhichRound){
+                                    echo "$code</td>";
+                                    echo "<td>";
+                                    $coursesDAO = new CourseDAO();
+                                    $course = $coursesDAO->RetrieveAllCourseDetail($code,$bidSection);
+                                    $bidresult = $bid[4];
+
+                                    
+                                echo "{$course[0]->getTitle()}</td>
+                                    <td>{$bidSection}</td>
+                                    <td>{$course[0]->getDay()}</td>
+                                    <td>{$course[0]->getStart()}</td>
+                                    <td>{$course[0]->getEnd()}</td>
+                                    <td>{$course[0]->getInstructor()}</td>
+                                    <td>{$bidAmt}</td>
+                                    <td>{$bidresult}</td>";
+                                    if ($roundStatus== "Finished"){
+                                        //should the round be started then they start to show the min bid?
+                                        
+                                        // $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
+                                        // echo "<td>$minbid</td>";
+                                    }
+                                }
+                            }
+                        }
+                       
+                                ?>
+                                </th></tr>
+                            <tr></tr>
+                        </table>
                     </div>
+
+
                     <div class="display-right__table-cart">
                         <table>
                             <tr>
@@ -129,7 +212,6 @@
                                     <?php
                                         //getting the round ID and roundstat
                                         //print ($roundID);
-
                                         if (isset($biddedModule)){
                                             if (count($biddedModule)==0){
                                                 echo "<tr>
@@ -147,7 +229,7 @@
                                                     <th>Instructor</th>
                                                     <th>Amount</th>
                                                     <th>Bid Result</th>";
-                                                    if ($roundID==2){
+                                                    if ($roundID == 2 && $roundStatus != "Not Started"){
                                                         //should the round be started then they start to show the min bid?
                                                         echo "<th>Min Bid Required</th>";
                                                     };
@@ -165,7 +247,9 @@
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
                                                     //retrieve minimum bid                  
-                                                    $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
+                                                    $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid(),FALSE);
+                                                    $SectionDAO = new SectionDAO();
+                                                    $currentMinBid = $SectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
 
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
@@ -174,14 +258,27 @@
                                                         <td>{$course->getEnd()}</td>
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
-                                                        if(!isempty($bidresult)){echo "
-                                                        <td>{$bidresult[0]}</td>";
+                                                        if($roundID == 2){
+                                                            if ($roundStatus != "Finished"){
+                                                                if($module->getAmount() >= $minbid){
+                                                                    echo "<td>Successful</td>";
+                                                                }else{
+                                                                    echo "<td>Unsuccessful. Bid too low.</td>";
+                                                                }
+                                                            }else{
+                                                                if (!CheckCourseEnrolled($loginID,$course->getCourseid())){
+                                                                    echo "<td>Unsuccessful. Bid too low.</td>";
+                                                                }else{
+                                                                    echo "<td>Successful</td>";
+                                                                }
+                                                            }
+                                                            
                                                         }else{
                                                             echo "<td>Pending</td>";
                                                         }
-                                                        if ($roundID==2){
-                                                            //should the round be started then they start to show the min bid?
-                                                            echo "<td>$minbid</td>";
+                                                        if ($roundID==2 && $roundStatus != "Not Started"){
+                                                            
+                                                            echo "<td>$currentMinBid</td>";
                                                         }; 
                                                         
                                                     echo "</tr>";
@@ -196,7 +293,8 @@
                                     ?>
                             <tr>
                                 <td colspan='8' align='center'><a href='search.php?token=<?php echo $_GET['token']?>'>Search</a></td>
-                                <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td>
+                                <td colspan='8' align='center'><a href='completed.php?token=<?php echo $_GET['token']?>'>Completed</a></td>
+                                <!-- <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td> -->
                             </tr>
                         </table>
                     </div>

@@ -502,8 +502,6 @@ function doBootstrap() {
                         $inputRowError[]=$lineError;
                     }else{
                         ChangeBidUpdateEdollar(new Bid($data[0],$data[1],$data[2],$data[3]));
-                        $bidprocessor = new bidProcessorDAO();
-                        $bidprocessor->addBidResults($data[0],$data[1],$data[2],$data[3],null,1);
                         $bid_processed++;
                     }
                     $line++;

@@ -2,6 +2,12 @@
 	require_once 'include/common.php';
     require_once 'include/function.php';
 //    require_once 'include/protect.php';
+    $student = $_SESSION['student']; 
+	$userid = $student->getUserid(); #get userid
+	$password = $student->getPassword(); #get password
+	$name = $student->getName(); #get name
+    $school = $student->getSchool();
+	$edollar = $student->getEdollar(); #get edollar
 
     $adminRoundDAO = new adminRoundDAO();
     $adminRoundStatus = $adminRoundDAO->RetrieveRoundDetail();
@@ -38,13 +44,6 @@
 			}
 			unset($_SESSION['errors1']);
 		}
-		if (isset($_SESSION['errors2'])) {
-			foreach ($_SESSION['errors2'] as $error) {
-				echo $error;
-				echo "<br>";
-			}
-			unset($_SESSION['errors2']);
-		}
 	}
 ?>   
 <!DOCTYPE html>
@@ -60,7 +59,9 @@
             <div class="navbar-left__profile">
                 <div class="navbar-left__profile__container">
                     <div class="profile-picture">
+					<a href="mainpage.php?token=<?php echo $_GET['token']?>">
                         <img class="profpic" src="css/profpic1.png">
+                        </a>
                     </div>
                     <div class="profile-details">
                         <p>Welcome, <?=$name?></p>
@@ -79,6 +80,12 @@
             </div>
         </div>
         <div class="display-right">
+			<?php
+                if(!isset($_GET['code'])){
+                    $_GET['code'] = '';
+                    $_GET['section'] = '';
+                }
+        	?>
             <div class="form-container">
                 <div class="form-header">
                     <p>Edit Bid Amount</p>
@@ -87,15 +94,15 @@
                     <input type='hidden' name='eCredit' value="<?=$edollar?>">
                     <div class="form-group">
                         <label for="code">Course Code: </label><br>
-                        <input class="form-control" type="text" name="code" required>
+                        <input class="form-control" type="text" name="code" required value=<?=$_GET['code']?>>
                     </div>
                     <div class="form-group">
                        <label for="sectionID">Section ID: </label><br>
-                        <input class="form-control" type="text" name="section" required>
+                        <input class="form-control" type="text" name="section" required value=<?=$_GET['section']?>>
                     </div>
                     <div class="form-group">
                         <label for="bidAmt">New Bid Amount: </label><br>
-                        <input class="form-control" type="number" name="newBidAmt" required>
+                        <input class="form-control" type="text" name="newBidAmt" required>
                     </div>
                     <input class="submit-btn" type='submit' name="submit">
                 </form>
@@ -118,7 +125,8 @@
 							        <th>Lesson Start Time</th>
 							        <th>Lesson End Time</th>
 							        <th>Instructor</th>
-							        <th>Amount</th>
+									<th>Amount</th>
+									<th>Edit</th>
 							      </tr>";
 							foreach ($biddedModule as $module) {
 							    echo "<tr><td>";
@@ -132,7 +140,8 @@
 							        <td>{$course->getStart()}</td>
 							        <td>{$course->getEnd()}</td>
 							        <td>{$course->getInstructor()}</td>
-							        <td>{$module->getAmount()}</td>";
+									<td>{$module->getAmount()}</td>";
+									echo "<td><a href = 'editBid.php?token={$_GET['token']}&code={$module->getCode()}&section={$module->getSection()}'>Edit</td>";
 								echo "</tr>";
 							}
 						}

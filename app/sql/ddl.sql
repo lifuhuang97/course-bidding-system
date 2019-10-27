@@ -16,15 +16,16 @@ create table COURSE (
 
 create table SECTION (
     coursesID varchar(100) not null,
-	sectionID varchar(2) not null,
+  sectionID varchar(2) not null,
     day int(1) not null,
     start time not null,
-    end	time not null,
+    end  time not null,
     instructor varchar(100) not null,
-	venue varchar(100) not  null,
-	size int not  null,
-	CONSTRAINT SECTION_PK primary key (coursesID,sectionID),
-	CONSTRAINT SECTION_FK1 foreign key(coursesID) references COURSE(courseID)
+  venue varchar(100) not  null,
+  size int not  null,
+  minbid decimal(5,2),
+  CONSTRAINT SECTION_PK primary key (coursesID,sectionID),
+  CONSTRAINT SECTION_FK1 foreign key(coursesID) references COURSE(courseID)
 );
 
 create table STUDENT (
@@ -83,8 +84,8 @@ create table STUDENT_SECTION (
     course varchar(100) not null,
     section varchar(2) not null,
     bidstatus varchar(50),
-    bidround varchar(1),
-  CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section)
+    bidround int(1),
+  CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section,bidround)
 );
 
 create table BID_PROCESSOR (
@@ -92,9 +93,9 @@ create table BID_PROCESSOR (
     amount decimal(5,2) not null,
     course varchar(100) not null,
     section varchar(2) not null,
-    bidstatus varchar(50),
-    bidround int(1),
-	CONSTRAINT BID_PROCESSOR_PK primary key (userid,amount,course,section)
+    bidstatus varchar(50) not null,
+    bidround int(1) not null,
+  CONSTRAINT BID_PROCESSOR_PK primary key (userid,amount,course,section,bidstatus,bidround)
 );
 
 

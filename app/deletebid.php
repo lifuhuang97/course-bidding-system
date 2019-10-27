@@ -22,54 +22,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Drop Exisiting Bid</title>
+<title>Drop Bid</title>
 <link rel="stylesheet" type="text/css" href="css/deletebid.css">
+<link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+<script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-    <h1>
-        Drop Existing Bid
-    </h1>
-    Welcome, <?=$name?><br>
-    School: <?=$school?><br>
-    Credit Left: <?=$edollar?>
-    <hr>
-
-    Please enter the course that you wish to drop:
-    <form action="deletebidprocess.php" method="GET">
-        <input type='hidden' name='token' value="<?php echo $_GET['token'];?>">
-        <table>
-            <tr>
-                <th>Course Code:</th>
-                <td><input type='text' name='code'></td>    
-            </tr>
-            <tr>
-                <th>Section ID     : </th>
-                <td><input type='text' name='section'></td>
-            </tr>
-        </table>
-        <input type='submit'>
-        <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
-        <br>
-        <br>
-    <?php
-        if (isset($_SESSION['errors1'])) {
-            foreach ($_SESSION['errors1'] as $errors){
-                print $errors;
-                print "<br>";
-            }
-            unset ($_SESSION['errors1']);
-        }
-    ?>
-    </form>
-    <hr>
-    
-    All bidded courses
-
-
-
-<?php
+    <div class="container">
+        <div class="navbar-left">
+            <div class="navbar-left__profile">
+                <div class="navbar-left__profile__container">
+                    <div class="profile-picture">
+                        <a href="mainpage.php?token=<?php echo $_GET['token']?>">
+                            <img class="profpic" src="css/profpic1.png">
+                        </a>
+                            
+                    </div>
+                    <div class="profile-details">
+                        <p>Welcome, <?=$name?></p>
+                        <p><?=$school?></p>
+                        <p>Credit Balance: <?=$edollar?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div>
+            <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID <i class="far fa-calendar-plus"></i></div></a>
+            <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID <i class="fas fa-pen-square"></i></div></a>
+            <a href='deletebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropCourse">DROP BID <i class="far fa-calendar-times"></i></div></a>
+            <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+            <div class="navbar-left__smuLogo">
+                <img src="css/smulogo.png">
+            </div>
+        </div>
+        <div class="display-right">
+            <div class="form-container">
+                <div class="form-header">
+                    <p>Drop Existing Bid</p>
+                </div>
+                <form action="deletebidprocess.php?token=<?php echo $_GET['token']?>" method="GET">
+                    <input type='hidden' name='token' value="<?php echo $_GET['token'];?>">
+                    <div class="form-group">
+                        <label for="code">Course Code: </label><br>
+                        <input class="form-control" type='text' name='code' required>
+                    </div>
+                    <div class="form-group">
+                        <label for="section">Section ID: </label><br>
+                        <input class="form-control" type='text' name='section' required>
+                    </div>
+                    <input class="submit-btn" name="submit" type='submit'>
+                    <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
+                </form>
+            </div>
+            <?php
+                if (isset($_SESSION['errors1'])) {
+                    foreach ($_SESSION['errors1'] as $errors){
+                        print $errors;
+                        print "<br>";
+                    }
+                    unset ($_SESSION['errors1']);
+                }
+            ?>
+            <?php
     if (count($biddedModule)==0){
         echo "No available course";
     }else {
@@ -100,7 +115,7 @@
                 <td>{$course->getEnd()}</td>
                 <td>{$course->getInstructor()}</td>
                 <td>{$module->getAmount()}</td>";
-                ?>
+?>
             
             <td>
             <button id="<?= $code?>" class="trigger">Drop</button>
@@ -125,7 +140,10 @@
         }
     }
 
-?>
+?>  
+        </div>
+    </div> 
+
 </body>
 <script>
 
