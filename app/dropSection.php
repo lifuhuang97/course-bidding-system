@@ -15,7 +15,7 @@
 
     //getting the round ID and roundstat
     $adminround = new adminRoundDAO();
-    $roundDetail = $adminround->RetrieveRoundDetail();
+    $roundDetail = $adminround->retrieveRoundDetail();
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 ?>
@@ -74,7 +74,6 @@
                         <input type="text" name="section" required>
                     </div>
                     <input class="submit-btn" type='submit' name="Submit">
-                    <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
                 </form>
             </div>
             <?php

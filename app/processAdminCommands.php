@@ -1,9 +1,9 @@
 <?php
 
 require_once 'include/common.php';
-require_once 'include/start.php';
-require_once 'include/stop.php';
-require_once 'include/restart.php';
+require_once 'include/DoStart.php';
+require_once 'include/DoStop.php';
+require_once 'include/DoRestart.php';
 
 if (isset($_POST['submit'])) {
      $_SESSION['roundaction'] = $_POST['submit'];
@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
  // get DAOs
 $adminRoundDAO = new adminRoundDAO();
 
-$round = $adminRoundDAO->RetrieveRoundDetail();
+$round = $adminRoundDAO->retrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 

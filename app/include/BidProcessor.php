@@ -1,6 +1,6 @@
 <?php
 
-class bidProcessor {
+class BidProcessor {
 
     private $userid;
     private $amount;

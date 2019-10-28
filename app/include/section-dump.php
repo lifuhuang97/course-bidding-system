@@ -22,7 +22,7 @@ function doSectionDump($course,$section) {
             ];
     }else{
         $StudentSectionDAO=new StudentSectionDAO();
-        $students=$StudentSectionDAO->RetrieveAllStudentByCourseSection($course,$section);
+        $students=$StudentSectionDAO->retrieveAllStudentByCourseSection($course,$section);
         $StudentList=[];
         foreach ($students as $student){
             $StudentList[]=["userid"=>$student->getUserid(),

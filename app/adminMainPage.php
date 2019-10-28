@@ -68,7 +68,7 @@
 <?php
 // Get up-to-date round details
 $adminRoundDAO = new adminRoundDAO();
-$round = $adminRoundDAO->RetrieveRoundDetail();
+$round = $adminRoundDAO->retrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 ?>

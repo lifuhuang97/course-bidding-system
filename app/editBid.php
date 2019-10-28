@@ -10,7 +10,7 @@
     $edollar = $student->getEdollar(); #get edollar
 
     $adminRoundDAO = new adminRoundDAO();
-    $adminRoundStatus = $adminRoundDAO->RetrieveRoundDetail();
+    $adminRoundStatus = $adminRoundDAO->retrieveRoundDetail();
     if ($adminRoundStatus->getRoundStatus() != "Started") {
         echo "Edit Bid is not allowed at the moment. ";
         echo "Go back to ";

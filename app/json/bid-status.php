@@ -20,9 +20,9 @@ if (isset($_REQUEST['r'])){
     }else{
         $section=$request['section'];
     }
-    // if (isset($tokenError)){
-    //     $errors=array_merge ($tokenError,$errors);
-    // }
+    if (isset($tokenError)){
+        $errors=array_merge ($tokenError,$errors);
+    }
 }else{
     $errors = array_merge ($tokenError,[ 
             isMissingOrEmpty ('course'),
@@ -43,7 +43,22 @@ if (!isEmpty($errors)) {
 }
 else{
     $result=doBidStatus($course,$section);
+    if ($result['status']=='success'){
+        $result['vacancy']=(int)$result['vacancy'];
+    }
 }
 header('Content-Type: application/json');
-echo json_encode($result, JSON_PRETTY_PRINT);
+$json= json_encode($result, JSON_PRETTY_PRINT);
+if ($result['status']=='success'){
+    if ($result['min-bid-amount']!='-'){
+        $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],1).'',$json);
+    }
+    if (count($result['students'])>0){
+        foreach ($result['students'] as $key=>$student){
+            $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
+            $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],1).'',$json);    
+        }
+    }
+}
+echo $json;
 ?>

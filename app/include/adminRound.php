@@ -1,6 +1,6 @@
 <?php
 
-class adminRound {
+class AdminRound {
     private $adminID;
     private $adminPW;
     private $adminTK;

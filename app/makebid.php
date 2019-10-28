@@ -18,7 +18,7 @@
 
         //getting the round ID and roundstat
         $adminround = new adminRoundDAO();
-        $roundDetail = $adminround->RetrieveRoundDetail();
+        $roundDetail = $adminround->retrieveRoundDetail();
         $roundID = $roundDetail->getRoundID();
         $roundstat = $roundDetail->getRoundStatus();
 
@@ -59,7 +59,7 @@
 ?>
 <html>
 <head>
-    <title>BOSS Bidding</title>
+    <title>BIOS Bidding</title>
     <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
     <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
 </head>
@@ -173,7 +173,7 @@ if ($roundID==1 && $roundstat=='Started'){
                 <td>{$course->getExamStart()}</td>
                 <td>{$course->getExamEnd()}</td>
                 <td><a href = 'makebid.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>Add</td>
-                <td><a href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
+                <td><a target='_blank' href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
                 </tr>";
                 if (isset($_GET['button'])){
                     $nnowcourse = $nowcourse;
@@ -229,7 +229,9 @@ if ($roundID==1 && $roundstat=='Started'){
                 $minbid = $sectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
                 $nowcourse = $course->getCourseid();
                 $nowsection = $course->getSectionid();
-                
+                if ($minbid==''){
+                    $minbid='-';
+                }
                 echo"<tr>
                 <td>{$course->getCourseid()}</td>
                 <td>{$course->getTitle()}</td>
@@ -262,4 +264,3 @@ if ($roundID==1 && $roundstat=='Started'){
         </div>
 </body>
 </html>
-<a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>

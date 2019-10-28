@@ -14,7 +14,7 @@
 
     //getting the round ID and roundstat
     $adminround = new adminRoundDAO();
-    $roundDetail = $adminround->RetrieveRoundDetail();
+    $roundDetail = $adminround->retrieveRoundDetail();
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 ?>
