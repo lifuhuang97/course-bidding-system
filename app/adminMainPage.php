@@ -1,3 +1,5 @@
+<!-- Requires for all used functions !-->
+
 <?php
     require_once 'include/dump.php';
     require_once 'include/user-dump.php';
@@ -18,45 +20,73 @@
 ?>
 
 
+
 <html>
 <head>
-    <title>BOSS Bidding System</title>
+<title>BOSS Bidding</title>
+        <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+        <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
     <style> 
         table, th, td {
             text-align:center; 
         } 
-  
     </style> 
 </head>
 
 <body>
-    <p>Welcome, Admin!</p>
-    <br>
-    <br>
 
+<body>
+<div class="container">
+            <div class="navbar-left">
+                <div class="navbar-left__profile">
+                    <div class="navbar-left__profile__container">
+                        <div class="profile-picture">
+                                <img class="profpic" src="css/profpic1.png">
+                            </a>
+                        </div>
+                        <div class="profile-details">
+                            <p>Welcome, Admin!</p>
+                        </div>
+                    </div>
+                </div>
+            
+            <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+            
+            <!-- <form action='processAdminCommands.php' method='post' id="submit"><button id="submit" value='Start Round'>Start Round</button></form> -->
+            
+            <div class="navbar-left__smuLogo">
+                    <img src="css/smulogo.png">
+            </div>
+            <div class="display-right">
+                <?php //Current Time Table<br> ?>
+                <div class="display-right-container">
+                    <div class="display-right__table-dates">
+</div>
+</div>
+</div>
+</div>
 <?php
-
 // Get up-to-date round details
 $adminRoundDAO = new adminRoundDAO();
 $round = $adminRoundDAO->RetrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
-
 ?>
 
-<form action="processAdminCommands.php" method="post">
+
+<table>
+                            <tr>
+                                <th class="table-title" colspan="3">Bid System Status</th>
+
 
 <?php
 
 //display current round & status
-echo "<table>
-<tr><th colspan='6'>Bid System Status</th></tr>
-    <tr><th></th><th></th>
-        <th>Round: {$roundNo}</th>
-        <th>Status: {$roundStatus}</th>
-        <th></th>
-        <th></th>
-    </tr>";
+echo "
+ 
+        <tr><th colspan='3'>Round: {$roundNo}</th></tr>
+        </th><th colspan='3'>Status: {$roundStatus}</th></tr>
+    ";
 
 ?>
 
@@ -81,21 +111,30 @@ if ($roundStatus == "Started"){
     }
 }
 
-echo "<tr>
-<td></td><td></td>
+echo "
+
+<form action='processAdminCommands.php' method='post'>
+<tr>
+
     <td><input type='submit' name='submit' value='Start Round' $startStatus></td>
     <td><input type='submit' name='submit' value='Clear Round' $clearStatus></td>
-    <td></td><td></td>
+ 
 </tr>
-</form>";
+<tr>
+<td colspan='3'><input type='submit' name='submit' value='Reset Round'></td>
+</tr>
+</form>
+</table>
+</div>
+</div>
+
+";
 
 ?>
 <!-- to reset database to base state >require new bootstrap< -->
-<tr>
-    <td colspan='6'><input type="submit" name="submit" value="Reset Round"></td>
-</tr>
 
-</table>
+
+<div class="display-right__table-cart">
 
 <?php
 
