@@ -69,8 +69,8 @@
             <div class="navbar-left__profile">
                 <div class="navbar-left__profile__container">
                     <div class="profile-picture">
-                    <a href="mainpage.php?token=<?php echo $_GET['token']?>">
-                        <img class="profpic" src="css/profpic1.png">
+                        <a href="mainpage.php?token=<?php echo $_GET['token']?>">
+                            <img class="profpic" src="css/profpic1.png">
                         </a>
                     </div>
                     <div class="profile-details">
@@ -80,10 +80,12 @@
                     </div>
                 </div>
             </div>
-            <div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div>
+            <a href="completed.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div></a>
+            <a href="search.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__search">SEARCH <i class="fas fa-search"></i></div></a>
             <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID <i class="far fa-calendar-plus"></i></div></a>
             <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID <i class="fas fa-pen-square"></i></div></a>
             <a href='deletebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropCourse">DROP BID <i class="far fa-calendar-times"></i></div></a>
+            <a href='dropSection.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropSection">DROP SECTION <i class="fas fa-minus-square"></i></div></a>
             <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
             <div class="navbar-left__smuLogo">
                 <img src="css/smulogo.png">

@@ -15,11 +15,11 @@
 	background: -webkit-linear-gradient(#8380B8, #0D1060);  /* Chrome 10-25, Safari 5.1-6 */
 	background: linear-gradient(#8380B8, #0D1060); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
-.navbar-left__profile, .navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout, .navbar-left__smuLogo{
+.navbar-left__profile, .navbar-left__completed, .navbar-left__search ,.navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__dropSection, .navbar-left__logout, .navbar-left__smuLogo{
 	padding: 15px;
 	text-align: right;
 }
-.navbar-left__completed, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__logout{
+.navbar-left__completed, .navbar-left__search, .navbar-left__addCourse, .navbar-left__editBid, .navbar-left__dropCourse, .navbar-left__dropSection, .navbar-left__logout{
 	font-size: small;
 }
 .profile-picture{
@@ -39,7 +39,7 @@
 .navbar-left__smuLogo img{
 	width: 10em;
 }
-.navbar-left__completed:hover, .navbar-left__addCourse:hover, .navbar-left__editBid:hover, .navbar-left__dropCourse:hover, .navbar-left__logout:hover{
+.navbar-left__completed:hover, .navbar-left__search:hover, .navbar-left__addCourse:hover, .navbar-left__editBid:hover, .navbar-left__dropCourse:hover, .navbar-left__dropSection:hover, .navbar-left__logout:hover{
 	background: white;
 	color: #0D1060;
 }
@@ -48,9 +48,9 @@
 }
 table{
 	border: 1px solid #D6D5E4;
-	-webkit-box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
-	-moz-box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
-	box-shadow: 3px 6px 10px 3px rgba(214,213,228,1);
+	-webkit-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
+	-moz-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
+	box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
 }
 .table-title{
 	/*text-align: center;*/
@@ -70,6 +70,7 @@ th{
     height: 17em;
 }
 .form-container form{
+	border-radius: 0 0 10px 10px;
 	-webkit-box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
 	-moz-box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
 	box-shadow: 10px 10px 10px 1px rgba(13,16,96,0.5);
@@ -81,6 +82,7 @@ th{
 	background: -webkit-linear-gradient(#8380B8, #0D1060);  /* Chrome 10-25, Safari 5.1-6 */
 	background: linear-gradient(#8380B8, #0D1060);
 	color: white;
+	border-radius: 10px 10px 0 0;
 }
 .form-group{
 	padding: 0.5em;
@@ -106,5 +108,8 @@ th{
     margin-bottom: 5px;
 }
 .content-container{
+	padding: 2em;
+}
+.display-right__container{
 	padding: 2em;
 }

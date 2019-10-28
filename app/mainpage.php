@@ -39,10 +39,9 @@
                 <div class="navbar-left__profile">
                     <div class="navbar-left__profile__container">
                         <div class="profile-picture">
-                        <a href="mainpage.php?token=<?php echo $_GET['token']?>">
-                        <img class="profpic" src="css/profpic1.png">
-                        </a>
-                            
+                            <a href="mainpage.php?token=<?php echo $_GET['token']?>">
+                                <img class="profpic" src="css/profpic1.png">
+                            </a>
                         </div>
                         <div class="profile-details">
                             <p>Welcome, <?=$name?></p>
@@ -51,10 +50,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div>
+                <a href="completed.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div></a>
+                <a href="search.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__search">SEARCH <i class="fas fa-search"></i></div></a>
                 <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID <i class="far fa-calendar-plus"></i></div></a>
                 <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID <i class="fas fa-pen-square"></i></div></a>
                 <a href='deletebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropCourse">DROP BID <i class="far fa-calendar-times"></i></div></a>
+                <a href='dropSection.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropSection">DROP SECTION <i class="fas fa-minus-square"></i></div></a>
                 <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
                 <div class="navbar-left__smuLogo">
                     <img src="css/smulogo.png">
@@ -291,147 +292,8 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     </tr>";
                                         }
                                     ?>
-                            <tr>
-                                <td colspan='8' align='center'><a href='search.php?token=<?php echo $_GET['token']?>'>Search</a></td>
-                                <td colspan='8' align='center'><a href='completed.php?token=<?php echo $_GET['token']?>'>Completed</a></td>
-                                <!-- <td colspan='8' align='center'><a href='pastResult.php'>View Past Bidding Result</a></td> -->
-                            </tr>
                         </table>
                     </div>
-
-                    <div class="display-right__table-cart">
-                        <table border='1px black'>
-                            <tr>
-                                <th colspan='4' class="table-title">Timetable</th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th>08:30 AM - 11:45 AM</th>
-                                <th>12:00 PM - 3:15 PM</th>
-                                <th>3:30 PM - 6:45PM</th>
-                            </tr>
-                            
-                            <?php
-                                $days = [1, 2, 3, 4, 5];
-                                $times = ['08:30', '12:00',  '03:00'];
-
-                                    if (isset($biddedModule)){
-                                        $timetable=[1=>['','',''],2=>['','',''],3=>['','',''],4=>['','',''],5=>['','','']];
-                                        $status = [];
-                                        if (count($biddedModule)!=0){
-                                            foreach ($biddedModule as $module){
-                                                $course=$module->getCourseDetailsByCourseSection();
-                                                $day_no = $course->getDay();
-                                                $startTime = $course->getStart();
-
-                                                //retrieve minimum bid                  
-                                                $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid(),FALSE);
-                                                $SectionDAO = new SectionDAO();
-                                                $currentMinBid = $SectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
-
-
-                                                if ($startTime=="08:30:00"){
-                                                    $timetable[$day_no][0]=$course->getTitle();
-                                                }
-
-                                                if($startTime=='12:00:00') {
-                                                    $timetable[$day_no][1] = $course->getTitle();
-                                                }
-                                                if($startTime=='15:30:00') {
-                                                    $timetable[$day_no][2] = $course->getTitle();
-                                                }
-
-                                                if($roundID == 2){
-                                                    if ($roundStatus != "Finished"){
-                                                        if($module->getAmount() >= $minbid){
-                                                            // echo "<td>Successful</td>";
-                                                            $status[$course->getTitle()] = 'successful';
-                                                        }
-        
-                                                    }else{
-                                                        if (CheckCourseEnrolled($loginID,$course->getCourseid())){
-                                                            // echo "<td>Unsuccessful. Bid too low.</td>";
-                                                            $status[$course->getTitle()] = 'successful';
-                                                        }
-                                                    }
-                                                    
-                                                }else{
-                                                    // echo "<td>Pending</td>";
-                                                    $status[$course->getTitle()] = 'pending';
-                                                }
-        
-                                        }
-                                    }
-                                    // var_dump($status);
-                                }
-
-                                if (count($successModules)>0){
-                                    foreach ($successModules as $module){
-                                        $courseDAO= new CourseDAO();
-                                        $course=$courseDAO->RetrieveAllCourseDetail($module[1],$module[2])[0];
-                                        $title = $course->getTitle();
-                                        $day_no = $course->getDay();
-                                        $startTime = $course->getStart();
-
-                                        if ($startTime=="08:30:00"){
-                                            $timetable[$day_no][0]=$course->getTitle();
-                                        }
-
-                                        if($startTime=='12:00:00') {
-                                            $timetable[$day_no][1] = $course->getTitle();
-                                        }
-                                        if($startTime=='15:30:00') {
-                                            $timetable[$day_no][2] = $course->getTitle();
-                                        }
-                                        $status[$title] = 'successful';
-                                    }
-                                }
-                                // var_dump($timetable);
-                            
-                                foreach($days as $day) {
-                                    if($day == 1) {
-                                        echo "<tr><td><b>MONDAY</b></td>";
-                                    }
-                                    elseif($day==2) {
-                                        echo "<tr><td><b>TUESDAY</b></td>";
-                                    }
-                                    elseif($day==3) {
-                                        echo "<tr><td><b>WEDNESDAY</b></td>";
-                                    }
-                                    elseif($day==4) {
-                                        echo "<tr><td><b>THURSDAY</b></td>";
-                                    }
-                                    elseif($day==5) {
-                                        echo "<tr><td><b>FRIDAY</b></td>";
-                                    }
-
-                                    for($i=0; $i<=2;$i++){
-                                        $title = $timetable[$day][$i];
-                                        if(isset($status[$title]) && $status[$title] == 'successful') {
-                                            echo "<td bgcolor='#6BFF32'>". $timetable[$day][$i] . "</td>";
-                                        }
-                                        elseif(isset($status[$title]) && $status[$title] == 'pending') { 
-                                        echo "<td bgcolor='#FFF233'>". $timetable[$day][$i] . "</td>";
-                                        }
-                                        else {
-                                            echo "<td></td>";
-                                        }
-                                    }
-                                    echo "</tr>";
-                                }
-                                
-                                echo "<tr><td colspan='4' style='padding: 20px'>Legend: <i class='fas fa-circle' style='color: #6BFF32'></i> Successful <i class='fas fa-circle' style='color: #FFF233'></i> Pending</td></tr>";
-
-                    
-                                // var_dump($timetable);
-                                
-                            ?>
-
-                        </table>
-                        
-
-                    </div>
-
                     <div class="display-right__table-enrolment">
                         <table>
                             <tr>
@@ -483,7 +345,6 @@ if($roundID == 2 && $roundStatus != "Started"){
 // }
 
 ?>
-                                <td><a href='dropSection.php?token=<?php echo $_GET['token']?>'>Drop a section</a></td>
                             </tr>
                         </table>
                     </div>
