@@ -8,7 +8,7 @@
         exit; 
     }else{
         $courseDAO= new CourseDAO();
-        $courses=$courseDAO->RetrieveAllCourseDetail('', '', '');
+        $courses=$courseDAO->retrieveAllCourseDetail('', '', '');
     }
     $currentavailablecourses = $_SESSION['availablecourses'];
 

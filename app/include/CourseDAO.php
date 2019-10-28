@@ -58,7 +58,7 @@ class CourseDAO {
         $conn = null; 
     }
 
-    public function RetrieveAllCourseDetail($courseid='',$sectionid='',$school=''){
+    public function retrieveAllCourseDetail($courseid='',$sectionid='',$school=''){
 
         // Connect to Database
         $connMgr = new ConnectionManager();

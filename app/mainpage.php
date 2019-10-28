@@ -169,7 +169,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     echo "$code</td>";
                                     echo "<td>";
                                     $coursesDAO = new CourseDAO();
-                                    $course = $coursesDAO->RetrieveAllCourseDetail($code,$bidSection);
+                                    $course = $coursesDAO->retrieveAllCourseDetail($code,$bidSection);
                                     $bidresult = $bid[4];
 
                                     
@@ -355,7 +355,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 if (count($successModules)>0){
                                     foreach ($successModules as $module){
                                         $courseDAO= new CourseDAO();
-                                        $course=$courseDAO->RetrieveAllCourseDetail($module[1],$module[2])[0];
+                                        $course=$courseDAO->retrieveAllCourseDetail($module[1],$module[2])[0];
                                         $title = $course->getTitle();
                                         $day_no = $course->getDay();
                                         $startTime = $course->getStart();
@@ -434,7 +434,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                         </tr>";
                                         foreach ($successModules as $module){
                                             $courseDAO= new CourseDAO();
-                                            $course=$courseDAO->RetrieveAllCourseDetail($module[1],$module[2])[0];
+                                            $course=$courseDAO->retrieveAllCourseDetail($module[1],$module[2])[0];
                                             echo "<tr>
                                             <td>{$module[1]}</td>
                                             <td>{$course->getTitle()}</td>

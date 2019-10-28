@@ -25,14 +25,14 @@
 
         //preparing for removing modules that user alr completed
         $courseDAO= new CourseDAO();
-        $courses=$courseDAO->RetrieveAllCourseDetail('', '', $school);
+        $courses=$courseDAO->retrieveAllCourseDetail('', '', $school);
         //retrieve all courses *with different school*
-        $allCourses = $courseDAO->RetrieveAllCourseDetail('', '', '');
+        $allCourses = $courseDAO->retrieveAllCourseDetail('', '', '');
         //var_dump($allCourses);
         
 
         $completedcourseDAO= new CourseCompletedDAO();
-        $completed_courses=$completedcourseDAO->getallcoursecomplete($userid);
+        $completed_courses=$completedcourseDAO->getAllCourseComplete($userid);
 
         $realarray= [];
         foreach ($completed_courses as $value) {

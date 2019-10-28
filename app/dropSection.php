@@ -106,7 +106,7 @@
                         echo "$code</td>";
                         $section=$module[3];
                         $courseDAO= new CourseDAO();
-                        $course=$courseDAO->RetrieveAllCourseDetail($code,$section)[0];
+                        $course=$courseDAO->retrieveAllCourseDetail($code,$section)[0];
                         echo "<td>";
                         echo "{$course->getTitle()}</td>
                             <td>{$section}</td>

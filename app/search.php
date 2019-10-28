@@ -14,7 +14,7 @@
 
 <?php 
     $courseDAO= new CourseDAO();
-    $allCourses = $courseDAO->RetrieveAllCourseDetail($courseid='',$sectionid='',$school='');
+    $allCourses = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school='');
     $courses=$courseDAO->RetrieveAll(); 
 
     if (isset($_POST['navigation']) || isset($_POST['courseSelect']) || isset($_POST['selectfaculty']) || isset($_POST['coursetitle'])){
@@ -124,7 +124,7 @@
                 if ($school=='All Faculty'){
                     $school='';
                 }
-                $coursebysch = $courseDAO->RetrieveAllCourseDetail($courseid='',$sectionid='',$school);
+                $coursebysch = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school);
                 foreach ($coursebysch as $schmods){
                     echo "<table border='1'>";
                     echo "<tr><td>Course Code:</td><td>{$schmods->getCourseid()}</td></tr>";

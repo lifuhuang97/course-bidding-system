@@ -12,7 +12,7 @@
     $eCredit = $student->getEdollar();
 
     $completedDAO = New CourseCompletedDAO();
-    $ccompleted = $completedDAO->getallcoursecomplete($loginID);
+    $ccompleted = $completedDAO->getAllCourseComplete($loginID);
 ?>
 
 <html>
