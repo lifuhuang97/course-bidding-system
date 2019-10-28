@@ -67,7 +67,7 @@ th{
 .form-container{
 	padding: 2em;
     width: 25em;
-    height: 17em;
+    /*height: 17em;*/
 }
 .form-container form{
 	border-radius: 0 0 10px 10px;
@@ -106,6 +106,15 @@ th{
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 5px;
+}
+.form-btn{
+	border-radius: 10px;
+    border: none;
+    margin-top: 1em;
+    height: 3em;
+    cursor: pointer;
+    margin-bottom: 1em;
+    margin-left: 10px;
 }
 .content-container{
 	padding: 2em;

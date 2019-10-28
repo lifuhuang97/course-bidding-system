@@ -1,28 +1,77 @@
-<html>
-<body>
-<h1>Search Page</h1>
 <?php
     require_once 'include/common.php';
     require_once 'include/function.php';
     require_once 'include/protect.php';
+
+    if (!isset($_SESSION['success'])){
+        header('Location: login.php');
+        exit; 
+    } else{
+        $student=$_SESSION['student']; 
+        #var_dump($student);
+        $userid = $student->getUserid(); #get userid
+        $password = $student->getPassword(); #get password
+        $name = $student->getName(); #get name
+        $school = $student->getSchool(); #get school
+        $edollar = $student->getEdollar(); #get edollar
+    }
 ?>
-<form action="search.php?token=<?php echo $_GET['token']?>" method="post">
-<input type='submit' name='navigation' value='Search by Course'>
-<input type='submit' name='navigation' value='Search by Faculty'>
-<input type='submit' name='navigation' value='Search by Course Title'>
-
-
-<?php 
+<html>
+    <head>
+        <title>Search</title>
+        <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+        <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
+    </head>
+<body>
+    <div class="container">
+        <div class="navbar-left">
+            <div class="navbar-left__profile">
+                <div class="navbar-left__profile__container">
+                    <div class="profile-picture">
+                        <a href="mainpage.php?token=<?php echo $_GET['token']?>">
+                            <img class="profpic" src="css/profpic1.png">
+                        </a>
+                    </div>
+                    <div class="profile-details">
+                        <p>Welcome, <?=$name?></p>
+                        <p><?=$school?></p>
+                        <p>Credit Balance: <?=$edollar?></p>
+                    </div>
+                </div>
+            </div>
+            <a href="completed.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__completed">COMPLETED <i class="far fa-window-restore"></i></div></a>
+            <a href="search.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__search">SEARCH <i class="fas fa-search"></i></div></a>
+            <a href='makebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__addCourse">ADD BID <i class="far fa-calendar-plus"></i></div></a>
+            <a href='editBid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__editBid">EDIT BID <i class="fas fa-pen-square"></i></div></a>
+            <a href='deletebid.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropCourse">DROP BID <i class="far fa-calendar-times"></i></div></a>
+            <a href='dropSection.php?token=<?php echo $_GET['token']?>' style="color: white; text-decoration: none;"><div class="navbar-left__dropSection">DROP SECTION <i class="fas fa-minus-square"></i></div></a>
+            <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+            <div class="navbar-left__smuLogo">
+                <img src="css/smulogo.png">
+            </div>
+        </div>
+        <div class="display-right">
+            <div class="form-container">
+                <div class="form-header">
+                    <p>Search Page</p>
+                </div>
+                <form action="search.php?token=<?php echo $_GET['token']?>" method="post">
+                    <input class="form-btn" type='submit' name='navigation' value='Search by Course'>
+                    <input class="form-btn" type='submit' name='navigation' value='Search by Faculty'>
+                    <input class="form-btn" type='submit' name='navigation' value='Search by Course Title'>
+                </form>
+            </div>
+            <div class="content-container">
+                <?php 
     $courseDAO= new CourseDAO();
     $allCourses = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school='');
     $courses=$courseDAO->RetrieveAll(); 
-
+    echo "<form action='search.php?token={$_GET['token']}' method='post'>";
     if (isset($_POST['navigation']) || isset($_POST['courseSelect']) || isset($_POST['selectfaculty']) || isset($_POST['coursetitle'])){
         if (isset($_POST['courseSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Search by Course')){
             $sectionDAO= new SectionDAO();
             $section=$sectionDAO->RetrieveAll();
-            echo "<br>";
-            echo "<br>";
+            
             echo "Select:";
             echo"<select name='course'>";
             //<option disabled selected value=''> -- select an option -- </option>";
@@ -222,11 +271,9 @@
         //}
         
     }
+    echo '</form>'
 ?>
-
-<br>
-<a href="makebid.php?token=<?php echo $_GET['token']?>">Bid</a>
-<br>
+            </div>
+        </div>
+    </div>
 </body>
-</html>
-<a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
