@@ -25,7 +25,9 @@
 <head>
     <title>Drop Section</title>
     <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+    <link rel="stylesheet" type="text/css" href="css/dropSection.css">
     <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -116,9 +118,20 @@
                             <td>{$module[1]}</td>";
                             ?>
                         
+                        
                         <td>
-                            <a href="dropSectionProcess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$section?>">Drop</a>
+                        <button id="<?= $code?>" class="trigger">Drop</button>
+                            <div class="modal" id="modal<?= $code?>">
+                                <div class="modal-content">
+                                    <h3>Are you sure you want to drop section?
+                                    </h3>
+                                    <span class="close-button">Close</span>
+                                    <a class="drop-button" href="dropSectionProcess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$section?>">Confirm</a>
+                                    
+                                </div>
+                            </div>
                         </td>
+
 
                         <?php
                         echo "</tr>";
@@ -130,4 +143,19 @@
         </div>
     </div> 
 </body>
+<script>
+$(document).ready(function(){
+    $(".trigger").click(function(e){
+    var id = e.target.id
+    $('#modal' + id).addClass('show-modal');
+});
+
+$('.close-button').click(function(){
+    $(this).parent().parent().removeClass('show-modal');
+});
+
+});
+
+
+</script>
 </html>

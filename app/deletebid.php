@@ -147,6 +147,7 @@
 </body>
 <script>
 
+$(document).ready(function(){
 $(".trigger").click(function(e){
     var id = e.target.id
     $('#modal' + id).addClass('show-modal');
@@ -155,6 +156,11 @@ $(".trigger").click(function(e){
 $('.close-button').click(function(){
     $(this).parent().parent().removeClass('show-modal');
 });
+
+});
+
+
+
 
 </script>
 </html>
