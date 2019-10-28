@@ -173,7 +173,7 @@ if ($roundID==1 && $roundstat=='Started'){
                 <td>{$course->getExamStart()}</td>
                 <td>{$course->getExamEnd()}</td>
                 <td><a href = 'makebid.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>Add</td>
-                <td><a href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
+                <td><a target='_blank' href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
                 </tr>";
                 if (isset($_GET['button'])){
                     $nnowcourse = $nowcourse;
