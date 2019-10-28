@@ -100,7 +100,7 @@
             ?>
             <div class="form-container">
                 <div class="form-header">
-                    <p>Edit Bid Amount</p>
+                    <p>Add Bid</p>
                 </div>
                 <form action="processBid.php?token=<?php echo $_GET['token']?>" method="POST">
                     <input type='hidden' name='eCredit' value="<?=$edollar?>">
@@ -113,7 +113,7 @@
                         <input required class="form-control" type='text' name='sectionID' value=<?=$_GET['sectionID']?>>
                     </div>
                     <div class="form-group">
-                        <label for="bidAmt">New Bid Amount: </label><br>
+                        <label for="bidAmt">Bid Amount: </label><br>
                         <input class="form-control" type="number" name="bidAmt" required>
                     </div>
                     <input class="submit-btn" type='submit' name="submit">
