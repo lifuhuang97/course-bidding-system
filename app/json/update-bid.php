@@ -34,9 +34,9 @@ if (isset($_REQUEST['r'])){
     }else{
         $section=$request['section'];
     }
-    // if (isset($tokenError)){
-    //     $errors=array_merge ($tokenError,$errors);
-    // }
+    if (isset($tokenError)){
+        $errors=array_merge ($tokenError,$errors);
+    }
 }else{
     $errors = array_merge ($tokenError,[
             isMissingOrEmpty ('userid'), 

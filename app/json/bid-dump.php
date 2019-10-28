@@ -20,9 +20,9 @@ if (isset($_REQUEST['r'])){
     }else{
         $section=$request['section'];
     }
-    // if (isset($tokenError)){
-    //     $errors=array_merge ($tokenError,$errors);
-    // }
+    if (isset($tokenError)){
+        $errors=array_merge ($tokenError,$errors);
+    }
 }else{
     $errors = array_merge ($tokenError,[ 
             isMissingOrEmpty ('course'),
@@ -45,5 +45,11 @@ else{
     $result=doBidDump($course,$section);
 }
 header('Content-Type: application/json');
-echo json_encode($result, JSON_PRETTY_PRINT);
+$json=json_encode($result, JSON_PRETTY_PRINT);
+if ($result['status']=='success' && count($result['bids'])>0){
+    foreach ($result['bids'] as $key=>$student){
+        $json=str_replace('"amount": "'.$result['bids'][$key]['amount'].'"','"amount": '.number_format($result['bids'][$key]['amount'],1).'',$json);   
+    }
+}
+echo $json;
 ?>

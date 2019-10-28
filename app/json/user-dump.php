@@ -13,9 +13,9 @@ if (isset($_REQUEST['r'])){
     }else{
         $userid=$request['userid'];
     }
-    // if (isset($tokenError)){
-    //     $errors=array_merge ($tokenError,$errors);
-    // }
+    if (isset($tokenError)){
+        $errors=array_merge ($tokenError,$errors);
+    }
 }else{
     $errors = array_merge ($tokenError,[isMissingOrEmpty ('userid')]);
     $errors = array_filter($errors);
@@ -35,5 +35,9 @@ else{
     $result=doUserDump($userid);
 }
 header('Content-Type: application/json');
-echo json_encode($result, JSON_PRETTY_PRINT);
+$json=json_encode($result, JSON_PRETTY_PRINT);
+if ($result['status']=="success"){
+    $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],1).'',$json);   
+}
+echo $json;
 ?>

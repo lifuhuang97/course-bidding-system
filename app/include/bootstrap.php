@@ -1,10 +1,11 @@
 <?php
 require_once 'common.php';
-// require_once 'protect.php';
 require_once 'function.php';
+require_once 'DoRestart.php';
+require_once 'DoStart.php';
 
 function doBootstrap() {
-		
+    doRestart();	
     $errors = array();
 	# need tmp_name -a temporary name create for the file and stored inside apache temporary folder- for proper read address
 	$zip_file = $_FILES["bootstrap-file"]["tmp_name"];
@@ -548,6 +549,7 @@ function doBootstrap() {
             $result["error"]=$inputRowError;
         }
     }
+    doStart();
     return $result;
 }
 ?>

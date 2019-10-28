@@ -1,6 +1,6 @@
 <?php
 require_once 'common.php';
-require_once 'include/function.php';
+require_once 'function.php';
 function doStop() {
     $adminRoundDAO = new adminRoundDAO();
     $roundDetail = $adminRoundDAO->retrieveRoundDetail();
