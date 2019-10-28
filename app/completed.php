@@ -14,7 +14,11 @@
     $completedDAO = New CourseCompletedDAO();
     $ccompleted = $completedDAO->getAllCourseComplete($loginID);
 ?>
-
+<style>
+th, td,tr {
+  text-align: center;
+}
+</style>
 <html>
 <head>
     <title>Completed Courses</title>

@@ -57,6 +57,12 @@
 
 
 ?>
+<style>
+th, td,tr {
+  text-align: center;
+}
+</style>
+
 <html>
 <head>
     <title>BIOS Bidding</title>
@@ -137,12 +143,12 @@ if ($roundID==1 && $roundstat=='Started'){
         echo"<table border='1px'>
         <tr>
             <th>Course ID</th>
-            <th>Title</th>
+            <th style='text-align:center'>Title</th>
             <th>Section ID</th>
-            <th>Day</th>
+            <th style='text-align:center'>Day</th>
             <th>Lesson Start Time</th>
             <th>Lesson End Time</th>
-            <th>Instructor</th>
+            <th style='text-align:center'>Instructor</th>
             <th>Size</th> 
             <th>Exam Date</th>
             <th>Exam Start Time</th>
@@ -158,20 +164,29 @@ if ($roundID==1 && $roundstat=='Started'){
                 //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
                 //$nowcourse = $course->getCourseid();
                 //$nowsection = $course->getSectionid();
+                $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                $eStartTime = $course->getExamStart();
+                $eStartTime = substr($eStartTime,0,5);
+                $eEndTime = $course->getExamEnd();
+                $eEndTime = substr($eEndTime,0,5);
+                $lStartTime = $course->getStart();
+                $lStartTime = substr($lStartTime,0,5);
+                $lEndTime = $course->getEnd();
+                $lEndTime = substr($lEndTime,0,5);
                 $_SESSION['currentcourse'] = $course->getCourseid();
                 $_SESSION['currentsection'] = $course->getSectionid();
                 echo"<tr>
                 <td>{$course->getCourseid()}</td>
                 <td>{$course->getTitle()}</td>
                 <td>{$course->getSectionid()}</td>
-                <td>{$course->getDay()}</td>
-                <td>{$course->getStart()}</td>
-                <td>{$course->getEnd()}</td>
+                <td>{$weekday[$course->getDay()]}</td>
+                <td>$lStartTime</td>
+                <td>$lEndTime</td>
                 <td>{$course->getInstructor()}</td>
                 <td>{$course->getSize()}</td>
                 <td>{$course->getExamDate()}</td>
-                <td>{$course->getExamStart()}</td>
-                <td>{$course->getExamEnd()}</td>
+                <td>$eStartTime</td>
+                <td>$eEndTime</td>
                 <td><a href = 'makebid.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>Add</td>
                 <td><a target='_blank' href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>
                 </tr>";
@@ -201,12 +216,12 @@ if ($roundID==1 && $roundstat=='Started'){
         echo"<table border='1px'>
         <tr>
             <th>Course ID</th>
-            <th>Title</th>
+            <th style='text-align:center'>Title</th>
             <th>Section ID</th>
-            <th>Day</th>
+            <th style='text-align:center'>Day</th>
             <th>Lesson Start Time</th>
             <th>Lesson End Time</th>
-            <th>Instructor</th>
+            <th style='text-align:center'>Instructor</th>
             <th>Size</th> 
             <th>Exam Date</th>
             <th>Exam Start Time</th>
@@ -225,6 +240,15 @@ if ($roundID==1 && $roundstat=='Started'){
             // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
             if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
                 //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
+                $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                $eStartTime = $course->getExamStart();
+                $eStartTime = substr($eStartTime,0,5);
+                $eEndTime = $course->getExamEnd();
+                $eEndTime = substr($eEndTime,0,5);
+                $lStartTime = $course->getStart();
+                $lStartTime = substr($lStartTime,0,5);
+                $lEndTime = $course->getEnd();
+                $lEndTime = substr($lEndTime,0,5);
                 $sectionDAO= new SectionDAO();
                 $minbid = $sectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
                 $nowcourse = $course->getCourseid();
@@ -236,14 +260,14 @@ if ($roundID==1 && $roundstat=='Started'){
                 <td>{$course->getCourseid()}</td>
                 <td>{$course->getTitle()}</td>
                 <td>{$course->getSectionid()}</td>
-                <td>{$course->getDay()}</td>
-                <td>{$course->getStart()}</td>
-                <td>{$course->getEnd()}</td>
+                <td>{$weekday[$course->getDay()]}</td>
+                <td>$lStartTime</td>
+                <td>$lEndTime</td>
                 <td>{$course->getInstructor()}</td>
                 <td>{$course->getSize()}</td>
                 <td>{$course->getExamDate()}</td>
-                <td>{$course->getExamStart()}</td>
-                <td>{$course->getExamEnd()}</td>
+                <td>{$eStartTime}</td>
+                <td>{$eEndTime}</td>
                 <td><a href = 'makebid.php?token={$_GET['token']}&code=$nowcourse&sectionID=$nowsection'>Add</td>
                 <td>$minbid</td>     
                 <td><a href = 'moredetails.php?token={$_GET['token']}&code={$course->getCourseid()}&sectionID={$course->getSectionid()}'>More Details</td>

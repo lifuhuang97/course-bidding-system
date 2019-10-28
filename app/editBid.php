@@ -46,6 +46,11 @@
         }
     }
 ?>   
+<style>
+th, td,tr {
+  text-align: center;
+}
+</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -121,26 +126,31 @@
                         else {
                             echo "<tr>
                                     <th>Code</th>
-                                    <th>Title</th>
+                                    <th style='text-align:center'>Title</th>
                                     <th>Section</th>
-                                    <th>Day</th>
+                                    <th style='text-align:center'>Day</th>
                                     <th>Lesson Start Time</th>
                                     <th>Lesson End Time</th>
-                                    <th>Instructor</th>
+                                    <th style='text-align:center'>Instructor</th>
                                     <th>Amount</th>
                                     <th>Edit</th>
                                   </tr>";
                             foreach ($biddedModule as $module) {
+                                $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN']; 
                                 echo "<tr><td>";
                                 $code = $module->getCode();
                                 echo "$code</td>";
                                 echo "<td>";
                                 $course = $module->getCourseDetailsByCourseSection();
+                                $lStartTime = $course->getStart();
+                                $lStartTime = substr($lStartTime,0,5);
+                                $lEndTime = $course->getEnd();
+                                $lEndTime = substr($lEndTime,0,5);
                                 echo "{$course->getTitle()}</td>
                                     <td>{$module->getSection()}</td>
-                                    <td>{$course->getDay()}</td>
-                                    <td>{$course->getStart()}</td>
-                                    <td>{$course->getEnd()}</td>
+                                    <td>{$weekday[$course->getDay()]}</td>
+                                    <td>$lStartTime</td>
+                                    <td>$lEndTime</td>
                                     <td>{$course->getInstructor()}</td>
                                     <td>{$module->getAmount()}</td>";
                                     echo "<td><a href = 'editBid.php?token={$_GET['token']}&code={$module->getCode()}&section={$module->getSection()}'>Edit</td>";

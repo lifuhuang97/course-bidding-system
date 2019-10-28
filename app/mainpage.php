@@ -27,6 +27,11 @@
         }
     } 
 ?>
+<style>
+th, td,tr {
+  text-align: center;
+}
+</style>
 <html>
     <head>
         <title>BIOS Bidding</title>
@@ -70,9 +75,9 @@
                                 <th class="table-title" colspan="3">Boss Date</th>
                             </tr>
                             <tr>
-                                <th>Event</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
+                                <th style='text-align:center'>Event</th>
+                                <th style='text-align:center'>Start Time</th>
+                                <th style='text-align:center'>End Time</th>
                             </tr>
                             <tr>
 <?php 
@@ -107,6 +112,7 @@
                                 <th>Round 1</th>
                                 <td>$roundStartEndTimes[0]</td>
                                 <td>$roundStartEndTimes[1]</td>
+                                
                             </tr>
                             <tr>
                                 <th>Round 2</th>
@@ -138,12 +144,12 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 $bidsByUser = $bidDatabase->getBidsByID($loginID);
                                 echo "<tr align='center'>
                                 <th>Code</th>
-                                <th>Title</th>
+                                <th style='text-align:center'>Title</th>
                                 <th>Section</th>
-                                <th>Day</th>
+                                <th style='text-align:center'>Day</th>
                                 <th>Lesson Start Time</th>
                                 <th>Lesson End Time</th>
-                                <th>Instructor</th>
+                                <th style='text-align:center'>Instructor</th>
                                 <th>Amount</th>
                                 <th>Bid Result</th>";
                                 if ($roundStatus == "Finished"){
@@ -222,12 +228,12 @@ if($roundID == 2 && $roundStatus != "Started"){
                                             else{
                                                 echo "<tr>
                                                     <th>Code</th>
-                                                    <th>Title</th>
+                                                    <th style='text-align:center'>Title</th>
                                                     <th>Section</th>
-                                                    <th>Day</th>
-                                                    <th>Lesson Start Time</th>
-                                                    <th>Lesson End Time</th>
-                                                    <th>Instructor</th>
+                                                    <th style='text-align:center'>Day</th>
+                                                    <th>Start Time</th>
+                                                    <th>End Time</th>
+                                                    <th style='text-align:center'>Instructor</th>
                                                     <th>Amount</th>
                                                     <th>Bid Result</th>";
                                                     if ($roundID == 2 && $roundStatus != "Not Started"){
@@ -245,6 +251,13 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     echo "$code</td>";
                                                     echo "<td>";
                                                     $course = $module->getCourseDetailsByCourseSection();
+
+                                                    $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                                                    $lStartTime = $course->getStart();
+                                                    $lStartTime = substr($lStartTime,0,5);
+                                                    $lEndTime = $course->getEnd();
+                                                    $lEndTime = substr($lEndTime,0,5);
+
                                                     $bidresult = $bidresultsDAO->getBidStatus($loginID,$bidAmt,$code,$bidSection);
                                                    
                                                     //retrieve minimum bid                  
@@ -254,9 +267,9 @@ if($roundID == 2 && $roundStatus != "Started"){
 
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
-                                                        <td>{$course->getDay()}</td>
-                                                        <td>{$course->getStart()}</td>
-                                                        <td>{$course->getEnd()}</td>
+                                                        <td>{$weekday[$course->getDay()]}</td>
+                                                        <td>$lStartTime</td>
+                                                        <td>$lEndTime</td>
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
                                                         if($roundID == 2){
@@ -424,24 +437,29 @@ if($roundID == 2 && $roundStatus != "Started"){
                                         echo"<table border='1'>
                                         <tr>
                                             <th>Code</th>
-                                            <th>Title</th>
+                                            <th style='text-align:center'>Title</th>
                                             <th>Section</th>
-                                            <th>Day</th>
+                                            <th style='text-align:center'>Day</th>
                                             <th>Lesson Start Time</th>
                                             <th>Lesson End Time</th>
-                                            <th>Instructor</th>
+                                            <th style='text-align:center'>Instructor</th>
                                             <th>Amount</th>
                                         </tr>";
                                         foreach ($successModules as $module){
                                             $courseDAO= new CourseDAO();
                                             $course=$courseDAO->retrieveAllCourseDetail($module[1],$module[2])[0];
+                                            $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                                            $lStartTime = $course->getStart();
+                                            $lStartTime = substr($lStartTime,0,5);
+                                            $lEndTime = $course->getEnd();
+                                            $lEndTime = substr($lEndTime,0,5);
                                             echo "<tr>
                                             <td>{$module[1]}</td>
                                             <td>{$course->getTitle()}</td>
                                             <td>{$module[2]}</td>
-                                            <td>{$course->getDay()}</td>
-                                            <td>{$course->getStart()}</td>
-                                            <td>{$course->getEnd()}</td>
+                                            <td>{$weekday[$course->getDay()]}</td>
+                                            <td>$lStartTime</td>
+                                            <td>$lEndTime</td>
                                             <td>{$course->getInstructor()}</td>
                                             <td>{$module[0]}</td>
                                         </tr>";

@@ -18,7 +18,11 @@
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 ?>
-
+<style>
+th, td,tr {
+  text-align: center;
+}
+</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,12 +95,12 @@
         echo"<table border='1px'>
         <tr>
             <th>Course ID</th>
-            <th>Title</th>
+            <th <th style='text-align:center'>Title</th>
             <th>Section ID</th>
-            <th>Day</th>
+            <th <th style='text-align:center'>Day</th>
             <th>Lesson Start Time</th>
             <th>Lesson End Time</th>
-            <th>Instructor</th>
+            <th <th style='text-align:center'>Instructor</th>
             <th>Amount</th> 
             <th>Delete</th>
         </tr>";
@@ -108,11 +112,16 @@
             echo "$code</td>";
             echo "<td>";
             $course = $module->getCourseDetailsByCourseSection();
+            $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+            $lStartTime = $course->getStart();
+            $lStartTime = substr($lStartTime,0,5);
+            $lEndTime = $course->getEnd();
+            $lEndTime = substr($lEndTime,0,5);
             echo "{$course->getTitle()}</td>
                 <td>{$module->getSection()}</td>
-                <td>{$course->getDay()}</td>
-                <td>{$course->getStart()}</td>
-                <td>{$course->getEnd()}</td>
+                <td>{$weekday[$course->getDay()]}</td>
+                <td>$lStartTime</td>
+                <td>$lEndTime</td>
                 <td>{$course->getInstructor()}</td>
                 <td>{$module->getAmount()}</td>";
 ?>

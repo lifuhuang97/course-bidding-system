@@ -96,10 +96,19 @@
             <input type='submit' name='courseSelect' value='Search'>";
             
             if (isset($_POST['courseSelect'])){
-                $selcourse = $_POST['course'];  
+                $selcourse = $_POST['course'];
+                $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];  
                 echo "<h1>Course Table</h1>";
                 foreach($allCourses as $course){
-                    
+                    $eStartTime = $course->getExamStart();
+                    $eStartTime = substr($eStartTime,0,5);
+                    $eEndTime = $course->getExamEnd();
+                    $eEndTime = substr($eEndTime,0,5);
+                    $lStartTime = $course->getStart();
+                    $lStartTime = substr($lStartTime,0,5);
+                    $lEndTime = $course->getEnd();
+                    $lEndTime = substr($lEndTime,0,5);
+
                     if ($course->getCourseid() == $selcourse){
                         echo "<table border='1'>";
                         echo "<tr><td>Course Code:</td><td>{$course->getCourseid()}</td></tr>";
@@ -107,12 +116,12 @@
                         echo "<tr><td>Title:</td><td>{$course->getTitle()}</td></tr>";
                         echo "<tr><td>Description:</td><td>{$course->getDescription()}</td></tr>";
                         echo "<tr><td>Exam Date:</td><td>{$course->getExamDate()}</td></tr>";
-                        echo "<tr><td>Exam Start:</td><td>{$course->getExamStart()}</td></tr>";
-                        echo "<tr><td>Exam End:</td><td>{$course->getExamEnd()}</td></tr>";
+                        echo "<tr><td>Exam Start:</td><td>$eStartTime</td></tr>";
+                        echo "<tr><td>Exam End:</td><td>$eEndTime</td></tr>";
                         echo "<tr><td>Instructor Name:</td><td>{$course->getInstructor()}</td></tr>";
-                        echo "<tr><td>Day:</td><td>{$course->getDay()}</td></tr>";
-                        echo "<tr><td>Lesson Start Time:</td><td>{$course->getStart()}</td></tr>";
-                        echo "<tr><td>Lesson End Time:</td><td>{$course->getEnd()}</td></tr>";
+                        echo "<tr><td>Day:</td><td>{$weekday[$course->getDay()]}</td></tr>";
+                        echo "<tr><td>Lesson Start Time:</td><td>$lStartTime</td></tr>";
+                        echo "<tr><td>Lesson End Time:</td><td>$lEndTime</td></tr>";
                         echo "<tr><td>Venue:</td><td>{$course->getVenue()}</td></tr>";
                         echo "<tr><td>Class Size:</td><td>{$course->getSize()}</td></tr>";
                         echo "</table>";
@@ -125,12 +134,12 @@
                         echo "<tr><td>Title:</td><td>{$course->getTitle()}</td></tr>";
                         echo "<tr><td>Description:</td><td>{$course->getDescription()}</td></tr>";
                         echo "<tr><td>Exam Date:</td><td>{$course->getExamDate()}</td></tr>";
-                        echo "<tr><td>Exam Start:</td><td>{$course->getExamStart()}</td></tr>";
-                        echo "<tr><td>Exam End:</td><td>{$course->getExamEnd()}</td></tr>";
+                        echo "<tr><td>Exam Start:</td><td>$eStartTime</td></tr>";
+                        echo "<tr><td>Exam End:</td><td>$eEndTime</td></tr>";
                         echo "<tr><td>Instructor Name:</td><td>{$course->getInstructor()}</td></tr>";
-                        echo "<tr><td>Day:</td><td>{$course->getDay()}</td></tr>";
-                        echo "<tr><td>Lesson Start Time:</td><td>{$course->getStart()}</td></tr>";
-                        echo "<tr><td>Lesson End Time:</td><td>{$course->getEnd()}</td></tr>";
+                        echo "<tr><td>Day:</td><td>{$weekday[$course->getDay()]}</td></tr>";
+                        echo "<tr><td>Lesson Start Time:</td><td>$lStartTime</td></tr>";
+                        echo "<tr><td>Lesson End Time:</td><td>$lEndTime</td></tr>";
                         echo "<tr><td>Venue:</td><td>{$course->getVenue()}</td></tr>";
                         echo "<tr><td>Class Size:</td><td>{$course->getSize()}</td></tr>";
                         echo "</table>";
@@ -174,19 +183,30 @@
                     $school='';
                 }
                 $coursebysch = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school);
+                
+
                 foreach ($coursebysch as $schmods){
+                    $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                    $eStartTime = $schmods->getExamStart();
+                    $eStartTime = substr($eStartTime,0,5);
+                    $eEndTime = $schmods->getExamEnd();
+                    $eEndTime = substr($eEndTime,0,5);
+                    $lStartTime = $schmods->getStart();
+                    $lStartTime = substr($lStartTime,0,5);
+                    $lEndTime = $schmods->getEnd();
+                    $lEndTime = substr($lEndTime,0,5);
                     echo "<table border='1'>";
                     echo "<tr><td>Course Code:</td><td>{$schmods->getCourseid()}</td></tr>";
                     echo "<tr><td>School:</td><td>{$schmods->getSchool()}</td></tr>";
                     echo "<tr><td>Title:</td><td>{$schmods->getTitle()}</td></tr>";
                     echo "<tr><td>Description:</td><td>{$schmods->getDescription()}</td></tr>";
                     echo "<tr><td>Exam Date:</td><td>{$schmods->getExamDate()}</td></tr>";
-                    echo "<tr><td>Exam Start:</td><td>{$schmods->getExamStart()}</td></tr>";
-                    echo "<tr><td>Exam End:</td><td>{$schmods->getExamEnd()}</td></tr>";
+                    echo "<tr><td>Exam Start:</td><td>$eStartTime</td></tr>";
+                    echo "<tr><td>Exam End:</td><td>$eEndTime</td></tr>";
                     echo "<tr><td>Instructor Name:</td><td>{$schmods->getInstructor()}</td></tr>";
-                    echo "<tr><td>Day:</td><td>{$schmods->getDay()}</td></tr>";
-                    echo "<tr><td>Lesson Start Time:</td><td>{$schmods->getStart()}</td></tr>";
-                    echo "<tr><td>Lesson End Time:</td><td>{$schmods->getEnd()}</td></tr>";
+                    echo "<tr><td>Day:</td><td>{$weekday[$schmods->getDay()]}</td></tr>";
+                    echo "<tr><td>Lesson Start Time:</td><td>$lStartTime</td></tr>";
+                    echo "<tr><td>Lesson End Time:</td><td>$lEndTime</td></tr>";
                     echo "<tr><td>Venue:</td><td>{$schmods->getVenue()}</td></tr>";
                     echo "<tr><td>Class Size:</td><td>{$schmods->getSize()}</td></tr>";
                     echo "</table>";
@@ -228,6 +248,15 @@
                 foreach($allCourses as $course){
                     $str1 = $course->getTitle();
                     $str2 = $_POST['coursename'];
+                    $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                    $eStartTime = $course->getExamStart();
+                    $eStartTime = substr($eStartTime,0,5);
+                    $eEndTime = $course->getExamEnd();
+                    $eEndTime = substr($eEndTime,0,5);
+                    $lStartTime = $course->getStart();
+                    $lStartTime = substr($lStartTime,0,5);
+                    $lEndTime = $course->getEnd();
+                    $lEndTime = substr($lEndTime,0,5);
                     if ($str1 == $str2){
                         echo "<table border='1'>";
                         echo "<tr><td>Course Code:</td><td>{$course->getCourseid()}</td></tr>";
@@ -235,12 +264,12 @@
                         echo "<tr><td>Title:</td><td>{$course->getTitle()}</td></tr>";
                         echo "<tr><td>Description:</td><td>{$course->getDescription()}</td></tr>";
                         echo "<tr><td>Exam Date:</td><td>{$course->getExamDate()}</td></tr>";
-                        echo "<tr><td>Exam Start:</td><td>{$course->getExamStart()}</td></tr>";
-                        echo "<tr><td>Exam End:</td><td>{$course->getExamEnd()}</td></tr>";
+                        echo "<tr><td>Exam Start:</td><td>$eStartTime</td></tr>";
+                        echo "<tr><td>Exam End:</td><td>$eEndTime</td></tr>";
                         echo "<tr><td>Instructor Name:</td><td>{$course->getInstructor()}</td></tr>";
-                        echo "<tr><td>Day:</td><td>{$course->getDay()}</td></tr>";
-                        echo "<tr><td>Lesson Start Time:</td><td>{$course->getStart()}</td></tr>";
-                        echo "<tr><td>Lesson End Time:</td><td>{$course->getEnd()}</td></tr>";
+                        echo "<tr><td>Day:</td><td>{$weekday[$course->getDay()]}</td></tr>";
+                        echo "<tr><td>Lesson Start Time:</td><td>$lStartTime</td></tr>";
+                        echo "<tr><td>Lesson End Time:</td><td>$lEndTime</td></tr>";
                         echo "<tr><td>Venue:</td><td>{$course->getVenue()}</td></tr>";
                         echo "<tr><td>Class Size:</td><td>{$course->getSize()}</td></tr>";
                         echo "</table>";
@@ -252,12 +281,12 @@
                         echo "<tr><td>Title:</td><td>{$course->getTitle()}</td></tr>";
                         echo "<tr><td>Description:</td><td>{$course->getDescription()}</td></tr>";
                         echo "<tr><td>Exam Date:</td><td>{$course->getExamDate()}</td></tr>";
-                        echo "<tr><td>Exam Start:</td><td>{$course->getExamStart()}</td></tr>";
-                        echo "<tr><td>Exam End:</td><td>{$course->getExamEnd()}</td></tr>";
+                        echo "<tr><td>Exam Start:</td><td>$eStartTime</td></tr>";
+                        echo "<tr><td>Exam End:</td><td>$eEndTime</td></tr>";
                         echo "<tr><td>Instructor Name:</td><td>{$course->getInstructor()}</td></tr>";
-                        echo "<tr><td>Day:</td><td>{$course->getDay()}</td></tr>";
-                        echo "<tr><td>Lesson Start Time:</td><td>{$course->getStart()}</td></tr>";
-                        echo "<tr><td>Lesson End Time:</td><td>{$course->getEnd()}</td></tr>";
+                        echo "<tr><td>Day:</td><td>{$weekday[$course->getDay()]}</td></tr>";
+                        echo "<tr><td>Lesson Start Time:</td><td>$lStartTime</td></tr>";
+                        echo "<tr><td>Lesson End Time:</td><td>$lEndTime</td></tr>";
                         echo "<tr><td>Venue:</td><td>{$course->getVenue()}</td></tr>";
                         echo "<tr><td>Class Size:</td><td>{$course->getSize()}</td></tr>";
                         echo "</table>";
