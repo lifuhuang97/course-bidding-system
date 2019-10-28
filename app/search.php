@@ -2,6 +2,17 @@
     require_once 'include/common.php';
     require_once 'include/function.php';
     require_once 'include/protect.php';
+?>
+<form action="search.php?token=<?php echo $_GET['token']?>" method="post">
+<input type='submit' name='navigation' value='Search by Course'>
+<input type='submit' name='navigation' value='Search by Faculty'>
+<input type='submit' name='navigation' value='Search by Course Title'>
+
+
+<?php 
+    $courseDAO= new CourseDAO();
+    $allCourses = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school='');
+    $courses=$courseDAO->RetrieveAll(); 
 
     if (!isset($_SESSION['success'])){
         header('Location: login.php');
@@ -195,6 +206,60 @@
                         
                     }
                     
+                    echo "<option value='$sch' ";
+                    if (isset($_POST['faculty']) && $_POST['faculty']=="$sch"){
+                        echo "selected";
+                    }
+                    echo">$sch</option>";
+                }
+                
+            }echo"<option selected value='$allcourse2'>$allcourse2</option>";
+            echo "</select>
+            <input type='submit' name='selectfaculty' value='Search'>";
+            echo '<br>';
+            
+            if (isset($_POST['selectfaculty'])){
+                echo  '<h1>Courses with sessions</h1>';
+                $school = $_POST['faculty'];
+                if ($school=='All Faculty'){
+                    $school='';
+                }
+                $coursebysch = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school);
+                foreach ($coursebysch as $schmods){
+                    echo "<table border='1'>";
+                    echo "<tr><td>Course Code:</td><td>{$schmods->getCourseid()}</td></tr>";
+                    echo "<tr><td>School:</td><td>{$schmods->getSchool()}</td></tr>";
+                    echo "<tr><td>Title:</td><td>{$schmods->getTitle()}</td></tr>";
+                    echo "<tr><td>Description:</td><td>{$schmods->getDescription()}</td></tr>";
+                    echo "<tr><td>Exam Date:</td><td>{$schmods->getExamDate()}</td></tr>";
+                    echo "<tr><td>Exam Start:</td><td>{$schmods->getExamStart()}</td></tr>";
+                    echo "<tr><td>Exam End:</td><td>{$schmods->getExamEnd()}</td></tr>";
+                    echo "<tr><td>Instructor Name:</td><td>{$schmods->getInstructor()}</td></tr>";
+                    echo "<tr><td>Day:</td><td>{$schmods->getDay()}</td></tr>";
+                    echo "<tr><td>Lesson Start Time:</td><td>{$schmods->getStart()}</td></tr>";
+                    echo "<tr><td>Lesson End Time:</td><td>{$schmods->getEnd()}</td></tr>";
+                    echo "<tr><td>Venue:</td><td>{$schmods->getVenue()}</td></tr>";
+                    echo "<tr><td>Class Size:</td><td>{$schmods->getSize()}</td></tr>";
+                    echo "</table>";
+                    echo "<br>";
+                } 
+                
+            }
+            
+                      
+            
+        }elseif (isset($_POST['coursetitle']) || (isset($_POST['navigation']) && $_POST['navigation']=='Search by Course Title')){
+            echo "<br>";
+            echo "<br>";
+            echo "Select:";
+            echo"<select name='coursename'>";
+            //<option disabled selected value=''> -- select an option -- </option>";
+            $array2=[];
+            $allcourse3 = 'All Title';
+            foreach ($courses as $course){
+                $title = $course->getTitle();
+                if (!in_array($title,$array2)){
+                    $array1[]=$title;
                     
                     
                 }elseif (isset($_POST['coursetitle']) || (isset($_POST['navigation']) && $_POST['navigation']=='Search by Course Title')){

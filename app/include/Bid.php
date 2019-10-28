@@ -32,7 +32,7 @@ class Bid {
 
     public function getCourseDetailsByCourseSection(){
         $courseDAO= new CourseDAO();
-        $course=$courseDAO->RetrieveAllCourseDetail($this->code,$this->section);
+        $course=$courseDAO->retrieveAllCourseDetail($this->code,$this->section);
         return $course[0]; // cuz only 1 item
     }
 

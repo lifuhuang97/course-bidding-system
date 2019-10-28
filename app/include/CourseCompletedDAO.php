@@ -47,7 +47,7 @@ class CourseCompletedDAO {
         $stmt = null;
         $conn = null; 
     }
-    public function getallcoursecomplete($userid='') {
+    public function getAllCourseComplete($userid='') {
         // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
