@@ -143,7 +143,7 @@ class StudentSectionDAO {
         $conn = null; 
     }
 
-    function DropSection($userid,$courseid){
+    function dropSection($userid,$courseid){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
     
@@ -190,7 +190,7 @@ class StudentSectionDAO {
         
         return $result;
     }
-    public function RetrieveAllStudentByCourseSection($course,$section){
+    public function retrieveAllStudentByCourseSection($course,$section){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 

@@ -21,7 +21,7 @@ function doDeleteBid($userid,$course,$section) {
     }
     //round ended
     $adminRoundDAO=new adminRoundDAO();
-    $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
+    $roundDetail=$adminRoundDAO->retrieveRoundDetail();
     $roundID=$roundDetail->getRoundID();
     $roundStatus=$roundDetail->getRoundStatus();
     if ($roundStatus!="Started"){

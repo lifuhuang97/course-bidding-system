@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
  // get DAOs
 $adminRoundDAO = new adminRoundDAO();
 
-$round = $adminRoundDAO->RetrieveRoundDetail();
+$round = $adminRoundDAO->retrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 

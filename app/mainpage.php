@@ -78,7 +78,7 @@
 <?php 
 
     $RoundStatusDAO = new adminRoundDAO();
-    $roundstatus = $RoundStatusDAO->RetrieveRoundDetail();
+    $roundstatus = $RoundStatusDAO->retrieveRoundDetail();
 
     $roundID = $roundstatus->getRoundID();
     $roundStatus = $roundstatus->getRoundStatus();

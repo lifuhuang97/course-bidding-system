@@ -215,7 +215,7 @@ function CheckMinBidFromBiddingResult($course,$section){
     //student section
     
     $BidProcessorDAO= new BidProcessorDAO();
-    $allBid=$BidProcessorDAO->RetrieveAllStudentByCourseSection($course,$section);
+    $allBid=$BidProcessorDAO->retrieveAllStudentByCourseSection($course,$section);
 
     $value = 10.00;
     if ($vacancy > count($allBid)){
@@ -299,7 +299,7 @@ function DropSectionUpdateEdollar($userid,$course,$dollar){
     $student=$studentDAO->retrieveStudent($userid);
     $eDollar=$student->getEdollar();
     $studentSectionDAO= new StudentSectionDAO();
-    $status=$studentSectionDAO->DropSection($userid,$course);
+    $status=$studentSectionDAO->dropSection($userid,$course);
     if ($status){
         $TotalAmt=$eDollar+$dollar;
         $status=$studentDAO->updateDollar($userid,$TotalAmt);

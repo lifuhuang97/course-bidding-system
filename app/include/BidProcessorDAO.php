@@ -2,7 +2,7 @@
 
 require_once 'common.php';
 
-class bidProcessorDAO {
+class BidProcessorDAO {
     
     // Add bid result record
     public function addBidResults($userid,$amount,$course,$section,$bidstatus, $bidround) {
@@ -115,7 +115,7 @@ class bidProcessorDAO {
 
 
 
-    public function RetrieveAllStudentByCourseSection($course,$section){
+    public function retrieveAllStudentByCourseSection($course,$section){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
@@ -250,7 +250,7 @@ class bidProcessorDAO {
     //         }
     //     }
 
-    //     $bidsList = ProcessAllSuccessfulBids($roundNumber);
+    //     $bidsList = processAllSuccessfulBids($roundNumber);
 
     //     foreach($bidsList as $bid){
     //         $userid = $bid->getUserid();
@@ -267,7 +267,7 @@ class bidProcessorDAO {
 
     // Transfer all successful bids to student section
 
-    public function ProcessAllSuccessfulBids($bidround = ''){
+    public function processAllSuccessfulBids($bidround = ''){
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 

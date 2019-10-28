@@ -1,3 +1,4 @@
+
 <?php
 require_once 'common.php';
 require_once 'function.php';
@@ -22,7 +23,7 @@ function doBidDump($course,$section) {
             ];
     }else{
         $adminRoundDAO = new adminRoundDAO();
-        $roundDetail = $adminRoundDAO->RetrieveRoundDetail();
+        $roundDetail = $adminRoundDAO->retrieveRoundDetail();
         $roundID=$roundDetail->getRoundID();
         $roundStatus=$roundDetail->getRoundStatus();
 

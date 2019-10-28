@@ -6,7 +6,7 @@ require_once 'function.php';
 class AdminRoundDAO {
 
     // Get latest round status
-    public function RetrieveRoundDetail() {
+    public function retrieveRoundDetail() {
         $connMgr = new ConnectionManager();
         $pdo = $connMgr->getConnection();
 
@@ -32,7 +32,7 @@ class AdminRoundDAO {
         $connMgr = new ConnectionManager();           
         $pdo = $connMgr->getConnection();
 
-        $roundDetails = $this->RetrieveRoundDetail();
+        $roundDetails = $this->retrieveRoundDetail();
 
         $round = $roundDetails->getRoundID();
 
@@ -59,7 +59,7 @@ class AdminRoundDAO {
         $successBidsDAO = new StudentSectionDAO();
         $processBidsDAO = new BidProcessorDAO();
 
-        $roundStatus = $this->RetrieveRoundDetail();
+        $roundStatus = $this->retrieveRoundDetail();
         $roundNumber = $roundStatus->getRoundID();
 
         $sections = $sectDAO->getAllSections();
@@ -180,7 +180,7 @@ class AdminRoundDAO {
         
         $successfulBids = new StudentSectionDAO();
 
-        $roundDetails = $this->RetrieveRoundDetail();
+        $roundDetails = $this->retrieveRoundDetail();
 
         $round = $roundDetails->getRoundID();
 

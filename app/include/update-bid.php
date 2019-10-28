@@ -7,7 +7,7 @@ function doUpdateBid($userid,$amount,$course,$section) {
     $course=strtoupper($course);
     $section=strtoupper($section);
     $adminRoundDAO=new adminRoundDAO();
-    $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
+    $roundDetail=$adminRoundDAO->retrieveRoundDetail();
     $roundID=$roundDetail->getRoundID();
     $roundStatus=$roundDetail->getRoundStatus();
     if ($roundStatus!="Started"){

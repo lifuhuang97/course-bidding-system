@@ -23,7 +23,7 @@
 
     //getting the round ID and roundstat
     $adminround = new adminRoundDAO();
-    $roundDetail = $adminround->RetrieveRoundDetail();
+    $roundDetail = $adminround->retrieveRoundDetail();
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 
@@ -67,7 +67,7 @@
     $sectionId = strtoupper($sectionId);
 
     //------------------------------------------------------------------------------------------------------------------------
-    if ($roundID == 1 || $roundID == 2 && $roundstat == 'Started'){
+    if ($roundID == 1 && $roundstat == 'Started' || $roundID == 2 && $roundstat == 'Started'){
         foreach ($currentavailablecourses as $items){
             if ($items[0] == $courseId){
                 $coursecounter += 1;
@@ -92,6 +92,18 @@
             array_push($_SESSION['errors1'], 'Insufficient Balance');
         }
 
+        //check if there is vacancy
+        
+        $seats = CheckVacancy($courseId,$sectionId);
+        if (!$seats){
+            array_push($_SESSION['errors1'], 'There is no vacancy left.');
+        }
+        
+        if (count($_SESSION['errors1']) > 0) {
+            header("Location: makebid.php?token={$_GET['token']}");
+            exit;
+        }
+        
         //check if use bid equal or more than the min required bid
         if ($roundID==2){
             $SectionDAO = new SectionDAO();

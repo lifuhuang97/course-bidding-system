@@ -18,7 +18,7 @@
 
         //getting the round ID and roundstat
         $adminround = new adminRoundDAO();
-        $roundDetail = $adminround->RetrieveRoundDetail();
+        $roundDetail = $adminround->retrieveRoundDetail();
         $roundID = $roundDetail->getRoundID();
         $roundstat = $roundDetail->getRoundStatus();
 
@@ -229,7 +229,9 @@ if ($roundID==1 && $roundstat=='Started'){
                 $minbid = $sectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
                 $nowcourse = $course->getCourseid();
                 $nowsection = $course->getSectionid();
-                
+                if ($minbid==''){
+                    $minbid='-';
+                }
                 echo"<tr>
                 <td>{$course->getCourseid()}</td>
                 <td>{$course->getTitle()}</td>

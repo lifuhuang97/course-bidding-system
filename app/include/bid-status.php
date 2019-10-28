@@ -17,7 +17,7 @@ function doBidStatus($course,$section) {
     }
     if (isEmpty($errors)){
         $adminRoundDAO=new adminRoundDAO();
-        $roundDetail=$adminRoundDAO->RetrieveRoundDetail();
+        $roundDetail=$adminRoundDAO->retrieveRoundDetail();
         $roundID=$roundDetail->getRoundID();
         $roundStatus=$roundDetail->getRoundStatus();
         $vacancy=CheckVacancy($course,$section,TRUE);
@@ -26,7 +26,7 @@ function doBidStatus($course,$section) {
         if ($roundID==2 && $roundStatus=='Finished'){
             $minbid=$checkminbid;
             $StudentSectionDAO = new StudentSectionDAO();
-            $allBid=$StudentSectionDAO->RetrieveAllStudentByCourseSection($course,$section);
+            $allBid=$StudentSectionDAO->retrieveAllStudentByCourseSection($course,$section);
             $students=[];
             $studentDAO=new StudentDAO();
             foreach ($allBid as $oneBid){
