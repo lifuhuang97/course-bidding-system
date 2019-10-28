@@ -29,7 +29,7 @@
 ?>
 <html>
     <head>
-        <title>BOSS Bidding</title>
+        <title>BIOS Bidding</title>
         <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
         <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
     </head>

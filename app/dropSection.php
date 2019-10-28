@@ -72,7 +72,6 @@
                         <input type="text" name="section" required>
                     </div>
                     <input class="submit-btn" type='submit' name="Submit">
-                    <a href="mainpage.php?token=<?php echo $_GET['token']?>">Back</a>
                 </form>
             </div>
             <?php
