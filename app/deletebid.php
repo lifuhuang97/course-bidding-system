@@ -1,6 +1,7 @@
 <?php
-     require_once 'include/common.php';
-     require_once 'include/function.php';
+    require_once 'include/common.php';
+    require_once 'include/function.php';
+    require_once 'include/protect.php';
 
     $student=$_SESSION['student'];
     $userid = $student->getUserid(); #get userid
@@ -66,7 +67,7 @@ th, td,tr {
                 <div class="form-header">
                     <p>Drop Existing Bid</p>
                 </div>
-                <form action="deletebidprocess.php?token=<?php echo $_GET['token']?>" method="GET">
+                <form action="deletebidprocess.php" method="GET">
                     <input type='hidden' name='token' value="<?php echo $_GET['token'];?>">
                     <div class="form-group">
                         <label for="code">Course Code: </label><br>

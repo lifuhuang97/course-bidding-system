@@ -17,12 +17,11 @@
         if ($_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!135') {
                 $_SESSION['success'] = $_POST['username'];
-                $token=generate_token($userid);
-                header('Location: adminMainPage.php');
-                // header('Location: bootstrap.php?token='.$token);
+                $token=generate_token($_POST['username']);
+                header('Location: adminMainPage.php?token='.$token);
                 exit;
             } else {
-                array_push($_SESSION['errors'], 'Password is incorrect!');
+                array_push($_SESSION['errors'], 'Your password is incorrect!');
             }
             
         } elseif (count($_SESSION['errors']) == 0){

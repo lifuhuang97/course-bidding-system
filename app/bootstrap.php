@@ -1,17 +1,17 @@
 <?php
 require_once 'include/common.php';
 require_once 'include/bootstrap.php';
-#require_once 'include/protect.php';
+require_once 'include/protect.php';
 ?>
 
-<form id='bootstrap-form' action="bootstrap.php" method="post" enctype="multipart/form-data">
+<form id='bootstrap-form' action="bootstrap.php?token=<?php echo $_GET['token']?>" method="post" enctype="multipart/form-data">
 	Bootstrap file: 
 	<input id='bootstrap-file' type="file" name="bootstrap-file"></br>
 	<input type="submit" name="submitBootstrap" value="Import">
 </form>
 <!-- Back if want to start round but don't want to upload any bid data -->
 <!-- temporary logout button for admin to logout -->
-<a href="adminMainPage.php">Back</a>
+<a href="adminMainPage.php?token=<?php echo $_GET['token']?>">Back</a>
 <a href="logout.php">Logout</a>
 <?php
 if (isset($_POST['submitBootstrap'])){

@@ -1,6 +1,7 @@
 <?php
     require_once 'include/common.php';
     require_once 'include/function.php';
+    require_once 'include/protect.php';
 
     $student=$_SESSION['student'];
     $userid = $student->getUserid(); #get userid

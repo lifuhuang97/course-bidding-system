@@ -41,11 +41,6 @@ function doStop() {
                 $bidprocessorDAO->addBidResults($bidID,$bidAmt,$bidCourse,$bidSection,$status,$roundID);
             }
         }
-        //clear bid
-        if ($roundID==2){
-            // $bidDAO->removeAll();
-            pass;
-        }
     }elseif($roundID==1 && $roundStatus=="Not Started"){
         $errors=["round not started"];
     }else{

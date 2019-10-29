@@ -106,16 +106,55 @@ th, td,tr {
     }
 
 
+    
+    $months = [1=>'JAN',2=>'FEB',3=>'MAR',4=>'APR',5=>'MAY',6=>'JUNE',7=>'JULY',8=>'AUG',9=>'SEPT',10=>'OCT',11=>'NOV',12=>'DEC'];
+    if ($roundStartEndTimes[0]!='Not Started'){
+        $starttime1 = $roundStartEndTimes[0];
+        $starttime1 = explode(" ",$starttime1);
+        $str1 ='';
+        $str1 .= ($starttime1[0][8].$starttime1[0][9]." ".$months[$starttime1[0][5].$starttime1[0][6]] 
+        ." ". substr($starttime1[1],0,5));
+        $roundStartEndTimes[0] = $str1;
+    }
+    if ($roundStartEndTimes[1]=='Not Started' || $roundStartEndTimes[1]=='Ongoing'){
+        $roundStartEndTimes[1] = $roundStartEndTimes[1];
+    }else{
+        $starttime2 = $roundStartEndTimes[1];
+        $starttime2 = explode(" ",$starttime2);
+        $str2 ='';
+        $str2 .= ($starttime2[0][8].$starttime2[0][9]." ".$months[$starttime2[0][5].$starttime2[0][6]] 
+        ." ". substr($starttime2[1],0,5));
+        $roundStartEndTimes[1] = $str2;
+    }
+    if ($roundStartEndTimes[2]!='Not Started'){
+        $starttime3 = $roundStartEndTimes[2];
+        $starttime3 = explode(" ",$starttime3);
+        $str3 ='';
+        $str3 .= ($starttime3[0][8].$starttime3[0][9]." ".$months[$starttime3[0][5].$starttime3[0][6]] 
+        ." ". substr($starttime3[1],0,5));
+        $roundStartEndTimes[2] = $str3;
+    }
+    if ($roundStartEndTimes[3]=='Not Started' || $roundStartEndTimes[3]=='Ongoing'){
+        $roundStartEndTimes[3] = $roundStartEndTimes[3];
+    }else{
+        $starttime4 = $roundStartEndTimes[3];
+        $starttime4 = explode(" ",$starttime4);
+        $str4 ='';
+        $str4 .= ($starttime4[0][8].$starttime4[0][9]." ".$months[$starttime4[0][5].$starttime4[0][6]] 
+        ." ". substr($starttime4[1],0,5));
+        $roundStartEndTimes[3] = $str4;
+    }
+
     echo"
                                 <th>Round 1</th>
-                                <td>$roundStartEndTimes[0]</td>
-                                <td>$roundStartEndTimes[1]</td>
+                                <td><b>$roundStartEndTimes[0]</b></td>
+                                <td><b>$roundStartEndTimes[1]</b></td>
                                 
                             </tr>
                             <tr>
                                 <th>Round 2</th>
-                                <td>$roundStartEndTimes[2]</td>
-                                <td>$roundStartEndTimes[3]</td>
+                                <td><b>$roundStartEndTimes[2]</b></td>
+                                <td><b>$roundStartEndTimes[3]</b></td>
                             </tr>
                             </tr>";
 

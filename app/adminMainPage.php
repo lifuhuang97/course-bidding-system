@@ -9,7 +9,7 @@
     require_once 'include/update-bid.php';
     require_once 'include/delete-bid.php';
     require_once 'include/drop-section.php';
-    // require_once 'include/protect.php';
+    require_once 'include/protect.php';
     // if (!isset($_SESSION['success'])){
     //     header('Location: login.php');
     //     exit;
@@ -62,7 +62,7 @@ $roundStatus = $round->getRoundStatus();
 
 ?>
 
-<form action="processAdminCommands.php" method="post">
+<form action="processAdminCommands.php?token=<?php echo "{$_GET['token']};"?>" method="post">
 
 <?php
 
@@ -179,7 +179,7 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
 <br>
 <br>
             <div class="display-right-allInfo">
-            <form action="adminMainPage.php" method="post">
+            <form action="adminMainPage.php?token=<?php echo "{$_GET['token']};"?>" method="post">
 <input type='submit' name='navigation' value='Show All Data'>
 <input type='submit' name='navigation' value='Show Student'>
 <input type='submit' name='navigation' value='Show Bid By Section'>
@@ -195,13 +195,13 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
             $result=doDump();
             echo "<br><table>
             <tr><th>Show All Data</th></tr>
-            <tr><td><a href='adminMainPage.php#course'>Course Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#section'>Section Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#student'>Student Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#prerequisite '>Prerequisite Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#bid'>Bid Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#completedCourse'>Completed Course Table</a></td></tr>
-            <tr><td><a href='adminMainPage.php#sectionStudent'>Section Student Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#course'>Course Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#section'>Section Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#student'>Student Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#prerequisite '>Prerequisite Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#bid'>Bid Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#completedCourse'>Completed Course Table</a></td></tr>
+            <tr><td><a href='adminMainPage.php?token={$_GET['token']}#sectionStudent'>Section Student Table</a></td></tr>
             </table>";
             //course
             echo"<section id='course'><h3>Course Table</h3></section>";
