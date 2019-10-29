@@ -184,8 +184,8 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 <th style='text-align:center'>Title</th>
                                 <th>Section</th>
                                 <th style='text-align:center'>Day</th>
-                                <th>Lesson Start Time</th>
-                                <th>Lesson End Time</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
                                 <th style='text-align:center'>Instructor</th>
                                 <th>Amount</th>
                                 <th>Bid Result</th>";
@@ -213,14 +213,21 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     echo "<td>";
                                     $coursesDAO = new CourseDAO();
                                     $course = $coursesDAO->retrieveAllCourseDetail($code,$bidSection);
+
+                                    $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                                    $lStartTime = $course[0]->getStart();
+                                    $lStartTime = substr($lStartTime,0,5);
+                                    $lEndTime = $course[0]->getEnd();
+                                    $lEndTime = substr($lEndTime,0,5);
+
                                     $bidresult = $bid[4];
 
                                     
                                 echo "{$course[0]->getTitle()}</td>
                                     <td>{$bidSection}</td>
-                                    <td>{$course[0]->getDay()}</td>
-                                    <td>{$course[0]->getStart()}</td>
-                                    <td>{$course[0]->getEnd()}</td>
+                                    <td>{$weekday[$course[0]->getDay()]}</td>
+                                    <td>$lStartTime</td>
+                                    <td>$lEndTime</td>
                                     <td>{$course[0]->getInstructor()}</td>
                                     <td>{$bidAmt}</td>
                                     <td>{$bidresult}</td>";
