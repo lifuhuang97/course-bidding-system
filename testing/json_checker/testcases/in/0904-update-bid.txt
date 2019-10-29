@@ -1,0 +1,4 @@
+userid=amy.ng.2009
+course=IS101
+section=S2
+amount=15.00
