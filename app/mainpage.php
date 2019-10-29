@@ -44,9 +44,7 @@ th, td,tr {
                 <div class="navbar-left__profile">
                     <div class="navbar-left__profile__container">
                         <div class="profile-picture">
-                            <a href="mainpage.php?token=<?php echo $_GET['token']?>">
                                 <img class="profpic" src="css/profpic1.png">
-                            </a>
                         </div>
                         <div class="profile-details">
                             <p>Welcome, <?=$name?></p>

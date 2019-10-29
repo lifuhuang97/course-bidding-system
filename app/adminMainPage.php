@@ -1,5 +1,3 @@
-<!-- Requires for all used functions !-->
-
 <?php
     require_once 'include/dump.php';
     require_once 'include/user-dump.php';
@@ -20,73 +18,64 @@
 ?>
 
 
-
 <html>
 <head>
-<title>BOSS Bidding</title>
-        <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
-        <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
+    <title>BOSS Bidding System</title>
+    <link rel="stylesheet" type="text/css" href="css/adminUI.css">
+    <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
     <style> 
         table, th, td {
             text-align:center; 
         } 
+  
     </style> 
 </head>
 
 <body>
-
-<body>
-<div class="container">
-            <div class="navbar-left">
-                <div class="navbar-left__profile">
+    <!-- class "container" wraps everything inside -->
+    <div class="container">
+        <div class="navbar-left">
+        <div class="navbar-left_profile">
                     <div class="navbar-left__profile__container">
                         <div class="profile-picture">
                                 <img class="profpic" src="css/profpic1.png">
-                            </a>
                         </div>
                         <div class="profile-details">
                             <p>Welcome, Admin!</p>
+                            <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+                <!-- <div class="navbar-left__smuLogo">
+                    <img src="css/smulogo.png"></div> -->
                         </div>
-                    </div>
-                </div>
-            
-            <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
-            
-            <!-- <form action='processAdminCommands.php' method='post' id="submit"><button id="submit" value='Start Round'>Start Round</button></form> -->
-            
-            <div class="navbar-left__smuLogo">
-                    <img src="css/smulogo.png">
-            </div>
-            <div class="display-right">
-                <?php //Current Time Table<br> ?>
-                <div class="display-right-container">
-                    <div class="display-right__table-dates">
-</div>
-</div>
-</div>
-</div>
-<?php
+                        <br>
+        </div>
+    </div>
+    </div>
+    
+        <div class="display-right">
+            <div class="display-right-bidSystem">
+            <?php
 // Get up-to-date round details
 $adminRoundDAO = new adminRoundDAO();
-$round = $adminRoundDAO->retrieveRoundDetail();
+$round = $adminRoundDAO->RetrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
+
 ?>
 
-
-<table>
-                            <tr>
-                                <th class="table-title" colspan="3">Bid System Status</th>
-
+<form action="processAdminCommands.php" method="post">
 
 <?php
 
 //display current round & status
-echo "
- 
-        <tr><th colspan='3'>Round: {$roundNo}</th></tr>
-        </th><th colspan='3'>Status: {$roundStatus}</th></tr>
-    ";
+echo "<table>
+<tr><th colspan='3' class='table-title'>Bid System Status</th></tr>
+    <tr><th></th><th></th>
+        <th>Round: {$roundNo}</th>
+        <th>Status: {$roundStatus}</th>
+        <th></th>
+        <th></th>
+    </tr>";
+    
 
 ?>
 
@@ -111,34 +100,25 @@ if ($roundStatus == "Started"){
     }
 }
 
-echo "
-
-<form action='processAdminCommands.php' method='post'>
-<tr>
-
+echo "<tr>
+<td></td><td></td>
     <td><input type='submit' name='submit' value='Start Round' $startStatus></td>
     <td><input type='submit' name='submit' value='Clear Round' $clearStatus></td>
- 
+    <td></td><td></td>
 </tr>
-<tr>
-<td colspan='3'><input type='submit' name='submit' value='Reset Round'></td>
-</tr>
-</form>
-</table>
-</div>
-</div>
-
-";
+</form>";
 
 ?>
 <!-- to reset database to base state >require new bootstrap< -->
+<tr>
+    <td colspan='6'><input type="submit" name="submit" value="Reset Round"></td>
+</tr>
 
-
-<div class="display-right__table-cart">
-
+</table>
+</div>
+            <div class="display-right-bidInfo">
 <?php
-
-/** Display bid results after round ends */
+            /** Display bid results after round ends */
 
 // $successBidDAO = new StudentSectionDAO();
 // $allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
@@ -192,10 +172,14 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
     echo"</table>";
 }
 ?>
+
+
+            </div>
+            <br>
 <br>
 <br>
-<br>
-<form action="adminMainPage.php" method="post">
+            <div class="display-right-allInfo">
+            <form action="adminMainPage.php" method="post">
 <input type='submit' name='navigation' value='Show All Data'>
 <input type='submit' name='navigation' value='Show Student'>
 <input type='submit' name='navigation' value='Show Bid By Section'>
@@ -660,8 +644,18 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
 ?>
 </form>
 
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+
+
+
+
+
 <br>
-<a href="logout.php">Logout</a>
+
 
 </body>
 
