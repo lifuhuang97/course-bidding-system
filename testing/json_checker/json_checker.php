@@ -12,7 +12,7 @@ $directories = [
 // extension of JSON API
 $json_ext =".php";
 
-
+set_time_limit(300);
 
 
 // Grab user's input of URL
