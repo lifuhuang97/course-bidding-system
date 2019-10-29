@@ -15,7 +15,7 @@
 
         // Authenticate then go to mainpage
         if ($_POST['username'] == 'admin') {
-            if ($_POST['password'] == 'P@ssw0rd!547') {
+            if ($_POST['password'] == 'P@ssw0rd!135') {
                 $_SESSION['success'] = $_POST['username'];
                 $token=generate_token($userid);
                 header('Location: adminMainPage.php');

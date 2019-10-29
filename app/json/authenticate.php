@@ -26,7 +26,7 @@ else{
     $studentDAO=new StudentDAO();
     $returnMsg=$studentDAO->authenticate($username,$password);
     # after you are sure that the $username and $password are correct, you can do
-    if ($returnMsg=='SUCCESS' || ($username=='admin' && $password=='P@ssw0rd!547')){
+    if ($returnMsg=='SUCCESS' || ($username=='admin' && $password=='P@ssw0rd!135')){
         $token=generate_token($username);
         $result = [
             "status" => "success",
