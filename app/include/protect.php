@@ -31,7 +31,6 @@ if ($currentFolder == "json")
             header('Location:login.php');
         }
     }else{
-        exit;
         $_SESSION['errors'] =  ["Missing token. Please Login!"];
         header('Location:login.php');
     }

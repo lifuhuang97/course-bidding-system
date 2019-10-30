@@ -120,7 +120,7 @@ th, td,tr {
                     </div>
                     <div class="form-group">
                         <label for="bidAmt">Bid Amount: </label><br>
-                        <input class="form-control" type="number" name="bidAmt" required>
+                        <input class="form-control" type="text" name="bidAmt" required>
                     </div>
                     <input class="submit-btn" type='submit' name="submit">
                 </form>

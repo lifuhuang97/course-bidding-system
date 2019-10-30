@@ -16,7 +16,7 @@ create table COURSE (
 
 create table SECTION (
     coursesID varchar(100) not null,
-  sectionID varchar(2) not null,
+    sectionID varchar(3) not null,
     day int(1) not null,
     start time not null,
     end  time not null,
@@ -57,7 +57,7 @@ create table BID (
     userid varchar(128) not null,
     amount decimal(5,2) not null,
     code varchar(100),
-    section varchar(2) not null,
+    section varchar(3) not null,
 	CONSTRAINT BID_PK primary key (userid,code,section),
 	CONSTRAINT BID_FK1 foreign key(userid) references STUDENT(userid),
 	CONSTRAINT BID_FK2 foreign key(code,section) references SECTION(coursesID,sectionID)
@@ -76,13 +76,13 @@ create table ADMIN_ROUND (
     CONSTRAINT ADMIN_ROUND primary key (adminID,adminPW)
 );
 
-insert into ADMIN_ROUND VALUES ("admin", "P@ssw0rd!547", null, 1, "Not Started", null, null, null, null);
+insert into ADMIN_ROUND VALUES ("admin", "P@ssw0rd!135", null, 1, "Not Started", null, null, null, null);
 
 create table STUDENT_SECTION (
     userid varchar(128) not null,
     amount decimal(5,2) not null,
     course varchar(100) not null,
-    section varchar(2) not null,
+    section varchar(3) not null,
     bidstatus varchar(50),
     bidround int(1),
   CONSTRAINT STUDENT_SECTION_PK primary key (userid,amount,course,section,bidround)
@@ -92,7 +92,7 @@ create table BID_PROCESSOR (
     userid varchar(128) not null,
     amount decimal(5,2) not null,
     course varchar(100) not null,
-    section varchar(2) not null,
+    section varchar(10) not null,
     bidstatus varchar(50) not null,
     bidround int(1) not null,
   CONSTRAINT BID_PROCESSOR_PK primary key (userid,amount,course,section,bidstatus,bidround)
