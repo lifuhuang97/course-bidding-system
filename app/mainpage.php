@@ -68,7 +68,7 @@ th, td,tr {
                 <?php //Current Time Table<br> ?>
                 <div class="display-right-container">
                     <div class="display-right__table-dates">
-                        <table>
+                        <table class="display-right__table-dates__table">
                             <tr>
                                 <th class="table-title" colspan="3">Boss Date</th>
                             </tr>
@@ -169,9 +169,9 @@ if($roundID == 2 && $roundStatus != "Started"){
 ?>
 
                     <div class="display-right__table-cart">
-                        <table>
+                        <table class="display-right__table-cart__table">
                             <tr>
-                                <th class="table-title" colspan="8">Round <?php $roundID?> Bidding Results</th>
+                                <th class="table-title" colspan="9">Round <?php $roundID?> Bidding Results</th>
                             </tr>
                             <tr>
                                 <th colspan="8">
@@ -249,12 +249,12 @@ if($roundID == 2 && $roundStatus != "Started"){
 
 
                     <div class="display-right__table-cart">
-                        <table>
+                        <table class="display-right__table-cart__table">
                             <tr>
-                                <th class="table-title" colspan="8">Bidding Cart</th>
+                                <th class="table-title" colspan="9">Bidding Cart</th>
                             </tr>
                             <tr>
-                                <th colspan="8">
+                                <th colspan="9">
                                 <?php echo "
                                     Round {$roundID} is {$roundStatus}" ?>
                                 </th></tr>
@@ -349,9 +349,70 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     </tr>";
                                         }
                                     ?>
+                            </table>
+                    </div>
+                    <div class="display-right__table-enrolment">
+                        <table class="display-right__table-enrolment__table">
+                            <tr>
+                                <th class="table-title">Enrolment</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                <?php
+                                    if (count($successModules)>0){
+                                        echo"<table border='1'>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th style='text-align:center'>Title</th>
+                                            <th>Section</th>
+                                            <th style='text-align:center'>Day</th>
+                                            <th>Lesson Start Time</th>
+                                            <th>Lesson End Time</th>
+                                            <th style='text-align:center'>Instructor</th>
+                                            <th>Amount</th>
+                                        </tr>";
+                                        foreach ($successModules as $module){
+                                            $courseDAO= new CourseDAO();
+                                            $course=$courseDAO->retrieveAllCourseDetail($module[1],$module[2])[0];
+                                            $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                                            $lStartTime = $course->getStart();
+                                            $lStartTime = substr($lStartTime,0,5);
+                                            $lEndTime = $course->getEnd();
+                                            $lEndTime = substr($lEndTime,0,5);
+                                            echo "<tr>
+                                            <td>{$module[1]}</td>
+                                            <td>{$course->getTitle()}</td>
+                                            <td>{$module[2]}</td>
+                                            <td>{$weekday[$course->getDay()]}</td>
+                                            <td>$lStartTime</td>
+                                            <td>$lEndTime</td>
+                                            <td>{$course->getInstructor()}</td>
+                                            <td>{$module[0]}</td>
+                                        </tr>";
+                                        }
+                                        echo"</table>";
+                                    }
+                                    else{
+                                        echo "No Enrolled Course";
+                                    }
+                                ?>
+                                </td>
+                            </tr>
+                            <tr>
+<?php
+
+// $EnrolledCourses = $bidresultsDAO->getSuccessfulBidsByID($loginID);
+// foreach($EnrolledCourses as $course){
+//     var_dump($course);
+// }
+
+?>
+                            </tr>
                         </table>
-                        <br>
-                        <table border='1px black'>
+                        
+                        </table>
+                        
+                        <table class="display-right__table-timetable__table" border='1px black'>
                             <tr>
                                 <th colspan='4' class="table-title">Timetable</th>
                             </tr>
@@ -467,65 +528,6 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 
                             ?>
 
-                        </table>
-                    </div>
-                    <div class="display-right__table-enrolment">
-                        <table>
-                            <tr>
-                                <th class="table-title">Enrolment</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                <?php
-                                    if (count($successModules)>0){
-                                        echo"<table border='1'>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th style='text-align:center'>Title</th>
-                                            <th>Section</th>
-                                            <th style='text-align:center'>Day</th>
-                                            <th>Lesson Start Time</th>
-                                            <th>Lesson End Time</th>
-                                            <th style='text-align:center'>Instructor</th>
-                                            <th>Amount</th>
-                                        </tr>";
-                                        foreach ($successModules as $module){
-                                            $courseDAO= new CourseDAO();
-                                            $course=$courseDAO->retrieveAllCourseDetail($module[1],$module[2])[0];
-                                            $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
-                                            $lStartTime = $course->getStart();
-                                            $lStartTime = substr($lStartTime,0,5);
-                                            $lEndTime = $course->getEnd();
-                                            $lEndTime = substr($lEndTime,0,5);
-                                            echo "<tr>
-                                            <td>{$module[1]}</td>
-                                            <td>{$course->getTitle()}</td>
-                                            <td>{$module[2]}</td>
-                                            <td>{$weekday[$course->getDay()]}</td>
-                                            <td>$lStartTime</td>
-                                            <td>$lEndTime</td>
-                                            <td>{$course->getInstructor()}</td>
-                                            <td>{$module[0]}</td>
-                                        </tr>";
-                                        }
-                                        echo"</table>";
-                                    }
-                                    else{
-                                        echo "No Enrolled Course";
-                                    }
-                                ?>
-                                </td>
-                            </tr>
-                            <tr>
-<?php
-
-// $EnrolledCourses = $bidresultsDAO->getSuccessfulBidsByID($loginID);
-// foreach($EnrolledCourses as $course){
-//     var_dump($course);
-// }
-
-?>
-                            </tr>
                         </table>
                     </div>
                 </div>

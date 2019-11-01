@@ -80,7 +80,8 @@ th, td,tr {
                     <input class="submit-btn" name="submit" type='submit'>
                 </form>
             </div>
-            <?php
+            <div class="content-container">
+                <?php
                 if (isset($_SESSION['errors1'])) {
                     foreach ($_SESSION['errors1'] as $errors){
                         print $errors;
@@ -88,69 +89,71 @@ th, td,tr {
                     }
                     unset ($_SESSION['errors1']);
                 }
-            ?>
-            <?php
-    if (count($biddedModule)==0){
-        echo "No available course";
-    }else {
-        echo"<table border='1px'>
-        <tr>
-            <th>Course ID</th>
-            <th <th style='text-align:center'>Title</th>
-            <th>Section ID</th>
-            <th <th style='text-align:center'>Day</th>
-            <th>Lesson Start Time</th>
-            <th>Lesson End Time</th>
-            <th <th style='text-align:center'>Instructor</th>
-            <th>Amount</th> 
-            <th>Delete</th>
-        </tr>";
-        foreach ($biddedModule as $module){
-            $i = 1;
+                ?>
+                <?php
+                if (count($biddedModule)==0){
+                    echo "No available course";
+                }else {
+                    echo"<table class='content-container__table' border='1px'>
+                    <tr>
+                    <th>Course ID</th>
+                    <th <th style='text-align:center'>Title</th>
+                    <th>Section ID</th>
+                    <th <th style='text-align:center'>Day</th>
+                    <th>Lesson Start Time</th>
+                    <th>Lesson End Time</th>
+                    <th <th style='text-align:center'>Instructor</th>
+                    <th>Amount</th> 
+                    <th>Delete</th>
+                    </tr>";
+                    foreach ($biddedModule as $module){
+                        $i = 1;
 
-            echo "<tr><td>";
-            $code = $module->getCode();
-            echo "$code</td>";
-            echo "<td>";
-            $course = $module->getCourseDetailsByCourseSection();
-            $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
-            $lStartTime = $course->getStart();
-            $lStartTime = substr($lStartTime,0,5);
-            $lEndTime = $course->getEnd();
-            $lEndTime = substr($lEndTime,0,5);
-            echo "{$course->getTitle()}</td>
-                <td>{$module->getSection()}</td>
-                <td>{$weekday[$course->getDay()]}</td>
-                <td>$lStartTime</td>
-                <td>$lEndTime</td>
-                <td>{$course->getInstructor()}</td>
-                <td>{$module->getAmount()}</td>";
-?>
-            
-            <td>
-            <button id="<?= $code?>" class="trigger">Drop</button>
-            <div class="modal" id="modal<?= $code?>">
-                <div class="modal-content">
-                    <h3>Are you sure you want to drop bid?
-                    </h3>
-                    <span class="close-button">Close</span>
-                    <a class="drop-button" href="deletebidprocess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$module->getSection()?>">Confirm</a>
-                    
-                </div>
+                        echo "<tr><td>";
+                        $code = $module->getCode();
+                        echo "$code</td>";
+                        echo "<td>";
+                        $course = $module->getCourseDetailsByCourseSection();
+                        $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                        $lStartTime = $course->getStart();
+                        $lStartTime = substr($lStartTime,0,5);
+                        $lEndTime = $course->getEnd();
+                        $lEndTime = substr($lEndTime,0,5);
+                        echo "{$course->getTitle()}</td>
+                        <td>{$module->getSection()}</td>
+                        <td>{$weekday[$course->getDay()]}</td>
+                        <td>$lStartTime</td>
+                        <td>$lEndTime</td>
+                        <td>{$course->getInstructor()}</td>
+                        <td>{$module->getAmount()}</td>";
+                        ?>
+
+                        <td>
+                            <button id="<?= $code?>" class="trigger">Drop</button>
+                            <div class="modal" id="modal<?= $code?>">
+                                <div class="modal-content">
+                                    <h3>Are you sure you want to drop bid?
+                                    </h3>
+                                    <span class="close-button">Close</span>
+                                    <a class="drop-button" href="deletebidprocess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$module->getSection()?>">Confirm</a>
+
+                                </div>
+                            </div>
+                        </td>
+
+
+
+
+                        <?php
+                        echo "</tr>";
+
+                        $i +=1;
+                    }
+                }
+
+                ?>
             </div>
-            </td>
-
-
-
-
-            <?php
-            echo "</tr>";
-
-            $i +=1;
-        }
-    }
-
-?>  
+  
         </div>
     </div> 
 

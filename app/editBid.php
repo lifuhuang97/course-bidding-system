@@ -116,7 +116,7 @@ th, td,tr {
             </div>
             <div class="content-container">
                 <?php
-                    echo "<table>";
+                    echo "<table class='content-container__table'>";
                     if (isset($biddedModule)) {
                         if (count($biddedModule) == 0){
                             echo "<tr>

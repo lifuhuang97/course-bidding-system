@@ -44,7 +44,21 @@
 	color: #0D1060;
 }
 .display-right__table-dates, .display-right__table-cart, .display-right__table-enrolment{
-	padding: 20px;
+	padding: 15px;
+}
+.display-right__table-dates{
+	padding-top: 0;
+}
+.display-right__table-cart__table, .display-right__table-dates__table, .display-right__table-enrolment__table{
+	width: 100%;
+}
+.display-right__table-enrolment{
+	display: grid;
+	grid-template-areas: "display-right__table-enrolment__table display-right__table-timetable__table";
+	grid-template-columns: 49% 50%;
+}
+.content-container__table{
+	width: 100%;
 }
 table{
 	border: 1px solid #D6D5E4;
@@ -62,7 +76,7 @@ th, td{
 	/*width: 10em;*/
 }
 th{
-	text-align: start;
+	text-align: center;
 }
 .form-container{
 	padding: 2em;
