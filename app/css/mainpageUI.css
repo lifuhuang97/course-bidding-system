@@ -60,11 +60,11 @@
 .content-container__table{
 	width: 100%;
 }
-table{
-	border: 1px solid #D6D5E4;
-	-webkit-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
-	-moz-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
-	box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
+table {
+    border: 1px solid #D6D5E4;
+    -webkit-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
+    -moz-box-shadow: 6px 6px 10px 3px rgba(214,213,228,1);
+    box-shadow: 3px 3px 7px 2px rgba(214,213,228,1);
 }
 .table-title{
 	/*text-align: center;*/
