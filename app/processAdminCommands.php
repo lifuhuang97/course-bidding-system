@@ -23,13 +23,21 @@ $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 
 // Update round status. If it's call to start round in round 1, go to bootstrap
-if ($_SESSION['roundaction'] == "Start Round"){
+// if ($_SESSION['roundaction'] == "Start Round"){
+//     doStart();
+//     if($roundNo == 1 && $roundStatus == "Not Started"){
+//         header("Location: bootstrap.php?token={$_GET['token']}");
+//     }else{
+//         header("Location: adminMainPage.php?token={$_GET['token']}");
+//     }
+// }
+if($_SESSION['roundaction'] == "Start Round") {
     doStart();
-    if($roundNo == 1 && $roundStatus == "Not Started"){
-        header("Location: bootstrap.php?token={$_GET['token']}");
-    }else{
-        header("Location: adminMainPage.php?token={$_GET['token']}");
-    }
+    header("Location: adminMainPage.php?token={$_GET['token']}");
+}
+elseif($_SESSION['roundaction'] == "Bootstrap & Start Round") {
+    doStart();
+    header("Location: bootstrap.php?token={$_GET['token']}");
 }
 
 // Update round status & go to admin page
