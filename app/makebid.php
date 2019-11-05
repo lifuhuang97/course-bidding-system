@@ -210,7 +210,7 @@ if ($roundID==1 && $roundstat=='Started'){
     echo "Available Courses to Bid for Round 2";
     //should show all courses that is available for the user 
     //should include the validation stuffs as well
-    if (count($courses)==0){
+    if (count($allCourses)==0){
         echo "No available course";
     }else {
         echo"<table border='1px'>
@@ -223,6 +223,7 @@ if ($roundID==1 && $roundstat=='Started'){
             <th>Lesson End Time</th>
             <th style='text-align:center'>Instructor</th>
             <th>Size</th> 
+            <th>Vacancy Left</th>
             <th>Exam Date</th>
             <th>Exam Start Time</th>
             <th>Exam End Time</th>
@@ -256,6 +257,10 @@ if ($roundID==1 && $roundstat=='Started'){
                 if ($minbid==''){
                     $minbid='-';
                 }
+                $vacancy = CheckVacancy($course->getCourseid(),$course->getSectionid(),$retrieveVale =True);
+                if ($vacancy==False){
+                    $vacancy=0;
+                }
                 echo"<tr>
                 <td>{$course->getCourseid()}</td>
                 <td>{$course->getTitle()}</td>
@@ -265,6 +270,7 @@ if ($roundID==1 && $roundstat=='Started'){
                 <td>$lEndTime</td>
                 <td>{$course->getInstructor()}</td>
                 <td>{$course->getSize()}</td>
+                <td>$vacancy</td>
                 <td>{$course->getExamDate()}</td>
                 <td>{$eStartTime}</td>
                 <td>{$eEndTime}</td>
