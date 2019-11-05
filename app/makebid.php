@@ -57,18 +57,20 @@
 
 
 ?>
-<style>
-th, td,tr {
-  text-align: center;
-}
-</style>
 
 <html>
 <head>
     <title>BIOS Bidding</title>
-    <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
     <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
+    <style>
+        th, td,tr {
+        text-align: center;
+        }
+    </style> 
 </head>
+
 <body>
     <div class="container">
         <div class="navbar-left">
@@ -108,7 +110,7 @@ th, td,tr {
                 <div class="form-header">
                     <p>Add Bid</p>
                 </div>
-                <form action="processBid.php?token=<?php echo $_GET['token']?>" method="POST">
+                <form id="formMakeBid" action="processBid.php?token=<?php echo $_GET['token']?>" method="POST">
                     <input type='hidden' name='eCredit' value="<?=$edollar?>">
                     <div class="form-group">
                         <label for="code">Course Code: </label><br>
@@ -125,15 +127,39 @@ th, td,tr {
                     <input class="submit-btn" type='submit' name="submit">
                 </form>
             </div>
-            <?php
-                if (isset($_SESSION['errors1'])) {
+
+            <?php 
+                if(isset($_SESSION['errors1']) && !empty($_SESSION['errors1'])) {
+                    echo "<div class='modal'>
+                    <div class='modal-content'>";
                     foreach ($_SESSION['errors1'] as $errors){
-                        print $errors;
-                        print "<br>";
+                        echo "<p>".$errors."</p>";
                     }
-                    unset ($_SESSION['errors1']);
+                    unset($_SESSION['errors1']);
+                    echo "<span class='close-button'>Close</span>";
+                    echo "</div>
+                    </div>";
+                   
+            ?>
+                    <script>
+                        $('.modal').addClass('show-modal');
+                    </script> 
+            <?php
+                  
                 }
             ?>
+
+            <?php
+               // if (isset($_SESSION['errors1'])) {
+                    //foreach ($_SESSION['errors1'] as $errors){
+                       // print $errors;
+                        //print "<br>";
+                    //}
+                    //unset ($_SESSION['errors1']);
+                //}
+                
+            ?>
+            
             <?php
 if ($roundID==1 && $roundstat=='Started'){
     echo "Available Courses to Bid for Round 1";
@@ -292,5 +318,28 @@ if ($roundID==1 && $roundstat=='Started'){
 }
 ?>
         </div>
+
+
+<script>
+
+
+
+var modal = document.querySelector(".modal");
+var closeButton = document.querySelector(".close-button");
+
+function toggleModal() {
+    modal.classList.toggle("show-modal");
+}
+
+function windowOnClick(event) {
+    if (event.target === modal) {
+        toggleModal();
+    }
+}
+
+closeButton.addEventListener("click", toggleModal);
+window.addEventListener("click", windowOnClick);
+</script>  
+
 </body>
 </html>

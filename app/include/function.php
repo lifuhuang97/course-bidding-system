@@ -165,6 +165,9 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
     if ($row=$stmt->fetch()){
         $size=$row['size'];
     }
+    else{
+        return 'No record found.';
+    }
 
     $sql = "SELECT count(*) as remain FROM student_section WHERE course=:course AND section=:section";
     $stmt = $conn->prepare($sql);

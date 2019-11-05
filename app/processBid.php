@@ -95,9 +95,14 @@
         //check if there is vacancy
         
         $seats = CheckVacancy($courseId,$sectionId);
-        if (!$seats){
-            array_push($_SESSION['errors1'], 'There is no vacancy left.');
+        if($seats !== 'No record found.') {
+            if (!$seats){
+                array_push($_SESSION['errors1'], 'There is no vacancy left.');
+            }
         }
+        // if (!$seats){
+        //     array_push($_SESSION['errors1'], 'There is no vacancy left.');
+        // }
         
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
