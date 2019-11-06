@@ -164,8 +164,7 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
     $size=0;
     if ($row=$stmt->fetch()){
         $size=$row['size'];
-    }
-    else{
+    }else{
         return 'No record found.';
     }
 
@@ -195,58 +194,33 @@ function CheckVacancy($course,$section,$retrieveValue=FALSE){
     } 
 }
 
-function CheckMinBidFromBiddingResult($course,$section){
+function CheckMinBidFromBiddingResult($course,$section,$round){
         // Connect to Database
     $connMgr = new ConnectionManager();
     $conn = $connMgr->getConnection();
 
     // Write & Prepare SQL Query (take care of Param Binding if necessary)
-    $sql = "SELECT * FROM SECTION WHERE coursesID=:course AND sectionID=:section";
+    $sql = "SELECT min(amount) as minbid FROM STUDENT_SECTION WHERE course=:course AND section=:section AND bidround=:round";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':course',$course ,PDO::PARAM_STR);
     $stmt->bindParam(':section',$section ,PDO::PARAM_STR);
+    $stmt->bindParam(':round',$round ,PDO::PARAM_STR);
         
     //Execute SQL Query
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
     $stmt->execute();
 
     //Retrieve Query Results (if any)
-    $vacancy=0;
+    $minBid=10;
     if ($row=$stmt->fetch()){
-        $vacancy=$row['size'];
+        $minBid=$row['minbid'];
     }
-    //student section
     
-    $BidProcessorDAO= new BidProcessorDAO();
-    $allBid=$BidProcessorDAO->retrieveAllStudentByCourseSection($course,$section);
+    // Clear Resources $stmt, $conn
+    $stmt = null;
+    $conn = null;
 
-    $value = 10.00;
-    if ($vacancy > count($allBid)){
-        return $value;
-    }
-    if ($vacancy == count($allBid)){
-        $count=0;
-        $valuearray = [];
-        while($count<count($allBid)){
-            array_push($valuearray,$allBid[$count]->getAmount());
-            $count +=1;
-        }
-        return $valuearray[$vacancy-1];
-    }
-    if ($vacancy < count($allBid)){
-        $count=0;
-        $valuearray = [];
-        while($count<count($allBid)){
-            array_push($valuearray,$allBid[$count]->getAmount());
-            $count +=1;
-        }
-    }
-    if ($valuearray[$vacancy-1] == $valuearray[$vacancy]){
-        return $valuearray[$vacancy-1]+0.01;
-    }else{
-        //$valuearray[$vacancy-1] > $valuearray[$vacancy]
-        return $valuearray[$vacancy-1];
-    }
+    return $minBid;
 }
 
 function CheckMinBid($course,$section,$user=TRUE){
@@ -476,15 +450,15 @@ function CheckExamTimeTable($userid,$courseid){
             return TRUE;
         }
         if ($row['examDate']==$info['examDate']){
-            if ($row['examStart']>=$info['examStart'] and $row['examEnd']<=$info['examEnd']){
+            if ($row['examStart']>$info['examStart'] and $row['examEnd']<$info['examEnd']){
                 // if the incoming fall inbetween the existing exam timetable
                 $status=FALSE;
             }
-            elseif ($row['examStart']<=$info['examEnd'] and $row['examEnd']>=$info['examEnd']){
+            elseif ($row['examStart']<$info['examEnd'] and $row['examEnd']>$info['examEnd']){
                 // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
                 $status=FALSE;
             }
-            elseif ($row['examStart']<=$info['examStart'] and $row['examEnd']>=$info['examStart']){
+            elseif ($row['examStart']<$info['examStart'] and $row['examEnd']>$info['examStart']){
                 // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
                 $status=FALSE;
             }
@@ -673,4 +647,33 @@ function ChangeBidUpdateEdollar($bid, $action=''){
     return $status;
 }
 
+function noOfSameMinBid($course,$section,$amount){
+    // Connect to Database
+    $connMgr = new ConnectionManager();
+    $conn = $connMgr->getConnection();
+
+    // Prepare SQL
+    //retrieve exisiting course bid
+    $sql = "SELECT count(*) as numberSameBid  FROM  BID where code=:course and section=:section and amount=:amount"; 
+    $stmt=$conn->prepare($sql);
+    $stmt->bindParam(':course',$course,PDO::PARAM_STR);
+    $stmt->bindParam(':section',$section,PDO::PARAM_STR);
+    $stmt->bindParam(':amount',$amount,PDO::PARAM_STR);
+
+    // Run Query
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $status = $stmt->execute();
+    $Total=0;
+    if ($row=$stmt->fetch()){
+        if ($row!=NULL){
+            $Total=$row['numberSameBid'];
+        }
+    }
+
+    // Close Query/Connection
+    $stmt = null;
+    $conn = null;
+
+    return $Total;
+}
 ?>

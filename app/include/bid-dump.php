@@ -28,14 +28,20 @@ function doBidDump($course,$section) {
 
         $bidDAO=new BidDAO();
         $AllBids=$bidDAO->getAllBids([$course,$section]);
-        $minBid=CheckMinBid($course,$section,FALSE);
+        if ($roundStatus!='Started'){
+            $minBid=CheckMinBidFromBiddingResult($course,$section,$roundID);
+        }else{
+            $minBid=CheckMinBid($course,$section,FALSE);
+        }
         $bidList=[];
         $index=1;
         foreach ($AllBids as $onebid){
             if ($roundID==1 && $roundStatus=='Started'){
                 $result='-';
             }else{
-                if ($onebid->getAmount()>=$minBid){
+                if ($roundID==2 && $roundStatus=='Started' && count($AllBids)==1){
+                    $result='-';
+                }elseif($onebid->getAmount()>=$minBid){
                     $result='in';
                 }else{
                     $result="out";

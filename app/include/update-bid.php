@@ -70,6 +70,8 @@ function doUpdateBid($userid,$amount,$course,$section) {
         }
     }
     if (!isEmpty($errors)){
+        $sortclass = new Sort();
+        $errors = $sortclass->sort_it($errors,"title");
         $result = [
             "status" => "error",
             "message" => array_values($errors)

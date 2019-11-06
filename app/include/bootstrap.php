@@ -128,7 +128,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -188,7 +187,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -261,7 +259,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -347,7 +344,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -395,7 +391,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -447,7 +442,6 @@ function doBootstrap() {
                         if (strlen($data[$i])==0){
                             //check for empty cell
                             $message[]="blank $header[$i]";
-                            break;
                         }
                     }
                     if (isEmpty($message)){
@@ -533,12 +527,12 @@ function doBootstrap() {
 		$result = [ 
 			"status" => "success",
 			"num-record-loaded" => [
-				"bid.csv" => $bid_processed,
-				"course.csv" => $course_processed,
-				"course_completed.csv" => $course_completed_processed,
-                "prerequisite.csv" => $prerequisite_processed,
-                "section.csv" => $section_processed,
-				"student.csv" => $student_processed
+				["bid.csv" => $bid_processed],
+				["course.csv" => $course_processed],
+				["course_completed.csv" => $course_completed_processed],
+                ["prerequisite.csv" => $prerequisite_processed],
+                ["section.csv" => $section_processed],
+				["student.csv" => $student_processed]
 			]
         ];
         if (!isEmpty($inputRowError)){

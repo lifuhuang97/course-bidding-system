@@ -27,10 +27,12 @@ if (isset($_POST['submitBootstrap'])){
             <th>File</th><th>Number of Records Loaded</th>
         </tr>";
         $total=0;
-        foreach($output['num-record-loaded'] as $file => $count){
-            echo"<tr>
-                <td>$file</td><td>$count</td>
-            </tr>";
+        foreach($output['num-record-loaded'] as $file){
+            foreach($file as $filename=> $count){
+                echo"<tr>
+                    <td>$filename</td><td>$count</td>
+                </tr>";
+            }
             $total+=$count;
         }
         echo"<tr><th>Total Data added</th><th>$total</th></tr>

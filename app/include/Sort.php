@@ -2,7 +2,7 @@
 class Sort {
 	function title($a, $b)
 	{
-	    return strcmp($a->title,$b->title);
+	    return strcmp($a,$b);
 	}
 
 

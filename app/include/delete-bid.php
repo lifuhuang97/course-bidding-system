@@ -11,13 +11,13 @@ function doDeleteBid($userid,$course,$section) {
         $errors[]="invalid course";
         $courseValid=FALSE;
     }
-    if(!CheckStudentExist($userid)){
-        // check if userid exist in student table
-        $errors[]="invalid userid";
-    }
     if($courseValid && !CheckSectionExist($course,$section)){
         // check if section exist in section table
         $errors[]="invalid section";
+    }
+    if(!CheckStudentExist($userid)){
+        // check if userid exist in student table
+        $errors[]="invalid userid";
     }
     //round ended
     $adminRoundDAO=new adminRoundDAO();

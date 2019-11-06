@@ -13,6 +13,7 @@ function doStop() {
         $StudentSectionDAO = new StudentSectionDAO();
         $sectDAO = new SectionDAO();
         $bidDAO= new BidDAO();
+        $studentDAO=new StudentDAO();
         $sections = $sectDAO->getAllSections();
 
         foreach($sections as $section){
@@ -21,6 +22,17 @@ function doStop() {
             $bids = $bidDAO->getAllBids($section);
 
             $sectMinBid = CheckMinBid($courseID, $sectionID,FALSE);
+            #round 1 clearing
+            $NoSameBid=1;
+            if ($roundID==1){
+                #number of same price
+                $NoSameBid=noOfSameMinBid($courseID,$sectionID,$sectMinBid);
+                $vacancy=CheckVacancy($courseID,$sectionID,TRUE);
+                if ($vacancy-count($bids)>0){
+                    $NoSameBid=1;
+                }
+            }
+            
 
             foreach($bids as $bid){
                 $bidID = $bid->getUserid();
@@ -28,14 +40,17 @@ function doStop() {
                 $bidAmt = $bidAmount;
                 $bidCourse = $bid->getCode();
                 $bidSection = $bid->getSection();
-                if ($bidAmt>=$sectMinBid){
+                if ($bidAmt>$sectMinBid || ($bidAmt==$sectMinBid && $NoSameBid==1)){
                     $status="Success";
                     //add student to student section
-                    if ($roundID==2){
-                        $StudentSectionDAO->addBidResults($bidID,$bidAmt,$bidCourse,$bidSection,$status,$roundID);
-                    }
+                    $StudentSectionDAO->addBidResults($bidID,$bidAmt,$bidCourse,$bidSection,$status,$roundID);
                 }else{
                     $status="Fail";
+                    //refund edollar
+                    $student=$studentDAO->retrieveStudent($bidID);
+                    $eDollar=$student->getEdollar();
+                    $TotalAmt=$eDollar+$bidAmt;
+                    $studentDAO->updateDollar($bidID,$TotalAmt);
                 }
                 //add to bidprocessor table
                 $bidprocessorDAO->addBidResults($bidID,$bidAmt,$bidCourse,$bidSection,$status,$roundID);

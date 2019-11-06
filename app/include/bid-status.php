@@ -21,10 +21,30 @@ function doBidStatus($course,$section) {
         $roundID=$roundDetail->getRoundID();
         $roundStatus=$roundDetail->getRoundStatus();
         $vacancy=CheckVacancy($course,$section,TRUE);
-        $minbid=CheckMinBid($course,$section);
-        $checkminbid=CheckMinBid($course,$section,FALSE);
-        if ($roundID==2 && $roundStatus=='Finished'){
+        
+        if ($roundID==1){
+            //round 1 started
+            $checkminbid=CheckMinBid($course,$section,FALSE);
             $minbid=$checkminbid;
+        }elseif ($roundID==2 && $roundStatus=='Not Started'){
+            //round 1 ended
+            $minbid=CheckMinBidFromBiddingResult($course,$section,1);
+            $checkminbid=$minbid;
+        }elseif($roundID==2 && $roundStatus=='Finished'){
+            //round 2 ended
+            $minbid=CheckMinBidFromBiddingResult($course,$section,2);
+            $checkminbid=$minbid;
+        }else{
+            // round 2 started
+            $sectionDAO= new SectionDAO();
+            $minbid = $sectionDAO->viewMinBid($course,$section);
+            $checkminbid=CheckMinBid($course,$section,FALSE);
+        }
+        if ($minbid==''){
+            $minbid='-';
+        }
+        
+        if ($roundID==2 && $roundStatus=='Finished'){
             $StudentSectionDAO = new StudentSectionDAO();
             $allBid=$StudentSectionDAO->retrieveAllStudentByCourseSection($course,$section);
             $students=[];
@@ -49,7 +69,7 @@ function doBidStatus($course,$section) {
                 $amount=$oneBid->getAmount();
                 $student=$studentDAO->retrieveStudent($userid);
                 $balance=$student->getEdollar();
-                if ($roundID==1 && ($roundStatus=="Started" || $roundStatus=="Not Started")){
+                if ($roundID==1){
                     $status='pending';
                 }elseif($amount>=$checkminbid){
                     $status='success';

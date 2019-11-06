@@ -149,11 +149,19 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
             if ($roundNo==1){
                 $result="pending";
             }else{
-                $minbid=CheckMinBid($bidCourse, $bidSect,FALSE);
-                if ($bidAmt>=$minbid){
-                    $result="success";
+                if ($roundStatus!='Started'){
+                    if(CheckCourseEnrolled($bidID,$bidCourse)){
+                        $result="success";
+                    }else{
+                        $result="fail";
+                    }
                 }else{
-                    $result="fail";
+                    $minbid=CheckMinBid($bidCourse, $bidSect,FALSE);
+                    if ($bidAmt>=$minbid){
+                        $result="success";
+                    }else{
+                        $result="fail";
+                    }
                 }
             }
             echo "<tr>
@@ -537,6 +545,7 @@ if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
                     echo "<tr><td colspan='2'><table border='1'><tr><th>Row</th><th>Userid</th><th>Amount</th><th>Balance</th><th>Status</th></tr>";
                     foreach($result['students'] as $oneStudent){
                         echo"<tr><td>$count</td><td>{$oneStudent['userid']}</td><td>{$oneStudent['amount']}</td><td>{$oneStudent['balance']}</td><td>{$oneStudent['status']}</td></tr>";
+                        $count++;
                     }
                     echo"</table></td></tr>";
                 }else{

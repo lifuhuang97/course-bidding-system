@@ -14,31 +14,10 @@ function doStart() {
             $bidprocessorDAO->removeAll();
         }else{
             //round 2
-            $StudentSectionDAO = new StudentSectionDAO();
             $sectDAO = new SectionDAO();
             $bidDAO= new BidDAO();
             $sections = $sectDAO->getAllSections();
 
-            foreach($sections as $section){
-                $courseID = $section[0];
-                $sectionID = $section[1];
-                $bids = $bidDAO->getAllBids($section);
-
-                $sectMinBid = CheckMinBid($courseID, $sectionID,FALSE);
-
-                foreach($bids as $bid){
-                    $bidID = $bid->getUserid();
-                    $bidAmount = $bid->getAmount();
-                    $bidAmt = $bidAmount;
-                    $bidCourse = $bid->getCode();
-                    $bidSection = $bid->getSection();
-                    if ($bidAmt>=$sectMinBid){
-                        $status="Success";
-                        //add student to student section
-                        $StudentSectionDAO->addBidResults($bidID,$bidAmt,$bidCourse,$bidSection,$status,$roundID);
-                    }
-                }
-            }
             //add minbid to table
             foreach($sections as $section){
                 $course = $section[0];
@@ -64,7 +43,8 @@ function doStart() {
             ];
     }else{
         $result = [
-            "status" => "success"
+            "status" => "success",
+            "round" => (int)$roundID
             ];
     }
     return $result;

@@ -317,7 +317,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>{$course->getInstructor()}</td>
                                                         <td>{$module->getAmount()}</td>";
                                                         if($roundID == 2){
-                                                            if ($roundStatus != "Finished"){
+                                                            if ($roundStatus == "Started"){
                                                                 if($module->getAmount() >= $minbid){
                                                                     echo "<td>Successful</td>";
                                                                 }else{
