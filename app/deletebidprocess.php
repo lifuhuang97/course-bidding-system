@@ -23,6 +23,7 @@
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 
+    //check for blanks Phase 1 
     if (isset($_GET['code']) && isset($_GET['section'])) {
         if (strlen(trim($_GET['code'])) == 0) {
             array_push($_SESSION['errors1'], 'Please enter a Course ID');
@@ -31,20 +32,21 @@
             array_push($_SESSION['errors1'], 'Please enter a Section ID');
         }
     }
+    //if the count of the error1 is more than 0 , this if statement will be triggered
     if (count($_SESSION['errors1']) > 0) {
         header("Location: deletebid.php?token={$_GET['token']}");
         exit;
     }
 
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-    $valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
-    if (($bidAmt - $valuetwodecimalplace) > 0){
-        array_push($_SESSION['errors1'], 'Please enter a value and round up to 2 decimal place');
-    }
-    if (count($_SESSION['errors1']) > 0) {
-        header("Location: makebid.php?token={$_GET['token']}");
-        exit;
-    }
+    //$valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
+    //if (($bidAmt - $valuetwodecimalplace) > 0){
+    //    array_push($_SESSION['errors1'], 'Please enter a value and round up to 2 decimal place');
+    //}
+    //if (count($_SESSION['errors1']) > 0) {
+    //    header("Location: makebid.php?token={$_GET['token']}");
+    //    exit;
+    //}
     //making sure all char is upper case
     $deletemod = strtoupper($deletemod);
     $deletesection = strtoupper($deletesection);

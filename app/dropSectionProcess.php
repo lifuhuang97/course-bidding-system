@@ -20,6 +20,7 @@
 
     $_SESSION['errors1']=[];
 
+    //checking on the user inputs, making sure course and section are valid
     if (!isset($_GET['code']) || strlen(trim($_GET['code'])) == 0){
         array_push($_SESSION['errors1'], 'Please enter a Course ID');
     }else{
@@ -30,6 +31,7 @@
     }else{
         $deletesection = $_GET['section'];
     }
+    #if there's a error, exit this page and go to dropSection.php page and display the error message stored inside $_SESSION['errors1']
     if (count($_SESSION['errors1']) > 0) {
         header("Location: dropSection.php?token={$_GET['token']}");
         exit;
@@ -37,6 +39,7 @@
 
     $deletemod = strtoupper($deletemod);
     $deletesection = strtoupper($deletesection);
+    //dropping a section
     $result=doDropSection($userid,$deletemod,$deletesection);
     if ($result['status']=="error"){
         $_SESSION['errors1']=array_merge ($_SESSION['errors1'], $result['message']);

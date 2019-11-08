@@ -47,8 +47,22 @@
         exit;
     }
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-    $valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
-    if (($bidAmt - $valuetwodecimalplace) > 0){
+    //$valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
+    // $result = False;
+    // $bidAmt = ($bidAmt);
+    // foreach ($bidAmt as $items){
+    //     if ($items == '.'){
+    //         $result = True;
+    //     }
+    // }
+    // $result1 = False;
+    // if ($result){
+    //     $value = explode(".", $bidAmt);
+    //     if (count($value[1]==2)){
+    //         $result1 = False;
+    //     }
+    // }
+    if (!is_numeric($bidAmt[1]) || ($bidAmt[1]<10) || $bidAmt[1]!=number_format($bidAmt[1],2,'.','')){
         array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
     }
     #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']

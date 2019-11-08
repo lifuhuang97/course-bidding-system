@@ -41,6 +41,7 @@
     if (!isset($_POST['newBidAmt']) || strlen(trim($_POST['newBidAmt'])) == 0) {
         array_push($_SESSION['errors1'], 'Please enter a Bid Amount');
     }
+    #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
     if (count($_SESSION['errors1']) > 0) {
         header("Location: editBid.php?token={$_GET['token']}");
         exit;
@@ -53,6 +54,7 @@
         $code = strtoupper($code);
         $section = strtoupper($section);
 
+        //Checking if the course ID & section ID is valid
         if (!array_key_exists($code, $biddedCourse)) {
             array_push($_SESSION['errors1'], 'Please enter a valid Course ID');
         }elseif (!in_array($section, $biddedCourse[$code])) {
@@ -62,10 +64,12 @@
             //check if is numeric value, value less than 10  and not more 2 decimal point
             array_push($_SESSION['errors1'],'Please enter a valid amount');
         }
+        #if there's a error, exit this page and go to editBid.php page and display the error message stored inside $_SESSION['errors1']
         if (count($_SESSION['errors1']) > 0) {
             header("Location: editBid.php?token={$_GET['token']}");
             exit;
         }
+        //update bid
         $result=doUpdateBid($userid,$newBidAmt,$code,$section);
         if ($result['status']=='error'){
             $_SESSION['errors1']=array_merge($_SESSION['errors1'],$result['message']);
