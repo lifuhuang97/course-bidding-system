@@ -8,7 +8,6 @@
         exit; 
     } else{
         $student=$_SESSION['student']; 
-        #var_dump($student);
         $userid = $student->getUserid(); #get userid
         $password = $student->getPassword(); #get password
         $name = $student->getName(); #get name
@@ -63,6 +62,7 @@
             </div>
             <div class="content-container">
                 <?php 
+    //Retrieve all courses 
     $courseDAO= new CourseDAO();
     $allCourses = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school='');
     $courses=$courseDAO->RetrieveAll(); 
@@ -74,7 +74,6 @@
             
             echo "Select:";
             echo"<select name='course'>";
-            //<option disabled selected value=''> -- select an option -- </option>";
             $array= [];
             $allcourse1 = 'All course';
             foreach($section as $item){
@@ -149,14 +148,10 @@
                 
             }
         }elseif (isset($_POST['selectfaculty']) || (isset($_POST['navigation']) && $_POST['navigation']=='Search by Faculty')){
-            // $courseDAO= new CourseDAO();
-            // $courses=$courseDAO->RetrieveAll();      
-            //var_dump($courses);
             echo "<br>";
             echo "<br>";
             echo "Select:";
             echo"<select name='faculty'>";
-            //<option disabled selected value=''> -- select an option -- </option>";
             $array1=[];
             $allcourse2 = 'All Faculty';
             foreach ($courses as $course){
@@ -222,7 +217,6 @@
             echo "<br>";
             echo "Select:";
             echo"<select name='coursename'>";
-            //<option disabled selected value=''> -- select an option -- </option>";
             $array2=[];
             $allcourse3 = 'All Title';
             foreach ($courses as $course){
@@ -244,7 +238,6 @@
 
             if (isset($_POST['coursetitle'])){
                 echo  '<h1>Courses that have the same Title are: </h1>';
-                //var_dump($allCourses);
                 foreach($allCourses as $course){
                     $str1 = $course->getTitle();
                     $str2 = $_POST['coursename'];
@@ -295,9 +288,7 @@
 
                 }
             }
-        }//elseif (False){
-        //   print 'next function';
-        //}
+        }
         
     }
     echo '</form>'

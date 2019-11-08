@@ -26,11 +26,10 @@
         //preparing for removing modules that user alr completed
         $courseDAO= new CourseDAO();
         $courses=$courseDAO->retrieveAllCourseDetail('', '', $school);
+
         //retrieve all courses *with different school*
         $allCourses = $courseDAO->retrieveAllCourseDetail('', '', '');
-        //var_dump($allCourses);
         
-
         $completedcourseDAO= new CourseCompletedDAO();
         $completed_courses=$completedcourseDAO->getAllCourseComplete($userid);
 
@@ -150,17 +149,6 @@
             ?>
 
             <?php
-               // if (isset($_SESSION['errors1'])) {
-                    //foreach ($_SESSION['errors1'] as $errors){
-                       // print $errors;
-                        //print "<br>";
-                    //}
-                    //unset ($_SESSION['errors1']);
-                //}
-                
-            ?>
-            
-            <?php
 if ($roundID==1 && $roundstat=='Started'){
     echo "Available Courses to Bid for Round 1";
     if (count($courses)==0){
@@ -188,8 +176,6 @@ if ($roundID==1 && $roundstat=='Started'){
             // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
             if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
                 //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
-                //$nowcourse = $course->getCourseid();
-                //$nowsection = $course->getSectionid();
                 $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
                 $eStartTime = $course->getExamStart();
                 $eStartTime = substr($eStartTime,0,5);
@@ -218,9 +204,7 @@ if ($roundID==1 && $roundstat=='Started'){
                 </tr>";
                 if (isset($_GET['button'])){
                     $nnowcourse = $nowcourse;
-                    //print $nnowcourse;
                     $nnowsection = $nowsection;
-                    //print $nnowsection;
                 }
 
                 //storing the available courses 
@@ -260,8 +244,6 @@ if ($roundID==1 && $roundstat=='Started'){
 
         $currentavailable = [];
         //getting round 2 maximum and minimum bid
-
-
 
         foreach ($allCourses as $course){
             // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)

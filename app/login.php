@@ -19,7 +19,6 @@
         </div>
         <div class="signin-title">
             <img src="css/Headline.png" style="width: 7em">
-            <!-- <img src="line1.png"> -->
         </div>
         <div class="login-form">
             <form action="processLogin.php" method="POST" style="text-align:center">

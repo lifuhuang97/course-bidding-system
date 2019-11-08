@@ -41,17 +41,17 @@
         }
 
     }
-    #print $_SESSION['errors1'];
+    #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
     if (count($_SESSION['errors1']) > 0) {
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
     }
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-
     $valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
     if (($bidAmt - $valuetwodecimalplace) > 0){
         array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
     }
+    #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
     if (count($_SESSION['errors1']) > 0) {
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
@@ -67,6 +67,7 @@
     $sectionId = strtoupper($sectionId);
 
     //------------------------------------------------------------------------------------------------------------------------
+    // checking is the round status is started.
     if ($roundID == 1 && $roundstat == 'Started' || $roundID == 2 && $roundstat == 'Started'){
         foreach ($currentavailablecourses as $items){
             if ($items[0] == $courseId){
@@ -93,17 +94,13 @@
         }
 
         //check if there is vacancy
-        
         $seats = CheckVacancy($courseId,$sectionId);
         if($seats !== 'No record found.') {
             if (!$seats){
                 array_push($_SESSION['errors1'], 'There is no vacancy left.');
             }
         }
-        // if (!$seats){
-        //     array_push($_SESSION['errors1'], 'There is no vacancy left.');
-        // }
-        
+        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
             exit;
@@ -117,6 +114,7 @@
                 array_push($_SESSION['errors1'], 'Please enter a value higher than the Minimum Required Bid.');
             }
         }
+        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
             exit;
@@ -127,7 +125,6 @@
         
         //------------------------------------------------------------------------------------------------------
         //checking if there's a clash of timetable
-        // this does not account for the date FOR NOW 8/10/2019 checkclasstimetable
         $checkClassTT = CheckClassTimeTable($userid,$courseId,$sectionId);
         $checkExamTT = CheckExamTimeTable($userid,$courseId);
         if ($checkClassTT == False){
@@ -136,19 +133,6 @@
         if ($checkExamTT == False){
             array_push($_SESSION['errors1'], 'There is a clash in the Exam date and time');
         }
-        #print ($common==True);
-        #$common1 = CheckExamTimeTable($userid,$courseId);
-        #print ($common1);
-        #if ((CheckClassTimeTable($userid,$courseId,$sectionId)) == False){
-        #    print('YOOOOO');
-        #    array_push($_SESSION['errors3'], 'ClassTimeTable Clashes');
-        #}
-
-        #if ((CheckExamTimeTable($userid,$courseId)) == False){
-        #    print('WOOOOO');
-        #    array_push($_SESSION['errors3'], 'ExamTimeTable Clashes');
-        #}
-
         //------------------------------------------------------------------------------------------------------
 
 
@@ -158,9 +142,6 @@
         if (!$checkforExceed){
             array_push($_SESSION['errors1'], 'You currently have 5 bidded sections');
         }
-        #if (!(CheckForExceedOfBidSection($userid,$courseId))) {
-        #    array_push($_SESSION['errors3'], 'You currently have 5 bidded sections');
-        #}
 
         //A student can only bid for one section per course. 
         $bidDAO = new BidDAO();
@@ -171,7 +152,7 @@
                 array_push($_SESSION['errors1'], 'You have already bidded for this module');
             }
         }
-
+        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
             exit;
@@ -191,7 +172,6 @@
             if ($roundID==2 && $minbid>$currentMinBid){
                 $SectionDAO->updateSectionMinBid($minbid,$courseId,$sectionId);
             }
-            //i believe this need some token to access 
             header("Location: mainpage.php?token={$_GET['token']}");
             exit;
         }

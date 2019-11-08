@@ -106,7 +106,8 @@ th, td,tr {
     }
 
 
-    
+    // This is to make the rounds dates and time to look more humanly
+    // EG: 04 NOV 23:31 => better to visualize
     $months = [1=>'JAN',2=>'FEB',3=>'MAR',4=>'APR',5=>'MAY',6=>'JUNE',7=>'JULY',8=>'AUG',9=>'SEPT',10=>'OCT',11=>'NOV',12=>'DEC'];
     if ($roundStartEndTimes[0]!='Not Started'){
         $starttime1 = $roundStartEndTimes[0];

@@ -4,7 +4,7 @@
 
     $dao = new StudentDAO();
     $_SESSION['errors'] = [];
-
+    //Check if user submit a blank input, the user will be asked to enter their username/password
     if (isset($_POST['username']) && isset($_POST['password'])) {
         if (strlen(trim($_POST['username'])) == 0) {
             array_push($_SESSION['errors'], 'Please enter your username');
