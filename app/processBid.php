@@ -16,8 +16,6 @@
     $school = $student->getSchool(); #get school
     $edollar = $student->getEdollar(); #get edollar
     $_SESSION['errors1'] = [];
-    $_SESSION['errors2'] = [];
-    $_SESSION['errors3'] = [];
     $coursecounter = 0;
     $sectioncounter = 0;
 
@@ -47,45 +45,26 @@
         exit;
     }
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-    //check if the amount the user entered is numeric
     if(!is_numeric($bidAmt)){
-        array_push($_SESSION['errors1'], 'Please enter a number');
-    }
-    if (count($_SESSION['errors1']) > 0) {
-        header("Location: makebid.php?token={$_GET['token']}");
-        exit;
-    }
-    // if amount is less than 10
-    if ($bidAmt<10){
+        //check if the amount the user entered is numeric
+        array_push($_SESSION['errors1'], 'Please enter a valid amount');
+    }elseif ($bidAmt<10){
+        // if amount is less than 10
         array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
-    }
-    if (count($_SESSION['errors1']) > 0) {
-        header("Location: makebid.php?token={$_GET['token']}");
-        exit;
-    }
-    // if amount is more than that the user have 
-    if ($bidAmt>$edollar){
-        array_push($_SESSION['errors1'], 'Insufficient Edollar');
-    }
-    if (count($_SESSION['errors1']) > 0) {
-        header("Location: makebid.php?token={$_GET['token']}");
-        exit;
-    }
-    // if amount is more than 2 decimal place 
-    $enterloop = False;
-    $result = Strpos($bidAmt,'.');
-    print ($result);
-    if ($result != False){
-        $sortedamt = number_format($bidAmt,2,'.','');
-        $stringresult = strcmp($sortedamt,$bidAmt);
-        if ($stringresult != 0) {
-            $enterloop = True;
+    }else{
+        if(strpos($bidAmt,'.')!=FALSE){
+            $temp=explode('.',$bidAmt);
+            if (strlen($temp[1])>2){
+                array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
+            }
+        }
+        if (count($_SESSION['errors1'])==0){
+            if ($bidAmt>$edollar){
+                // if amount is more than that the user have 
+                array_push($_SESSION['errors1'], 'Insufficient Edollar');
+            }
         }
     }
-    if ($enterloop == True){
-        array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
-    }
-    #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
     if (count($_SESSION['errors1']) > 0) {
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
