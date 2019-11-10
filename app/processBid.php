@@ -47,22 +47,42 @@
         exit;
     }
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-    //$valuetwodecimalplace = number_format((float)$bidAmt,2,'.','');
-    // $result = False;
-    // $bidAmt = ($bidAmt);
-    // foreach ($bidAmt as $items){
-    //     if ($items == '.'){
-    //         $result = True;
-    //     }
-    // }
-    // $result1 = False;
-    // if ($result){
-    //     $value = explode(".", $bidAmt);
-    //     if (count($value[1]==2)){
-    //         $result1 = False;
-    //     }
-    // }
-    if (!is_numeric($bidAmt[1]) || ($bidAmt[1]<10) || $bidAmt[1]!=number_format($bidAmt[1],2,'.','')){
+    //check if the amount the user entered is numeric
+    if(!is_numeric($bidAmt)){
+        array_push($_SESSION['errors1'], 'Please enter a number');
+    }
+    if (count($_SESSION['errors1']) > 0) {
+        header("Location: makebid.php?token={$_GET['token']}");
+        exit;
+    }
+    // if amount is less than 10
+    if ($bidAmt<10){
+        array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
+    }
+    if (count($_SESSION['errors1']) > 0) {
+        header("Location: makebid.php?token={$_GET['token']}");
+        exit;
+    }
+    // if amount is more than that the user have 
+    if ($bidAmt>$edollar){
+        array_push($_SESSION['errors1'], 'Insufficient Edollar');
+    }
+    if (count($_SESSION['errors1']) > 0) {
+        header("Location: makebid.php?token={$_GET['token']}");
+        exit;
+    }
+    // if amount is more than 2 decimal place 
+    $enterloop = False;
+    $result = Strpos($bidAmt,'.');
+    print ($result);
+    if ($result != False){
+        $sortedamt = number_format($bidAmt,2,'.','');
+        $stringresult = strcmp($sortedamt,$bidAmt);
+        if ($stringresult != 0) {
+            $enterloop = True;
+        }
+    }
+    if ($enterloop == True){
         array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
     }
     #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']

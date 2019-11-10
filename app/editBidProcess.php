@@ -60,11 +60,49 @@
         }elseif (!in_array($section, $biddedCourse[$code])) {
             array_push($_SESSION['errors1'], 'Please enter a valid Section ID');
         }
-        if(!is_numeric($newBidAmt) || ($newBidAmt<10) || $newBidAmt!=number_format($newBidAmt,2,'.','')){
-            //check if is numeric value, value less than 10  and not more 2 decimal point
-            array_push($_SESSION['errors1'],'Please enter a valid amount');
+        if (count($_SESSION['errors1']) > 0) {
+            header("Location: editBid.php?token={$_GET['token']}");
+           exit;
         }
-        #if there's a error, exit this page and go to editBid.php page and display the error message stored inside $_SESSION['errors1']
+        //check if the amount the user entered is numeric
+        if(!is_numeric($newBidAmt)){
+        array_push($_SESSION['errors1'], 'Please enter a number');
+        }
+        if (count($_SESSION['errors1']) > 0) {
+            header("Location: editBid.php?token={$_GET['token']}");
+           exit;
+        }
+        // if amount is less than 10
+        if ($newBidAmt<10){
+            array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
+        }
+        if (count($_SESSION['errors1']) > 0) {
+            header("Location: editBid.php?token={$_GET['token']}");
+            exit;
+        }
+        // if amount is more than that the user have 
+        if ($newBidAmt>$edollar){
+            array_push($_SESSION['errors1'], 'Insufficient Edollar');
+        }
+        if (count($_SESSION['errors1']) > 0) {
+            header("Location: editBid.php?token={$_GET['token']}");
+            exit;
+        }
+        // if amount is more than 2 decimal place 
+        $enterloop = False;
+        $result = Strpos($newBidAmt,'.');
+        print ($result);
+        if ($result != False){
+            $sortedamt = number_format($newBidAmt,2,'.','');
+            $stringresult = strcmp($sortedamt,$newBidAmt);
+            if ($stringresult != 0) {
+                $enterloop = True;
+            }
+        }
+        if ($enterloop == True){
+            array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
+        }
+        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
         if (count($_SESSION['errors1']) > 0) {
             header("Location: editBid.php?token={$_GET['token']}");
             exit;
