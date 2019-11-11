@@ -262,15 +262,17 @@ function doBootstrap() {
                         }
                     }
                     if (isEmpty($message)){
+                        $courseValid=TRUE;
                         if(!in_array($data[0],$courseList)){
                             //check if course exist in course.csv
                             $message[]="invalid course";
+                            $courseValid=FALSE;
                         }
-                        if($data[1][0]!="S" || !is_numeric(substr($data[1],1)) || substr($data[1],1)<1 || substr($data[1],1)>99){
+                        if($courseValid && ($data[1][0]!="S" || !is_numeric(substr($data[1],1)) || substr($data[1],1)<1 || substr($data[1],1)>99 || $data[1][1]=='0')){
                             //check if first character is not a "S" and check numbers is between 1 to 99
                             $message[]="invalid section";
                         }
-                        if($data[2]<1 ||$data[2]>7){
+                        if(!is_numeric($data[2]) || $data[2]!=number_format($data[2],0) || $data[2]<1 ||$data[2]>7){
                             $message[]="invalid day";
                         }
                         $dateFormat= True;
@@ -449,9 +451,14 @@ function doBootstrap() {
                             // check if userid exist in student.csv
                             $message[]="invalid userid";
                         }
-                        if(!is_numeric($data[1]) || ($data[1]<10) || $data[1]!=number_format($data[1],2,'.','')){
-                            //check if is numeric value, value less than 10  and not more 2 decimal point
+                        if(!is_numeric($data[1]) || $data[1]<10){
+                            // check if is numeric, value is less than 10
                             $message[]="invalid amount";
+                        }elseif(strpos($data[1],'.')!=FALSE){
+                            $temp=explode('.',$data[1]);
+                            if (strlen($temp[1])>2){
+                                $message[]="invalid amount";
+                            }
                         }
                         $courseValid=TRUE;
                         if(!in_array($data[2],$courseList)){

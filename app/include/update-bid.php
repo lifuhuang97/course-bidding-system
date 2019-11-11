@@ -13,9 +13,14 @@ function doUpdateBid($userid,$amount,$course,$section) {
     if ($roundStatus!="Started"){
         $errors[]="round ended";
     }else{
-        if(!is_numeric($amount) || ($amount<10) || $amount!=number_format($amount,2,'.','')){
-            //check if is numeric value, value less than 10  and not more 2 decimal point
+        if(!is_numeric($amount) || $amount<10){
+            // if amount is less than 10
             $errors[]="invalid amount";
+        }elseif(strpos($amount,'.')!=FALSE){
+            $temp=explode('.',$amount);
+            if (strlen($temp[1])>2){
+                $errors[]="invalid amount";
+            }
         }
         $courseValid=TRUE;
         if(!CheckCourseExist($course)){

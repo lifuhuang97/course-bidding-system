@@ -367,16 +367,20 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
             return TRUE;
         }
         if ($row['code']!=$courseid && $row['day']==$info['day']){
-            if ($row['start']>=$info['start'] and $row['end']<=$info['end']){
+            if ($row['start']>$info['start'] and $row['end']<$info['end']){
                 // if the incoming fall inbetween the existing timetable
                 $status=FALSE;
             }
-            elseif ($row['start']<=$info['end'] and $row['end']>=$info['end']){
+            elseif ($row['start']<$info['end'] and $row['end']>$info['end']){
                 // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
                 $status=FALSE;
             }
-            elseif ($row['start']<=$info['start'] and $row['end']>=$info['start']){
+            elseif ($row['start']<$info['start'] and $row['end']>$info['start']){
                 // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
+                $status=FALSE;
+            }
+            elseif ($row['start']==$info['start'] and $row['end']==$info['end']){
+                // same timing
                 $status=FALSE;
             }
         }
@@ -394,16 +398,20 @@ function CheckClassTimeTable($userid,$courseid,$sectionid){
 
     while ($row=$stmt->fetch()){
         if ($row['day']==$info['day']){
-            if ($row['start']>=$info['start'] and $row['end']<=$info['end']){
+            if ($row['start']>$info['start'] and $row['end']<$info['end']){
                 // if the incoming fall inbetween the existing timetable
                 $status=FALSE;
             }
-            elseif ($row['start']<=$info['end'] and $row['end']>=$info['end']){
+            elseif ($row['start']<$info['end'] and $row['end']>$info['end']){
                 // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
                 $status=FALSE;
             }
-            elseif ($row['start']<=$info['start'] and $row['end']>=$info['start']){
+            elseif ($row['start']<$info['start'] and $row['end']>$info['start']){
                 // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
+                $status=FALSE;
+            }
+            elseif ($row['start']==$info['start'] and $row['end']==$info['end']){
+                // same timing
                 $status=FALSE;
             }
         }
@@ -462,6 +470,10 @@ function CheckExamTimeTable($userid,$courseid){
                 // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
                 $status=FALSE;
             }
+            elseif ($row['examStart']==$info['examStart'] and $row['examEnd']==$info['examEnd']){
+                // same timing
+                $status=FALSE;
+            }
         } 
     }
 
@@ -477,16 +489,20 @@ function CheckExamTimeTable($userid,$courseid){
 
     while ($row=$stmt->fetch()){
         if ($row['examDate']==$info['examDate']){
-            if ($row['examStart']>=$info['examStart'] and $row['examEnd']<=$info['examEnd']){
+            if ($row['examStart']>$info['examStart'] and $row['examEnd']<$info['examEnd']){
                 // if the incoming fall inbetween the existing exam timetable
                 $status=FALSE;
             }
-            elseif ($row['examStart']<=$info['examEnd'] and $row['examEnd']>=$info['examEnd']){
+            elseif ($row['examStart']<$info['examEnd'] and $row['examEnd']>$info['examEnd']){
                 // if the incoming timetable clashes with incomingStart->existingStart->incomingEnd->existingEnd
                 $status=FALSE;
             }
-            elseif ($row['examStart']<=$info['examStart'] and $row['examEnd']>=$info['examStart']){
+            elseif ($row['examStart']<$info['examStart'] and $row['examEnd']>$info['examStart']){
                 // if the incoming timetable clashes with existingStart->incomingStart->existingEnd->incomingEnd
+                $status=FALSE;
+            }
+            elseif ($row['examStart']==$info['examStart'] and $row['examEnd']==$info['examEnd']){
+                // same timing
                 $status=FALSE;
             }
         } 
