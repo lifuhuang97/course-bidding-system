@@ -10,13 +10,14 @@ session_start();
 
 function printErrors() {
     if(isset($_SESSION['errors'])){
-        print "<ul style='color:red;text-align:center;list-style:inside'>";
-        
+        // print "<ul style='color:red;text-align:center;list-style:inside'>";
+        print "<p style='color:red;text-align:center'>";
         foreach ($_SESSION['errors'] as $value) {
-            print "<li >" . $value . "</li>";
+            echo $value;
+            echo "<br>";
         }
         
-        print "</ul>";   
+        print "</p>";   
         unset($_SESSION['errors']);
     }    
 }

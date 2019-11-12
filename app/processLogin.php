@@ -14,13 +14,13 @@
         }
 
         // Authenticate then go to mainpage
-        if ($_POST['username'] == 'admin') {
+        if (count($_SESSION['errors']) == 0 && $_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!135') {
                 $_SESSION['success'] = $_POST['username'];
                 $token=generate_token($_POST['username']);
                 header('Location: adminMainPage.php?token='.$token);
                 exit;
-            } else {
+            } else {    
                 array_push($_SESSION['errors'], 'Your password is incorrect!');
             }
             
