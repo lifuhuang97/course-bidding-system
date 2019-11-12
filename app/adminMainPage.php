@@ -38,11 +38,15 @@
         <div class="navbar-left_profile">
                     <div class="navbar-left__profile__container">
                         <div class="profile-picture">
+                        <a href="adminMainPage.php?token=<?php echo $_GET['token']?>">
                                 <img class="profpic" src="css/profpic1.png">
+                            </a>
                         </div>
                         <div class="profile-details">
                             <p>Welcome, Admin!</p>
+                            <a href="bootstrap.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__logout">BOOTSTRAP <i class="fas fa-sign-out-alt"></i></div></a>
                             <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+                            
                 <!-- <div class="navbar-left__smuLogo">
                     <img src="css/smulogo.png"></div> -->
                         </div>
