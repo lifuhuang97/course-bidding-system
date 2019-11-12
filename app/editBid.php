@@ -11,10 +11,12 @@
 
     $adminRoundDAO = new adminRoundDAO();
     $adminRoundStatus = $adminRoundDAO->retrieveRoundDetail();
+    $msg = '';
     if ($adminRoundStatus->getRoundStatus() != "Started") {
-        echo "Edit Bid is not allowed at the moment. ";
-        echo "Go back to ";
-        echo "<a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
+        // echo "Edit Bid is not allowed at the moment. ";
+        // echo "Go back to ";
+        // echo "<a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
+        $msg = "Edit Bid is not allowed at the moment. Go back to <a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
     } else {
         if (!isset($_SESSION['success'])) {
             header('Location: login.php');
@@ -113,6 +115,14 @@ th, td,tr {
                     </div>
                     <input class="submit-btn" type='submit' name="submit">
                 </form>
+            </div>
+            <div class="msg">
+            <?php
+            if($msg != '') {
+                        echo $msg;
+                    }
+
+            ?>
             </div>
             <div class="content-container">
                 <?php
