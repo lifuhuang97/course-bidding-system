@@ -134,9 +134,10 @@ th, td,tr {
                                 <div class="modal-content">
                                     <h3>Are you sure you want to drop bid?
                                     </h3>
-                                    <span class="close-button">Close</span>
-                                    <a class="drop-button" href="deletebidprocess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$module->getSection()?>">Confirm</a>
-
+                                    <div class="btn-wrapper">
+                                        <span class="close-button">Close</span>
+                                        <a class="drop-button" href="deletebidprocess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$module->getSection()?>">Confirm</a>
+                                    </div>
                                 </div>
                             </div>
                         </td>
