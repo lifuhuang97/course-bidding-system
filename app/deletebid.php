@@ -168,7 +168,7 @@ $(".trigger").click(function(e){
 });
 
 $('.close-button').click(function(){
-    $(this).parent().parent().removeClass('show-modal');
+    $(this).parent().parent().parent().removeClass('show-modal');
 });
 
 });
