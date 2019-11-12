@@ -135,9 +135,10 @@ th, td,tr {
                                 <div class="modal-content">
                                     <h3>Are you sure you want to drop section?
                                     </h3>
+                                    <div class="btn-wrapper">
                                     <span class="close-button">Close</span>
                                     <a class="drop-button" href="dropSectionProcess.php?token=<?=$_GET['token']?>&code=<?=$code?>&section=<?=$section?>">Confirm</a>
-                                    
+                                </div>
                                 </div>
                             </div>
                         </td>
@@ -161,7 +162,7 @@ $(document).ready(function(){
 });
 
 $('.close-button').click(function(){
-    $(this).parent().parent().removeClass('show-modal');
+    $(this).parent().parent().parent().removeClass('show-modal');
 });
 
 });
