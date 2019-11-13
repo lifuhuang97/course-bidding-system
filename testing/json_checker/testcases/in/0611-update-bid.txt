@@ -1,4 +1,0 @@
-userid=ben.ng.2009
-course=ECON001
-section=S1
-amount=10

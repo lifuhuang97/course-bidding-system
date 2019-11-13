@@ -1,3 +1,0 @@
-userid=amy.ng.2009
-course=
-section=S1

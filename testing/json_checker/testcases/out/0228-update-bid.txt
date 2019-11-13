@@ -1,7 +1,0 @@
-{
-    "status": "error",
-    "message": [
-        "insufficient e$",
-        "section limit reached"
-    ]
-}
