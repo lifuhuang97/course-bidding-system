@@ -49,13 +49,13 @@
 	padding: 2em;
 }
 
-.display-right__bidSystem{
+.display-right-bidSystem{
 	padding: 0 20px 0 20px;
 }
-.display-right__bidInfo{
+.display-right-bidInfo{
 	padding: 20px 20px 0 20px;
 }
-.display-right__allInfo{
+.display-right-allInfo{
 	padding: 20px 20px 0 20px;
 	/*add css for class here*/
 }
@@ -106,7 +106,6 @@
     border: none;
     height: 3em;
     cursor: pointer;
-    margin-left: 10px;
 }
 table {
     border: 1px solid #D6D5E4;
