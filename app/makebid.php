@@ -150,7 +150,7 @@
 
             <?php
 if ($roundID==1 && $roundstat=='Started'){
-    echo "Available Courses to Bid for Round 1";
+    echo "<h3 style='text-align:left; font-weight:bold; padding-left:20px;'>Available Courses to Bid for Round 1</h3>";
     if (count($courses)==0){
         echo "No available course";
     }else {

@@ -92,7 +92,7 @@ th, td,tr {
                 ?>
                 <?php
                 if (count($biddedModule)==0){
-                    echo "No available course";
+                    echo "<h3 style='text-align:left; font-weight:bold; '>No available course</h3>";
                 }else {
                     echo"<table class='content-container__table' border='1px'>
                     <tr>

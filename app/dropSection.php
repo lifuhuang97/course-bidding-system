@@ -92,7 +92,7 @@ th, td,tr {
             ?>
             <?php
                 if (count($sections)==0){
-                    echo "<h3>No available course</h3>";
+                    echo "<h3 style='text-align:left; font-weight:bold; padding-left:20px;'>No available course</h3>";
                 }else {
                     echo"<table border='1px'>
                     <tr>
