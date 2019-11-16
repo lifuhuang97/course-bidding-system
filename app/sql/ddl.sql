@@ -92,7 +92,7 @@ create table BID_PROCESSOR (
     userid varchar(128) not null,
     amount decimal(5,2) not null,
     course varchar(100) not null,
-    section varchar(10) not null,
+    section varchar(3) not null,
     bidstatus varchar(50) not null,
     bidround int(1) not null,
   CONSTRAINT BID_PROCESSOR_PK primary key (userid,amount,course,section,bidstatus,bidround)
