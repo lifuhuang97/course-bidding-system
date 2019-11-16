@@ -269,6 +269,7 @@ function CheckMinBid($course,$section,$user=TRUE){
             return $valuearray[$vacancy-1];
         }
     }
+    return $value;
 }
 
 function DropSectionUpdateEdollar($userid,$course,$dollar){

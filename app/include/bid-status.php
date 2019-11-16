@@ -30,6 +30,9 @@ function doBidStatus($course,$section) {
             //round 1 ended
             $minbid=CheckMinBidFromBiddingResult($course,$section,1);
             $checkminbid=$minbid;
+            if ($minbid==''){
+                $minbid=10;
+            }
         }elseif($roundID==2 && $roundStatus=='Finished'){
             //round 2 ended
             $minbid=CheckMinBidFromBiddingResult($course,$section,2);
@@ -59,6 +62,9 @@ function doBidStatus($course,$section) {
                     "balance"=>  $balance, 
                     "status"=> 'success'];
             }
+            $studentID=array_column($students,"userid");
+            $studentAmount=array_column($students,"amount");
+            array_multisort($studentAmount,SORT_DESC,$studentID,SORT_ASC,$students);
         }else{
             $bidDAO= new BidDAO();
             $allBid=$bidDAO->getAllBids([$course,$section]);
@@ -86,7 +92,7 @@ function doBidStatus($course,$section) {
         $result = [
             "status" => "success",
             "vacancy"=> $vacancy,
-            "min-bid-amount"=> $minbid,
+            "min-bid-amount"=> (string)$minbid,
             "students"=>$students
             ];
     }else{
