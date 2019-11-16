@@ -449,11 +449,16 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     $timetable[$day_no][2] = $course->getTitle();
                                                 }
                                                 if($roundID == 2){
-                                                    if ($roundStatus != "Finished"){
+                                                    if ($roundStatus != "Finished" && $roundStatus=='Not Started'){
+                                                       if($module->getAmount() < $minbid) {
+                                                        $status[$course->getTitle()] = 'unsuccessful';
+                                                       }
+                                                    }
+                                                    elseif($roundStatus != 'Finished' && $roundStatus=='Started') {
                                                         if($module->getAmount() >= $minbid){
                                                             // echo "<td>Successful</td>";
                                                             $status[$course->getTitle()] = 'successful';
-                                                        }
+                                                    }
         
                                                     }else{
                                                         if (CheckCourseEnrolled($loginID,$course->getCourseid())){
