@@ -84,7 +84,7 @@ th, td,tr {
                 <?php
                 if (isset($_SESSION['errors1'])) {
                     foreach ($_SESSION['errors1'] as $errors){
-                        print $errors;
+                        echo "<p style='color: red'>".$errors."</p>";
                         print "<br>";
                     }
                     unset ($_SESSION['errors1']);

@@ -26,10 +26,10 @@
     //check for blanks Phase 1 
     if (isset($_GET['code']) && isset($_GET['section'])) {
         if (strlen(trim($_GET['code'])) == 0) {
-            array_push($_SESSION['errors1'], 'Please enter a Course ID');
+            array_push($_SESSION['errors1'], 'Please enter a Course ID.');
         }
         if (strlen(trim($_GET['section'])) == 0) {
-            array_push($_SESSION['errors1'], 'Please enter a Section ID');
+            array_push($_SESSION['errors1'], 'Please enter a Section ID.');
         }
     }
     //if the count of the error1 is more than 0 , this if statement will be triggered
@@ -63,11 +63,11 @@
         }
 
         if ($modulecounter == 0){
-            array_push($_SESSION['errors1'], 'Please enter a valid Course ID');
+            array_push($_SESSION['errors1'], 'Please enter a valid Course ID.');
         }
 
         if ($modulecounter == 1 and $sectioncounter == 0){
-            array_push($_SESSION['errors1'], 'Please enter a valid Section ID');
+            array_push($_SESSION['errors1'], 'Please enter a valid Section ID.');
         }
         
         if (count($_SESSION['errors1']) > 0) {
@@ -87,7 +87,7 @@
         }
     }else{
         //error message because the round is not started
-        array_push($_SESSION['errors1'], "You can't drop your bid when the round is not started!");
+        array_push($_SESSION['errors1'], "You can't drop your bid when the round is not active!");
         header("Location: deletebid.php?token={$_GET['token']}");
         exit;
         

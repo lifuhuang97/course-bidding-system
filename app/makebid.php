@@ -132,7 +132,7 @@
                     echo "<div class='modal'>
                     <div class='modal-content'>";
                     foreach ($_SESSION['errors1'] as $errors){
-                        echo "<p>".$errors."</p>";
+                        echo "<p style='color: red'>".$errors."</p>";
                     }
                     unset($_SESSION['errors1']);
                     echo "<span class='close-button'>Close</span>";
@@ -296,7 +296,7 @@ if ($roundID==1 && $roundstat=='Started'){
         $_SESSION['availablecourses'] = $currentavailable;
     }
 }else{
-    echo "Rounds have not started!";
+    echo "<h2 style='color: red; text-transform: uppercase; padding-left: 1em;'>Rounds have not started!</h2>";
 }
 ?>
         </div>

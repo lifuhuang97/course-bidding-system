@@ -22,12 +22,12 @@
 
     //checking on the user inputs, making sure course and section are valid
     if (!isset($_GET['code']) || strlen(trim($_GET['code'])) == 0){
-        array_push($_SESSION['errors1'], 'Please enter a Course ID');
+        array_push($_SESSION['errors1'], 'Please enter a Course ID.');
     }else{
         $deletemod = $_GET['code'];
     }
     if (!isset($_GET['section']) || strlen(trim($_GET['section'])) == 0) {
-        array_push($_SESSION['errors1'], 'Please enter a Course ID');
+        array_push($_SESSION['errors1'], 'Please enter a Course ID.');
     }else{
         $deletesection = $_GET['section'];
     }

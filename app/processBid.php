@@ -1,5 +1,5 @@
 <?php
-	require_once 'include/common.php';
+    require_once 'include/common.php';
     require_once 'include/function.php';
     require_once 'include/protect.php';
 
@@ -7,8 +7,8 @@
     $currentavailablecourses = $_SESSION['availablecourses'];
     #var_dump($currentavailablecourses);
     $courseId = $_POST['code'];
-	$sectionId = $_POST['sectionID'];
-	$bidAmt = $_POST['bidAmt'];
+    $sectionId = $_POST['sectionID'];
+    $bidAmt = $_POST['bidAmt'];
     $student=$_SESSION['student'];
     $userid = $student->getUserid(); #get userid
     $password = $student->getPassword(); #get password
@@ -29,13 +29,13 @@
     //check for blanks Phase 1 
     if (isset($_POST['code']) && isset($_POST['sectionID']) && isset($_POST['bidAmt'])) {
         if (strlen(trim($_POST['code'])) == 0) {
-            array_push($_SESSION['errors1'], 'Please enter a Course ID');
+            array_push($_SESSION['errors1'], 'Please enter a Course ID.');
         }
         if (strlen(trim($_POST['sectionID'])) == 0) {
-            array_push($_SESSION['errors1'], 'Please enter a Section ID');
+            array_push($_SESSION['errors1'], 'Please enter a Section ID.');
         }
         if (strlen(trim($_POST['bidAmt'])) == 0) {
-            array_push($_SESSION['errors1'], 'Please enter a bid amount');
+            array_push($_SESSION['errors1'], 'Please enter a bid amount.');
         }
 
     }
@@ -47,21 +47,21 @@
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
     if(!is_numeric($bidAmt)){
         //check if the amount the user entered is numeric
-        array_push($_SESSION['errors1'], 'Please enter a valid amount');
+        array_push($_SESSION['errors1'], 'Please enter a valid amount.');
     }elseif ($bidAmt<10){
         // if amount is less than 10
-        array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
+        array_push($_SESSION['errors1'], 'Please enter a value more than 9.99.');
     }else{
         if(strpos($bidAmt,'.')!=FALSE){
             $temp=explode('.',$bidAmt);
             if (strlen($temp[1])>2){
-                array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
+                array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place.');
             }
         }
         if (count($_SESSION['errors1'])==0){
             if ($bidAmt>$edollar){
                 // if amount is more than that the user have 
-                array_push($_SESSION['errors1'], 'Insufficient Edollar');
+                array_push($_SESSION['errors1'], 'Insufficient Edollar.');
             }
         }
     }
@@ -97,13 +97,13 @@
         //checking if there is a course in the 'filtered' courses page but the sectioncounter did not increase, it means that the sectionid is 
         //invalid 
         if ($sectioncounter == 0){
-            array_push($_SESSION['errors1'], 'Please enter a valid Section ID'); 
+            array_push($_SESSION['errors1'], 'Please enter a valid Section ID.'); 
         }
         //checking amount if is less than 10 and if user have enough money to bid
         if (floatval($bidAmt) < 10) {
-            array_push($_SESSION['errors1'], 'Please Bid an Amount that is high than $9.99 edollar');
+            array_push($_SESSION['errors1'], 'Please Bid an Amount that is high than $9.99 edollar.');
         }elseif ($edollar < $bidAmt) {
-            array_push($_SESSION['errors1'], 'You do not have enough edollar');
+            array_push($_SESSION['errors1'], 'You do not have enough edollar.');
         }
 
         //check if there is vacancy
@@ -141,10 +141,10 @@
         $checkClassTT = CheckClassTimeTable($userid,$courseId,$sectionId);
         $checkExamTT = CheckExamTimeTable($userid,$courseId);
         if ($checkClassTT == False){
-            array_push($_SESSION['errors1'], 'There is a clash in the Lesson date and time');
+            array_push($_SESSION['errors1'], 'There is a clash in the Lesson date and time.');
         }
         if ($checkExamTT == False){
-            array_push($_SESSION['errors1'], 'There is a clash in the Exam date and time');
+            array_push($_SESSION['errors1'], 'There is a clash in the Exam date and time.');
         }
         //------------------------------------------------------------------------------------------------------
 
@@ -153,7 +153,7 @@
         $checkforExceed = CheckForExceedOfBidSection($userid,$courseId);
         #var_dump($checkforExceed);
         if (!$checkforExceed){
-            array_push($_SESSION['errors1'], 'You currently have 5 bidded sections');
+            array_push($_SESSION['errors1'], 'You currently have 5 bidded sections.');
         }
 
         //A student can only bid for one section per course. 
@@ -162,7 +162,7 @@
 
         foreach ($bidInfo as $bids) {
             if ($bids->getCode() == $courseId) {
-                array_push($_SESSION['errors1'], 'You have already bidded for this module');
+                array_push($_SESSION['errors1'], 'You have already bidded for this module.');
             }
         }
         #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
