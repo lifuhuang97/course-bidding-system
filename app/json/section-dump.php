@@ -48,7 +48,11 @@ $json=json_encode($result, JSON_PRETTY_PRINT);
 
 if ($result['status']=='success' && count($result['students'])>0){
     foreach ($result['students'] as $key=>$student){
-        $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);   
+        if (strpos($result['students'][$key]['amount'],'.')!== FALSE){
+            $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+        }else{
+            $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
+        }
     }
 }
 echo $json;

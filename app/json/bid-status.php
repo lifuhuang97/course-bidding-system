@@ -51,12 +51,25 @@ header('Content-Type: application/json');
 $json= json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=='success'){
     if ($result['min-bid-amount']!='-'){
-        $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],1).'',$json);
+        if (strpos($result['min-bid-amount'],'.')!== FALSE){
+            $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],2).'',$json);
+        }else{
+            $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],1).'',$json);
+        }
     }
     if (count($result['students'])>0){
         foreach ($result['students'] as $key=>$student){
-            $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
-            $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],1).'',$json);    
+            if (strpos($result['students'][$key]['amount'],'.')!== FALSE){
+                $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+            }else{
+                $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
+            }
+            if (strpos($result['students'][$key]['balance'],'.')!== FALSE){
+                $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],2).'',$json);
+            }else{
+                $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],1).'',$json);
+            }
+                
         }
     }
 }

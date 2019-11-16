@@ -33,17 +33,29 @@ $json= json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=="success"){
     if (count($result['student'])>0){
         foreach ($result['student'] as $key=>$student){
-            $json=str_replace('"edollar": "'.$result['student'][$key]['edollar'].'"','"edollar": '.number_format($result['student'][$key]['edollar'],1).'',$json);   
+            if (strpos($result['student'][$key]['edollar'],'.')!== FALSE){
+                $json=str_replace('"edollar": "'.$result['student'][$key]['edollar'].'"','"edollar": '.number_format($result['student'][$key]['edollar'],2).'',$json);
+            }else{
+                $json=str_replace('"edollar": "'.$result['student'][$key]['edollar'].'"','"edollar": '.number_format($result['student'][$key]['edollar'],1).'',$json);
+            }
         }
     }
     if (count($result['bid'])>0){
         foreach ($result['bid'] as $key=>$student){
-            $json=str_replace('"amount": "'.$result['bid'][$key]['amount'].'"','"amount": '.number_format($result['bid'][$key]['amount'],1).'',$json);   
+            if (strpos($result['bid'][$key]['amount'],'.')!== FALSE){
+                $json=str_replace('"amount": "'.$result['bid'][$key]['amount'].'"','"amount": '.number_format($result['bid'][$key]['amount'],2).'',$json);
+            }else{
+                $json=str_replace('"amount": "'.$result['bid'][$key]['amount'].'"','"amount": '.number_format($result['bid'][$key]['amount'],1).'',$json);
+            }
         }
     }
     if (count($result['section-student'])>0){
         foreach ($result['section-student'] as $key=>$student){
-            $json=str_replace('"amount": "'.$result['section-student'][$key]['amount'].'"','"amount": '.number_format($result['section-student'][$key]['amount'],1).'',$json);   
+            if (strpos($result['section-student'][$key]['amount'],'.')!== FALSE){
+                $json=str_replace('"amount": "'.$result['section-student'][$key]['amount'].'"','"amount": '.number_format($result['section-student'][$key]['amount'],2).'',$json); 
+            }else{
+                $json=str_replace('"amount": "'.$result['section-student'][$key]['amount'].'"','"amount": '.number_format($result['section-student'][$key]['amount'],1).'',$json); 
+            }
         }
     }
 }

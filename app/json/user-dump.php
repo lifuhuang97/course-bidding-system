@@ -37,7 +37,11 @@ else{
 header('Content-Type: application/json');
 $json=json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=="success"){
-    $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],1).'',$json);   
+    if (strpos($result['edollar'],'.')!== FALSE){
+        $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],2).'',$json);
+    }else{
+        $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],1).'',$json);
+    }
 }
 echo $json;
 ?>
