@@ -549,14 +549,19 @@ require_once 'include/protect.php';
                     echo"</table>";
                 }
 
-            }elseif (isset($_POST['updateBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Update bid')){
-                echo "<h3>Update Bid</h3>";
-                echo "Userid: <input type='text' name='userid'><br>
-                Course: <input type='text' name='course'><br>
-                Section: <input type='text' name='section'><br>
-                Amount: <input type='text' name='amount'><br>
-                <input type='submit' name='updateBid' value='Update'><br>
+            }elseif (isset($_POST['updateBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Update bid')){    
+                echo "<h3>Update Bid</h3>
+                <table border='0' class='bid-table'>
+                <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
+                <tr><td>Course:</td><td><input type='text' name='course'></td></tr>
+                <tr><td>Section:</td><td><input type='text' name='section'></td></tr>
+                <tr><td>Amount:</td><td><input type='text' name='amount'></td></tr>
+                <tr></tr>
+                <tr><td></td><td align='right'><input type='submit' name='updateBid' value='Update' class='table-button'></td></tr>
+                </table>
                 ";
+
+
                 if(isset($_POST['updateBid'])){
                     $errors=[];
                     if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
@@ -579,17 +584,23 @@ require_once 'include/protect.php';
                             echo "Successfully Updated";
                         }
                     }
+                    echo "<br>";
                     foreach ($errors as $error) {
-                        echo $error . "<br>";
+                        echo "<h4 style='color: red; margin:5px'>". $error . "</h4>";
                     }
                 }
             }elseif (isset($_POST['deleteBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Delete bid')){
-                echo "<h3>Delete Bid</h3>";
-                echo "Userid: <input type='text' name='userid'><br>
-                Course: <input type='text' name='course'><br>
-                Section: <input type='text' name='section'><br>
-                <input type='submit' name='deleteBid' value='Delete Bid'><br>
+                echo "<h3>Delete Bid</h3>
+                <table border='0' class='bid-table'>
+                <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
+                <tr><td>Course:</td><td><input type='text' name='course'></td></tr>
+                <tr><td>Section:</td><td><input type='text' name='section'></td></tr>
+                <tr></tr>
+                <tr><td></td><td align='right'>
+                <input type='submit' name='deleteBid' value='Delete Bid' class='table-button'></td></tr>
+                </table>
                 ";
+
                 if(isset($_POST['deleteBid'])){
                     $errors=[];
                     if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
@@ -609,17 +620,23 @@ require_once 'include/protect.php';
                             echo "Successfully Deleted";
                         }
                     }
+                    echo "<br>";
                     foreach ($errors as $error) {
-                        echo $error . "<br>";
+                        echo "<h4 style='color: red; margin:5px'>". $error . "</h4>";
                     }
                 }
             }elseif (isset($_POST['dropSection']) || (isset($_POST['navigation']) && $_POST['navigation']=='Drop Section')){
-                echo "<h3>Drop Section</h3>";
-                echo "Userid: <input type='text' name='userid'><br>
-                Course: <input type='text' name='course'><br>
-                Section: <input type='text' name='section'><br>
-                <input type='submit' name='dropSection' value='Drop Section'><br>
+                echo "<h3>Drop Section</h3>
+                <table border='0' class='bid-table'>
+                <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
+                <tr><td>Course:</td><td><input type='text' name='course'></td></tr>
+                <tr><td>Section:</td><td><input type='text' name='section'></td></tr>
+                <tr></tr>
+                <tr><td></td><td align='right'>
+                <input type='submit' name='dropSection' value='Drop Section' class='table-button'></td></tr>
+                </table>
                 ";
+
                 if(isset($_POST['dropSection'])){
                     $errors=[];
                     if(isset($_POST['userid']) && strlen(trim($_POST['userid'])) == 0){
@@ -639,8 +656,9 @@ require_once 'include/protect.php';
                             echo "Successfully Dropped Section";
                         }
                     }
+                    echo "<br>";
                     foreach ($errors as $error) {
-                        echo $error . "<br>";
+                        echo "<h4 style='color: red; margin:5px'>". $error . "</h4>";
                     }
                 }
             }
