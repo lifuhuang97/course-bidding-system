@@ -280,6 +280,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     <th>End Time</th>
                                                     <th style='text-align:center'>Instructor</th>
                                                     <th>Amount</th>
+                                                    <th>Vacancy</th>
                                                     <th>Bid Result</th>";
                                                     if ($roundID == 2 && $roundStatus != "Not Started"){
                                                         //should the round be started then they start to show the min bid?
@@ -309,6 +310,10 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid(),FALSE);
                                                     $SectionDAO = new SectionDAO();
                                                     $currentMinBid = $SectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
+                                                    $vacancy = CheckVacancy($course->getCourseid(),$course->getSectionid(),$retrieveVale =True);
+                                                    if ($vacancy==False){
+                                                        $vacancy=0;
+                                                    }
 
                                                     echo "{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
@@ -316,7 +321,9 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>$lStartTime</td>
                                                         <td>$lEndTime</td>
                                                         <td>{$course->getInstructor()}</td>
-                                                        <td>{$module->getAmount()}</td>";
+                                                        <td>{$module->getAmount()}</td>
+                                                        <td>$vacancy</th>";
+                                                        
                                                         if($roundID == 2){
                                                             if ($roundStatus == "Started"){
                                                                 if($module->getAmount() >= $minbid){

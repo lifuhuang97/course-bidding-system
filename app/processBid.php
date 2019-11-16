@@ -1,5 +1,5 @@
 <?php
-    require_once 'include/common.php';
+	require_once 'include/common.php';
     require_once 'include/function.php';
     require_once 'include/protect.php';
 
@@ -7,8 +7,8 @@
     $currentavailablecourses = $_SESSION['availablecourses'];
     #var_dump($currentavailablecourses);
     $courseId = $_POST['code'];
-    $sectionId = $_POST['sectionID'];
-    $bidAmt = $_POST['bidAmt'];
+	$sectionId = $_POST['sectionID'];
+	$bidAmt = $_POST['bidAmt'];
     $student=$_SESSION['student'];
     $userid = $student->getUserid(); #get userid
     $password = $student->getPassword(); #get password
@@ -16,8 +16,22 @@
     $school = $student->getSchool(); #get school
     $edollar = $student->getEdollar(); #get edollar
     $_SESSION['errors1'] = [];
+    $_SESSION['errors2'] = [];
     $coursecounter = 0;
     $sectioncounter = 0;
+
+    //-----
+    //get all complete course 
+    $completedDAO = New CourseCompletedDAO();
+    $ccompleted = $completedDAO->getAllCourseComplete($userid);
+
+    //preparing for removing modules that user alr completed
+    $courseDAO= new CourseDAO();
+    $courses=$courseDAO->retrieveAllCourseDetail('', '', $school);
+
+    //retrieve all courses *with different school*
+    $allCourses = $courseDAO->retrieveAllCourseDetail('', '', '');
+    //----
 
     //getting the round ID and roundstat
     $adminround = new adminRoundDAO();
@@ -25,7 +39,8 @@
     $roundID = $roundDetail->getRoundID();
     $roundstat = $roundDetail->getRoundStatus();
 
-
+    $courseId = strtoupper($courseId);
+    $sectionId = strtoupper($sectionId);
     //check for blanks Phase 1 
     if (isset($_POST['code']) && isset($_POST['sectionID']) && isset($_POST['bidAmt'])) {
         if (strlen(trim($_POST['code'])) == 0) {
@@ -39,36 +54,81 @@
         }
 
     }
+    //above is the front end portion ---------------------------------------------------------------
+    $sectioncounter1=0;
+    $coursecounter1=0;
+    $x = 1;
     #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
-    if (count($_SESSION['errors1']) > 0) {
-        header("Location: makebid.php?token={$_GET['token']}");
-        exit;
+    //if (count($_SESSION['errors2']) > 0) {
+    //    header("Location: makebid.php?token={$_GET['token']}");
+    //    exit;
+    //}
+    
+    //checking if there's this courseid in the (whole list of the courses) ---
+
+    foreach ($allCourses as $course){
+        if ($course->getCourseid() == $courseId){
+            $coursecounter1 += 1;
+            if ($course->getSectionid() == $sectionId){
+                $sectioncounter1 += 1;
+            }
+        }
     }
+    if ($coursecounter1 == 0 ){
+        array_push($_SESSION['errors1'], 'Please enter a valid Course ID.'); 
+    }
+    //checking if there is a course in the 'filtered' courses page but the sectioncounter did not increase, it means that the sectionid is 
+    //invalid 
+    if ($sectioncounter1 == 0){
+        array_push($_SESSION['errors1'], 'Please enter a valid Section ID.'); 
+    }
+    //----
     //Phase 1.2, Checking of user input, must be equal or less than 2 decimal place.
-    if(!is_numeric($bidAmt)){
+    if (!is_numeric($bidAmt)){
         //check if the amount the user entered is numeric
         array_push($_SESSION['errors1'], 'Please enter a valid amount.');
-    }elseif ($bidAmt<10){
-        // if amount is less than 10
-        array_push($_SESSION['errors1'], 'Please enter a value more than 9.99.');
     }else{
+        if ($bidAmt<10){
+            // if amount is less than 10
+            array_push($_SESSION['errors1'], 'Please enter a value more than 9.99.');
+        }
+        
         if(strpos($bidAmt,'.')!=FALSE){
             $temp=explode('.',$bidAmt);
             if (strlen($temp[1])>2){
                 array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place.');
             }
         }
-        if (count($_SESSION['errors1'])==0){
-            if ($bidAmt>$edollar){
-                // if amount is more than that the user have 
-                array_push($_SESSION['errors1'], 'Insufficient Edollar.');
-            }
-        }
     }
     if (count($_SESSION['errors1']) > 0) {
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
     }
+
+
+    //if(!is_numeric($bidAmt)){
+        //check if the amount the user entered is numeric
+    //    array_push($_SESSION['errors1'], 'Please enter a valid amount');
+    //}elseif ($bidAmt<10){
+        // if amount is less than 10
+    //    array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
+    //}else{
+    //    if ($bidAmt>$edollar){
+    //        array_push($_SESSION['errors1'], 'Insufficient Edollar');
+            // if amount is more than that the user have             
+    //    }
+    //}
+    //if ($x == 1){
+    //    if(strpos($bidAmt,'.')!=FALSE){
+    //        $temp=explode('.',$bidAmt);
+    //        if (strlen($temp[1])>2){
+    //            array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
+    //        }
+    //    }
+    //}
+
+
+
     //check phase 2
     //after making sure that the inputs by the users are not empty/blank 
     //we can do the following checks,
@@ -79,31 +139,23 @@
     $courseId = strtoupper($courseId);
     $sectionId = strtoupper($sectionId);
 
-    //------------------------------------------------------------------------------------------------------------------------
-    // checking is the round status is started.
+    //------------------------another checking**********
     if ($roundID == 1 && $roundstat == 'Started' || $roundID == 2 && $roundstat == 'Started'){
-        foreach ($currentavailablecourses as $items){
-            if ($items[0] == $courseId){
-                $coursecounter += 1;
-                if ($items[2] == $sectionId){
-                    $sectioncounter += 1;
-                }
-            }
+        //CHECKING OF PREREQ------------------------------------
+        $checking = CheckForCompletedPrerequisites($userid,$courseId);
+        #var_dump($checking);
+        if ($checking == True){
+            #continue;            #array_push($_SESSION['errors1'], 'You has not completed the prerequisites for this course.');
         }
-        //checking if there is a course in the 'filtered' courses page
-        if ($coursecounter == 0 ){
-            array_push($_SESSION['errors1'], 'Please enter a valid Course ID.'); 
+        elseif ($checking == False){
+            #print ('1');
+            array_push($_SESSION['errors1'], 'You has not completed the prerequisites for this course.');
         }
-        //checking if there is a course in the 'filtered' courses page but the sectioncounter did not increase, it means that the sectionid is 
-        //invalid 
-        if ($sectioncounter == 0){
-            array_push($_SESSION['errors1'], 'Please enter a valid Section ID.'); 
-        }
-        //checking amount if is less than 10 and if user have enough money to bid
-        if (floatval($bidAmt) < 10) {
-            array_push($_SESSION['errors1'], 'Please Bid an Amount that is high than $9.99 edollar.');
-        }elseif ($edollar < $bidAmt) {
-            array_push($_SESSION['errors1'], 'You do not have enough edollar.');
+
+        //checking for if amount is more than that the user have 
+        if ($bidAmt>$edollar){
+            array_push($_SESSION['errors1'], 'Insufficient Edollar.');
+            // if amount is more than that the user have             
         }
 
         //check if there is vacancy
@@ -113,13 +165,7 @@
                 array_push($_SESSION['errors1'], 'There is no vacancy left.');
             }
         }
-        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
-        if (count($_SESSION['errors1']) > 0) {
-            header("Location: makebid.php?token={$_GET['token']}");
-            exit;
-        }
-        
-        //check if use bid equal or more than the min required bid
+        //checking at round 2 if the use did enter a value more than the minimum required bid
         if ($roundID==2){
             $SectionDAO = new SectionDAO();
             $currentMinBid = $SectionDAO->viewMinBid($courseId,$sectionId);
@@ -127,17 +173,7 @@
                 array_push($_SESSION['errors1'], 'Please enter a value higher than the Minimum Required Bid.');
             }
         }
-        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
-        if (count($_SESSION['errors1']) > 0) {
-            header("Location: makebid.php?token={$_GET['token']}");
-            exit;
-        }
 
-        //check phase 3
-        //we can only do further checking only if the courseid, sectionid and the amount is correct
-        
-        //------------------------------------------------------------------------------------------------------
-        //checking if there's a clash of timetable
         $checkClassTT = CheckClassTimeTable($userid,$courseId,$sectionId);
         $checkExamTT = CheckExamTimeTable($userid,$courseId);
         if ($checkClassTT == False){
@@ -146,8 +182,6 @@
         if ($checkExamTT == False){
             array_push($_SESSION['errors1'], 'There is a clash in the Exam date and time.');
         }
-        //------------------------------------------------------------------------------------------------------
-
 
         //A student can bid at most for 5 sections
         $checkforExceed = CheckForExceedOfBidSection($userid,$courseId);
@@ -165,12 +199,64 @@
                 array_push($_SESSION['errors1'], 'You have already bidded for this module.');
             }
         }
-        #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
+        //ANY MORE CHECKS?
+        $ccounter = 0;
+        //user had already complete this module
+        foreach ($ccompleted as $completed){
+            $nameofuser = $completed->getUserid();
+            $coursecodecompleted = $completed->getCode();
+
+            if ($nameofuser==$name && $coursecodecompleted==$courseId){
+                $ccounter += 1;
+            }
+            
+        }
+        if ($ccounter >= 1 ){
+            array_push($_SESSION['errors1'], 'You had already completed this course.'); 
+        }       
+
+        //user had already won a bid for a section in this course in a previous round.
+        $successcounter = 0;
+        if ($roundID==2){
+            $StudentSecDAO = new StudentSectionDAO();
+            $studentsuccessbid = $StudentSecDAO->getSuccessfulBidsByID($userid);
+
+            foreach ($studentsuccessbid as $row){
+                if ($row[2] == $courseId){
+                    $successcounter += 1;
+                }
+            }
+             
+        }
+        if ($successcounter >= 1 ){
+            array_push($_SESSION['errors1'], 'You had already enrolled in this course.'); 
+        } 
+        
+
+        //not own school, but only for round 1
+        $incourse = 0;
+        if ($roundID==1){  
+            foreach ($courses as $course){
+
+                if ($course->getCourseid() ==$courseId){
+                    $incourse += 1;
+                }
+            }
+            if ($incourse == 0 ){
+                array_push($_SESSION['errors1'], 'In round 1, You are not allowed to bid for course from other school.'); 
+            } 
+        }
+        
+
+
+        //------------------------------------------------
+
+        //all the course if there is no error in error1, if it passes thought this, please that there's no error at all
         if (count($_SESSION['errors1']) > 0) {
             header("Location: makebid.php?token={$_GET['token']}");
             exit;
         }
-        
+
         //add to the user bidding table
         //- the amount from the user edollar
         //create a html table to show the course that the user just bidded for 
@@ -188,10 +274,12 @@
             header("Location: mainpage.php?token={$_GET['token']}");
             exit;
         }
-    } else {
+
+    }else{
         //this is the error message area to tell use the round is not started
-        array_push($_SESSION['errors1'], "You can't add your bid when the round is not started!");
+        array_push($_SESSION['errors1'], "There is no active round!");
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
-    }   
+    }
+
 ?>
