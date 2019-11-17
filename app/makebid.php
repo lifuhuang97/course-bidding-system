@@ -126,25 +126,14 @@
                 </form>
             </div>
 
-            <?php 
-                // code for Modal Box when there is error while adding bid
-                if(isset($_SESSION['errors1']) && !empty($_SESSION['errors1'])) {
-                    echo "<div class='modal'>
-                    <div class='modal-content'>";
-                    foreach ($_SESSION['errors1'] as $errors){
-                        echo "<p style='color: red'>".$errors."</p>";
-                    }
-                    unset($_SESSION['errors1']);
-                    echo "<span class='close-button'>Close</span>";
-                    echo "</div>
-                    </div>";
-                   
-            ?>
-                    <script>
-                        $('.modal').addClass('show-modal');
-                    </script> 
             <?php
-                  
+                //  display errors if there is error
+                if (isset($_SESSION['errors1'])) {
+                    foreach ($_SESSION['errors1'] as $errors){
+                        echo "<p style='color: red; margin: 0'>".$errors."</p>";
+                        print "<br>";
+                    }
+                    unset ($_SESSION['errors1']);
                 }
             ?>
 
@@ -300,29 +289,7 @@ if ($roundID==1 && $roundstat=='Started'){
     echo "<h2 style='color: red; text-transform: uppercase; padding-left: 1em;'>Rounds have not started!</h2>";
 }
 ?>
-        </div>
-
-
-<script>
-
-
-// for Modal Box
-var modal = document.querySelector(".modal");
-var closeButton = document.querySelector(".close-button");
-
-function toggleModal() {
-    modal.classList.toggle("show-modal");
-}
-
-function windowOnClick(event) {
-    if (event.target === modal) {
-        toggleModal();
-    }
-}
-
-closeButton.addEventListener("click", toggleModal);
-window.addEventListener("click", windowOnClick);
-</script>  
+        </div> 
 
 </body>
 </html>
