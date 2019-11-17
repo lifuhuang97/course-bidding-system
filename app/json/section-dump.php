@@ -52,7 +52,11 @@ if ($result['status']=='success' && count($result['students'])>0){
     foreach ($result['students'] as $key=>$student){
         if (strpos($result['students'][$key]['amount'],'.')!== FALSE){
             // display float value
-            $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+            if (substr($result['students'][$key]['amount'],-1)=='0'){
+                $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
+            }else{
+                $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+            }
         }else{
             // display int as float value
             $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);

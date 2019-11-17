@@ -58,7 +58,11 @@ if ($result['status']=='success'){
     if ($result['min-bid-amount']!='-'){
         if (strpos($result['min-bid-amount'],'.')!== FALSE){
             // display float value
-            $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],2).'',$json);
+            if (substr($result['min-bid-amount'],-1)=='0'){
+                $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],1).'',$json);
+            }else{
+                $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],2).'',$json);
+            }
         }else{
             // display int as float value
             $json=str_replace('"min-bid-amount": "'.$result['min-bid-amount'].'"','"min-bid-amount": '.number_format($result['min-bid-amount'],1).'',$json);
@@ -68,14 +72,22 @@ if ($result['status']=='success'){
         foreach ($result['students'] as $key=>$student){
             if (strpos($result['students'][$key]['amount'],'.')!== FALSE){
                 // display float value
-                $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+                if (substr($result['students'][$key]['amount'],-1)=='0'){
+                    $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
+                }else{
+                    $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
+                }
             }else{
                 // display int as float value
                 $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
             }
             if (strpos($result['students'][$key]['balance'],'.')!== FALSE){
                 // display float value
-                $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],2).'',$json);
+                if (substr($result['students'][$key]['balance'],-1)=='0'){
+                    $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],1).'',$json);
+                }else{
+                    $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],2).'',$json);
+                }
             }else{
                 // display int as float value
                 $json=str_replace('"balance": "'.$result['students'][$key]['balance'].'"','"balance": '.number_format($result['students'][$key]['balance'],1).'',$json);
