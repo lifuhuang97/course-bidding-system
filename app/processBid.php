@@ -58,11 +58,6 @@
     $sectioncounter1=0;
     $coursecounter1=0;
     $x = 1;
-    #if there's a error, exit this page and go to makebid.php page and display the error message stored inside $_SESSION['errors1']
-    //if (count($_SESSION['errors2']) > 0) {
-    //    header("Location: makebid.php?token={$_GET['token']}");
-    //    exit;
-    //}
     
     //checking if there's this courseid in the (whole list of the courses) ---
 
@@ -74,10 +69,12 @@
             }
         }
     }
+    //checking if there is a course in the courses page but if the coursecounter1 did not increase, it means that the courseId is 
+    //invalid
     if ($coursecounter1 == 0 ){
         array_push($_SESSION['errors1'], 'Please enter a valid Course ID.'); 
     }
-    //checking if there is a course in the 'filtered' courses page but the sectioncounter did not increase, it means that the sectionid is 
+    //checking if there is a course in the courses page but if the sectioncounter1 did not increase, it means that the sectionid is 
     //invalid 
     if ($sectioncounter1 == 0){
         array_push($_SESSION['errors1'], 'Please enter a valid Section ID.'); 
@@ -104,31 +101,6 @@
         header("Location: makebid.php?token={$_GET['token']}");
         exit;
     }
-
-
-    //if(!is_numeric($bidAmt)){
-        //check if the amount the user entered is numeric
-    //    array_push($_SESSION['errors1'], 'Please enter a valid amount');
-    //}elseif ($bidAmt<10){
-        // if amount is less than 10
-    //    array_push($_SESSION['errors1'], 'Please enter a value more than 9.99');
-    //}else{
-    //    if ($bidAmt>$edollar){
-    //        array_push($_SESSION['errors1'], 'Insufficient Edollar');
-            // if amount is more than that the user have             
-    //    }
-    //}
-    //if ($x == 1){
-    //    if(strpos($bidAmt,'.')!=FALSE){
-    //        $temp=explode('.',$bidAmt);
-    //        if (strlen($temp[1])>2){
-    //            array_push($_SESSION['errors1'], 'Please enter a value and round it up to 2 decimal place');
-    //        }
-    //    }
-    //}
-
-
-
     //check phase 2
     //after making sure that the inputs by the users are not empty/blank 
     //we can do the following checks,
@@ -143,12 +115,10 @@
     if ($roundID == 1 && $roundstat == 'Started' || $roundID == 2 && $roundstat == 'Started'){
         //CHECKING OF PREREQ------------------------------------
         $checking = CheckForCompletedPrerequisites($userid,$courseId);
-        #var_dump($checking);
         if ($checking == True){
             #continue;            #array_push($_SESSION['errors1'], 'You has not completed the prerequisites for this course.');
         }
         elseif ($checking == False){
-            #print ('1');
             array_push($_SESSION['errors1'], 'You has not completed the prerequisites for this course.');
         }
 
@@ -174,6 +144,7 @@
             }
         }
 
+        //checking of clash in timetable and exam timeable 
         $checkClassTT = CheckClassTimeTable($userid,$courseId,$sectionId);
         $checkExamTT = CheckExamTimeTable($userid,$courseId);
         if ($checkClassTT == False){
@@ -185,7 +156,6 @@
 
         //A student can bid at most for 5 sections
         $checkforExceed = CheckForExceedOfBidSection($userid,$courseId);
-        #var_dump($checkforExceed);
         if (!$checkforExceed){
             array_push($_SESSION['errors1'], 'You currently have 5 bidded sections.');
         }
@@ -199,7 +169,7 @@
                 array_push($_SESSION['errors1'], 'You have already bidded for this module.');
             }
         }
-        //ANY MORE CHECKS?
+
         $ccounter = 0;
         //user had already complete this module
         foreach ($ccompleted as $completed){
@@ -211,6 +181,7 @@
             }
             
         }
+        //if ccounter is more than 1, it means that the user had already completed that mod
         if ($ccounter >= 1 ){
             array_push($_SESSION['errors1'], 'You had already completed this course.'); 
         }       
@@ -228,6 +199,7 @@
             }
              
         }
+        //if successcounter is more than 1, it means that the user had already enrolled into that mod
         if ($successcounter >= 1 ){
             array_push($_SESSION['errors1'], 'You had already enrolled in this course.'); 
         } 
@@ -238,10 +210,12 @@
         if ($roundID==1){  
             foreach ($courses as $course){
 
-                if ($course->getCourseid() ==$courseId){
+                if ($course->getCourseid() == $courseId){
                     $incourse += 1;
                 }
             }
+            //if incourse is equal to 0, it means that the user had bidded a mod outside of his/her school
+            //the list of school is filtered base of the school that the user is in
             if ($incourse == 0 ){
                 array_push($_SESSION['errors1'], 'In round 1, You are not allowed to bid for course from other school.'); 
             } 

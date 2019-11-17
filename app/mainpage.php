@@ -7,8 +7,7 @@
         exit;
     }
     else{
-        //Retrieve student information
-        if ($_SESSION['success']!='admin'){
+        if ($_SESSION['success']!='admin'){ //Verify that user is student and retrieves information
             $studentDAO = New StudentDAO();
             $student = $studentDAO->retrieveStudent($_SESSION['success']);
             $loginID = $student->getUserid();
@@ -20,7 +19,7 @@
             $biddedModule = $bidDAO->getBidInfo($_SESSION['success']);
             $bidresultsDAO = New StudentSectionDAO();
             $successModules=$bidresultsDAO->retrieveAllByUser($loginID);
-        }else{
+        }else{ // Verify that user is admin
             $name = $_SESSION['success'];
             $school = '-';
             $eCredit = '-';
@@ -65,7 +64,7 @@ th, td,tr {
                 </div>
             </div>
             <div class="display-right">
-                <?php //Current Time Table<br> ?>
+                <!-- display current timetable -->
                 <div class="display-right-container">
                     <div class="display-right__table-dates">
                         <table class="display-right__table-dates__table">
@@ -93,6 +92,7 @@ th, td,tr {
 
     $roundStartEndTimes = [$round1Start,$round1End,$round2Start,$round2End];
 
+    // check status of current round
     if($round1Start != null && $round1End == null){
         $roundStartEndTimes[1] = "Ongoing";
     }
@@ -106,8 +106,7 @@ th, td,tr {
     }
 
 
-    // This is to make the rounds dates and time to look more humanly
-    // EG: 04 NOV 23:31 => better to visualize
+    // For better visualisation of rounds start time and date (e.g. 04 NOV 23:31)
     $months = [1=>'JAN',2=>'FEB',3=>'MAR',4=>'APR',5=>'MAY',6=>'JUNE',7=>'JULY',8=>'AUG',9=>'SEPT',10=>'OCT',11=>'NOV',12=>'DEC'];
     if ($roundStartEndTimes[0]!='Not Started'){
         $starttime1 = $roundStartEndTimes[0];
@@ -145,7 +144,7 @@ th, td,tr {
         ." ". substr($starttime4[1],0,5));
         $roundStartEndTimes[3] = $str4;
     }
-
+    // display Rounds Start Time and End Time Status
     echo"
                                 <th>Round 1</th>
                                 <td><b>$roundStartEndTimes[0]</b></td>
@@ -172,12 +171,19 @@ if($roundID == 2 && $roundStatus != "Started"){
                     <div class="display-right__table-cart">
                         <table class="display-right__table-cart__table">
                             <tr>
-                                <th class="table-title" colspan="9">Round <?php $roundID?> Bidding Results</th>
+                            <!-- check roundID and print -->
+                            <th class="table-title" colspan="9">Round <?php 
+                                if($roundID == 2 && $roundStatus == "Not Started")
+                                    echo "1";
+                                else
+                                    echo $roundID;
+                                ?>
+                                Bidding Results</th>
                             </tr>
                             <tr>
                                 <th colspan="8">
                                 <?php 
-
+                                // get bid details by user and print
                                 $bidDatabase = new BidProcessorDAO();
                                 $bidsByUser = $bidDatabase->getBidsByID($loginID);
                                 echo "<tr align='center'>
@@ -190,10 +196,6 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 <th style='text-align:center'>Instructor</th>
                                 <th>Amount</th>
                                 <th>Bid Result</th>";
-                                if ($roundStatus == "Finished"){
-                                    //should the round be started then they start to show the min bid?
-                                    // echo "<th>Min Bid</th>";
-                                };
                                 echo "</tr>";
 
                             foreach ($bidsByUser as $bid){
@@ -232,12 +234,6 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     <td>{$course[0]->getInstructor()}</td>
                                     <td>{$bidAmt}</td>
                                     <td>{$bidresult}</td>";
-                                    if ($roundStatus== "Finished"){
-                                        //should the round be started then they start to show the min bid?
-                                        
-                                        // $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid());
-                                        // echo "<td>$minbid</td>";
-                                    }
                                 }
                             }
                         }
@@ -262,8 +258,7 @@ if($roundID == 2 && $roundStatus != "Started"){
 
                             <tr></tr>
                                     <?php
-                                        //getting the round ID and roundstat
-                                        //print ($roundID);
+                                        // check for bids placed 
                                         if (isset($biddedModule)){
                                             if (count($biddedModule)==0){
                                                 echo "<tr>
@@ -282,20 +277,20 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     <th>Amount</th>
                                                     <th>Vacancy</th>
                                                     <th>Bid Result</th>";
+                                                    // if round 1 ended, insert min bid column 
                                                     if ($roundID == 2 && $roundStatus != "Not Started"){
-                                                        //should the round be started then they start to show the min bid?
                                                         echo "<th>Min Bid Required</th>";
                                                     };
                                                     echo "</tr>";
-
+                                                
+                                                // display details of bidded modules
                                                 foreach ($biddedModule as $module){
                                                     
-                                                    echo "<tr><td>";
+                                                    echo "<tr>";
                                                     $code = $module->getCode();
                                                     $bidAmt = $module->getAmount();
                                                     $bidSection = $module->getSection();
-                                                    echo "$code</td>";
-                                                    echo "<td>";
+                                                    echo "<td>$code</td>";
                                                     $course = $module->getCourseDetailsByCourseSection();
 
                                                     $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
@@ -315,7 +310,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         $vacancy=0;
                                                     }
 
-                                                    echo "{$course->getTitle()}</td>
+                                                    echo "<td>{$course->getTitle()}</td>
                                                         <td>{$module->getSection()}</td>
                                                         <td>{$weekday[$course->getDay()]}</td>
                                                         <td>$lStartTime</td>
@@ -325,13 +320,13 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                         <td>$vacancy</th>";
                                                         
                                                         if($roundID == 2){
-                                                            if ($roundStatus == "Started"){
+                                                            if ($roundStatus == "Started"){ // check amount bidded with min bid (for round 2 started)
                                                                 if($module->getAmount() >= $minbid){
                                                                     echo "<td>Successful</td>";
                                                                 }else{
                                                                     echo "<td>Unsuccessful. Bid too low.</td>";
                                                                 }
-                                                            }else{
+                                                            }else{ // check for bids placed during Round 1 end, Round 2 ongoing and ends
                                                                 if (!CheckCourseEnrolled($loginID,$course->getCourseid())){
                                                                     echo "<td>Unsuccessful. Bid too low.</td>";
                                                                 }else{
@@ -367,6 +362,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                             <tr>
                                 <td>
                                 <?php
+                                    // display successfully bidded modules details
                                     if (count($successModules)>0){
                                         echo"<table border='1'>
                                         <tr>
@@ -406,21 +402,13 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 ?>
                                 </td>
                             </tr>
-                            <tr>
-<?php
 
-// $EnrolledCourses = $bidresultsDAO->getSuccessfulBidsByID($loginID);
-// foreach($EnrolledCourses as $course){
-//     var_dump($course);
-// }
-
-?>
-                            </tr>
                         </table>
                         
                         </table>
                         
                         <table class="display-right__table-timetable__table" border='1px black'>
+                            <!-- display timetable -->
                             <tr>
                                 <th colspan='4' class="table-title">Timetable</th>
                             </tr>
@@ -441,11 +429,11 @@ if($roundID == 2 && $roundStatus != "Started"){
                                             foreach ($biddedModule as $module){
                                                 $course=$module->getCourseDetailsByCourseSection();
                                                 $day_no = $course->getDay();
-                                                $startTime = $course->getStart();
-                                                //retrieve minimum bid                  
+                                                $startTime = $course->getStart();                 
                                                 $minbid = CheckMinBid($course->getCourseid(),$course->getSectionid(),FALSE);
                                                 $SectionDAO = new SectionDAO();
                                                 $currentMinBid = $SectionDAO->viewMinBid($course->getCourseid(),$course->getSectionid());
+                                                // check for timing of the module, retrieve the title and store it in timeTable array by that timing
                                                 if ($startTime=="08:30:00"){
                                                     $timetable[$day_no][0]=$course->getTitle();
                                                 }
@@ -455,6 +443,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                 if($startTime=='15:30:00') {
                                                     $timetable[$day_no][2] = $course->getTitle();
                                                 }
+                                                // check for status
                                                 if($roundID == 2){
                                                     if ($roundStatus != "Finished" && $roundStatus=='Not Started'){
                                                        if($module->getAmount() < $minbid) {
@@ -463,26 +452,22 @@ if($roundID == 2 && $roundStatus != "Started"){
                                                     }
                                                     elseif($roundStatus != 'Finished' && $roundStatus=='Started') {
                                                         if($module->getAmount() >= $minbid){
-                                                            // echo "<td>Successful</td>";
                                                             $status[$course->getTitle()] = 'successful';
                                                     }
         
                                                     }else{
                                                         if (CheckCourseEnrolled($loginID,$course->getCourseid())){
-                                                            // echo "<td>Unsuccessful. Bid too low.</td>";
                                                             $status[$course->getTitle()] = 'successful';
                                                         }
                                                     }
                                                     
                                                 }else{
-                                                    // echo "<td>Pending</td>";
                                                     $status[$course->getTitle()] = 'pending';
                                                 }
         
                                         }
                                     }
-                                    // var_dump($status);
-                                }
+                                    }
                                 if (count($successModules)>0){
                                     foreach ($successModules as $module){
                                         $courseDAO= new CourseDAO();
@@ -502,8 +487,8 @@ if($roundID == 2 && $roundStatus != "Started"){
                                         $status[$title] = 'successful';
                                     }
                                 }
-                                // var_dump($timetable);
-                            
+                                
+                                // loop through the days and print the timetable
                                 foreach($days as $day) {
                                     if($day == 1) {
                                         echo "<tr><td><b>MONDAY</b></td>";
@@ -534,10 +519,9 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     }
                                     echo "</tr>";
                                 }
-                                
+                                // legend of timetable
                                 echo "<tr><td colspan='4' style='padding: 20px'>Legend: <i class='fas fa-circle' style='color: #6BFF32'></i> Successful <i class='fas fa-circle' style='color: #FFF233'></i> Pending</td></tr>";
                     
-                                // var_dump($timetable);
                                 
                             ?>
 

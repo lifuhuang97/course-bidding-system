@@ -56,6 +56,7 @@
                 <img src="css/smulogo.png">
             </div>
         </div>
+        <!-- display details of course -->
         <div class="display-right">
             <div class="content-container">
                 <?php

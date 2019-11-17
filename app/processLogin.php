@@ -14,6 +14,7 @@
         }
 
         // Authenticate then go to mainpage
+        // if user is admin, redirect to adminMainPage
         if (count($_SESSION['errors']) == 0 && $_POST['username'] == 'admin') {
             if ($_POST['password'] == 'P@ssw0rd!135') {
                 $_SESSION['success'] = $_POST['username'];
@@ -23,8 +24,8 @@
             } else {    
                 array_push($_SESSION['errors'], 'Your password is incorrect!');
             }
-            
-        } elseif (count($_SESSION['errors']) == 0){
+        
+        } elseif (count($_SESSION['errors']) == 0){ // if user is student, redirect to mainpage
             $userid = $_POST['username'];
             $pass = $_POST['password'];
 

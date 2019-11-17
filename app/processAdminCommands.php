@@ -22,15 +22,7 @@ $round = $adminRoundDAO->retrieveRoundDetail();
 $roundNo = $round->getRoundID();
 $roundStatus = $round->getRoundStatus();
 
-// Update round status. If it's call to start round in round 1, go to bootstrap
-// if ($_SESSION['roundaction'] == "Start Round"){
-//     doStart();
-//     if($roundNo == 1 && $roundStatus == "Not Started"){
-//         header("Location: bootstrap.php?token={$_GET['token']}");
-//     }else{
-//         header("Location: adminMainPage.php?token={$_GET['token']}");
-//     }
-// }
+// check for round status. if "Bootstrap & Start Round" (round 1 not started) => go bootstrap , if "Start Round" (round 2 not started) => go to admin page
 if($_SESSION['roundaction'] == "Start Round") {
     doStart();
     header("Location: adminMainPage.php?token={$_GET['token']}");
