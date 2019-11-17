@@ -16,8 +16,11 @@ $school = $student->getSchool(); #get school
 $edollar = $student->getEdollar(); #get edollar
 $_SESSION['errors1'] = [];
 
+
+
 $biddingDAO = New BidDAO();
 $modules = $biddingDAO->getBidInfo($_SESSION['success']);
+
 $biddedCourse = [];
 foreach ($modules as $mods) {
     if (!array_key_exists($mods->getCode(),$biddedCourse)){
@@ -26,7 +29,13 @@ foreach ($modules as $mods) {
         $biddedCourse[$mods->getCode()][]=$mods->getSection();
     }
 }
-
+//finding the bidding amount that the user bidded
+$biddedamount = 0 ;
+foreach ($modules as $modu) {
+    if ($_POST['code'] == $modu->getCode()){
+        $biddedamount = $modu->getAmount();
+    }
+}
 
 //do validation
 //check if user did enter anything to the text field
@@ -77,7 +86,7 @@ if (count($_SESSION['errors1']) > 0) {
             }
         }
         if (count($_SESSION['errors1'])==0){
-            if ($newBidAmt>$edollar){
+            if ($newBidAmt>($edollar+$biddedamount)){
                 // if amount is more than that the user have 
                 array_push($_SESSION['errors1'], 'Insufficient Edollar.');
             }
