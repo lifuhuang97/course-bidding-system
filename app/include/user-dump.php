@@ -14,6 +14,7 @@ function doUserDump($userid) {
             "message" => array_values($errors)
             ];
     }else{
+        //retrieve student information
         $studentDAO=new StudentDAO();
         $student=$studentDAO->retrieveStudent($userid);
         $result = [

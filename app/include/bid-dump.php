@@ -36,16 +36,12 @@ function doBidDump($course,$section) {
         $bidList=[];
         $index=1;
         foreach ($AllBids as $onebid){
-            if ($roundID==1 && $roundStatus=='Started'){
+            if ($roundStatus=='Started'){
                 $result='-';
+            }elseif($onebid->getAmount()>=$minBid){
+                $result='in';
             }else{
-                if ($roundID==2 && $roundStatus=='Started' && count($AllBids)==1){
-                    $result='-';
-                }elseif($onebid->getAmount()>=$minBid){
-                    $result='in';
-                }else{
-                    $result="out";
-                }
+                $result="out";
             }
             
             $bidList[]=["row"=>$index,

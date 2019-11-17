@@ -17,8 +17,6 @@ class StudentSectionDAO {
         $stmt->bindParam(':course',$course,PDO::PARAM_STR);
         $stmt->bindParam(':section',$section,PDO::PARAM_STR);
 
-       
-
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
@@ -81,8 +79,11 @@ class StudentSectionDAO {
         while ($row = $stmt->fetch()) {
             $bids[] = [$row['userid'],$row['amount'],$row['course'],$row['section'],$row['bidstatus'], $row['bidround']];
         }
-        return $bids;
+        // Close Query/Connection
+        $stmt = null;
+        $conn = null;
 
+        return $bids;
     }
 
     // Wipe table
@@ -134,7 +135,7 @@ class StudentSectionDAO {
         }
 
         $stmt = null;
-        $conn = null;        
+        $conn = null;
         
         return $result;
     }

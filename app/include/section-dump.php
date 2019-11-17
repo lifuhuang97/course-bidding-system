@@ -3,6 +3,7 @@ require_once 'common.php';
 require_once 'function.php';
 function doSectionDump($course,$section) {
     $errors=array();
+    //upper case
     $course=strtoupper($course);
     $section=strtoupper($section);
     $courseValid=TRUE;

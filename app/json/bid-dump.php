@@ -4,6 +4,7 @@ require_once '../include/bid-dump.php';
 require_once '../include/protect.php';
 
 if (isset($_REQUEST['r'])){
+    // json request
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
     if (!isset($request['course'])){
@@ -42,6 +43,7 @@ if (!isEmpty($errors)) {
         ];
 }
 else{
+    //perform bid dump if there is no error
     $result=doBidDump($course,$section);
 }
 header('Content-Type: application/json');
@@ -49,8 +51,10 @@ $json=json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=='success' && count($result['bids'])>0){
     foreach ($result['bids'] as $key=>$student){
         if (strpos($result['bids'][$key]['amount'],'.')!== FALSE){
+            // display float value
             $json=str_replace('"amount": "'.$result['bids'][$key]['amount'].'"','"amount": '.number_format($result['bids'][$key]['amount'],2).'',$json);
         }else{
+            // display int as float value
             $json=str_replace('"amount": "'.$result['bids'][$key]['amount'].'"','"amount": '.number_format($result['bids'][$key]['amount'],1).'',$json);
         }
     }

@@ -43,12 +43,6 @@ else{
             ];
             
     }
-    # generate a secret token for the user based on their username
-
-    # return the token to the user via JSON    
-		
-	# return error message if something went wrong
-
 }
 
 header('Content-Type: application/json');

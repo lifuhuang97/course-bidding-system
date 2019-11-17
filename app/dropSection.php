@@ -1,24 +1,28 @@
 <?php
-    require_once 'include/common.php';
-    require_once 'include/function.php';
-    require_once 'include/protect.php';
-     
 
-    $student=$_SESSION['student'];
-    $userid = $student->getUserid(); #get userid
-    $password = $student->getPassword(); #get password
-    $name = $student->getName(); #get name
-    $school = $student->getSchool(); #get school
-    $edollar = $student->getEdollar(); #get edollar
+//to be included files
 
-    $studentSectionDAO = New StudentSectionDAO();
-    $sections = $studentSectionDAO->getSuccessfulBidsByID($userid);
+require_once 'include/common.php';
+require_once 'include/function.php';
+require_once 'include/protect.php';
 
-    //getting the round ID and roundstat
-    $adminround = new adminRoundDAO();
-    $roundDetail = $adminround->retrieveRoundDetail();
-    $roundID = $roundDetail->getRoundID();
-    $roundstat = $roundDetail->getRoundStatus();
+//retrieve student information
+$student=$_SESSION['student'];
+$userid = $student->getUserid(); #get userid
+$password = $student->getPassword(); #get password
+$name = $student->getName(); #get name
+$school = $student->getSchool(); #get school
+$edollar = $student->getEdollar(); #get edollar
+
+//retrieve student success bid from round 1
+$studentSectionDAO = New StudentSectionDAO();
+$sections = $studentSectionDAO->getSuccessfulBidsByID($userid);
+
+//getting the round ID and roundstatus
+$adminround = new adminRoundDAO();
+$roundDetail = $adminround->retrieveRoundDetail();
+$roundID = $roundDetail->getRoundID();
+$roundstat = $roundDetail->getRoundStatus();
 ?>
 <style>
 th, td,tr {
@@ -82,6 +86,7 @@ th, td,tr {
                 </form>
             </div>
             <?php
+                //display error
                 if (isset($_SESSION['errors1'])) {
                     foreach ($_SESSION['errors1'] as $errors){
                         echo "<p style='color: red'>".$errors."</p>";
@@ -92,6 +97,7 @@ th, td,tr {
             ?>
             <?php
                 if (count($sections)==0){
+                    // if there is no section
                     echo "<h3 style='text-align:left; font-weight:bold; padding-left:20px;'>No available course</h3>";
                 }else {
                     echo"<table border='1px'>
@@ -113,11 +119,14 @@ th, td,tr {
                         $section=$module[3];
                         $courseDAO= new CourseDAO();
                         $course=$courseDAO->retrieveAllCourseDetail($code,$section)[0];
+
                         $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                        //format datetime to time only
                         $lStartTime = $course->getStart();
                         $lStartTime = substr($lStartTime,0,5);
                         $lEndTime = $course->getEnd();
                         $lEndTime = substr($lEndTime,0,5);
+
                         echo "<td>";
                         echo "{$course->getTitle()}</td>
                             <td>{$section}</td>
@@ -128,7 +137,7 @@ th, td,tr {
                             <td>{$module[1]}</td>";
                             ?>
                         
-                        
+                        <!-- notification for student confirm the selection -->
                         <td>
                         <button id="<?= $code?>" class="trigger">Drop</button>
                             <div class="modal" id="modal<?= $code?>">

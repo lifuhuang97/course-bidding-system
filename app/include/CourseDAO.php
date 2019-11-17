@@ -127,6 +127,28 @@ class CourseDAO {
     
         return $course;
     }
+
+    public function RetrieveCourseName($courseID){
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+    
+        $sql = "SELECT * FROM COURSE where courseID=:courseID";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':courseID',$courseID ,PDO::PARAM_STR);
+            
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $status=$stmt->execute();
+
+        $courseName='';
+        while ($row=$stmt->fetch()){
+            $courseName=$row['title'];
+        }
+        
+        $stmt = null;
+        $conn = null;
+    
+        return $courseName;
+    }
 }
 
 

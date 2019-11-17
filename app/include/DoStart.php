@@ -11,6 +11,7 @@ function doStart() {
     if ($roundStatus=="Not Started"){
         $adminRoundDAO->startRound();
         if ($roundID==1){
+            //remove all data from bid processor
             $bidprocessorDAO->removeAll();
         }else{
             //round 2

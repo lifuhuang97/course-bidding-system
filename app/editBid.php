@@ -1,45 +1,48 @@
 <?php
-    require_once 'include/common.php';
-    require_once 'include/function.php';
-    require_once 'include/protect.php';
-    $student = $_SESSION['student']; 
-    $userid = $student->getUserid(); #get userid
-    $password = $student->getPassword(); #get password
-    $name = $student->getName(); #get name
-    $school = $student->getSchool();
-    $edollar = $student->getEdollar(); #get edollar
 
-    $adminRoundDAO = new adminRoundDAO();
-    $adminRoundStatus = $adminRoundDAO->retrieveRoundDetail();
-    $msg = '';
-    if ($adminRoundStatus->getRoundStatus() != "Started") {
-        // echo "Edit Bid is not allowed at the moment. ";
-        // echo "Go back to ";
-        // echo "<a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
-        $msg = "Edit Bid is not allowed at the moment. Go back to <a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
-    } else {
-        if (!isset($_SESSION['success'])) {
-            header('Location: login.php');
-            exit;
-        }
-        else{
-            $student = $_SESSION['student']; 
-            $userid = $student->getUserid(); #get userid
-            $password = $student->getPassword(); #get password
-            $name = $student->getName(); #get name
-            $school = $student->getSchool();
-            $edollar = $student->getEdollar(); #get edollar
+//to be included files
 
-            $biddingDAO = new BidDAO();
-            $biddedModule = $biddingDAO->getBidInfo($_SESSION['success']);
+require_once 'include/common.php';
+require_once 'include/function.php';
+require_once 'include/protect.php';
 
-            $biddedmodsarray = [];
-            foreach ($biddedModule as $mods) {
-                $b = ($mods->getCode());
-                array_push($biddedmodsarray, $b);
-            }
+//retrieve student information
+$student = $_SESSION['student']; 
+$userid = $student->getUserid(); #get userid
+$password = $student->getPassword(); #get password
+$name = $student->getName(); #get name
+$school = $student->getSchool();
+$edollar = $student->getEdollar(); #get edollar
+
+//retrieve round status
+$adminRoundDAO = new adminRoundDAO();
+$adminRoundStatus = $adminRoundDAO->retrieveRoundDetail();
+$msg = '';
+if ($adminRoundStatus->getRoundStatus() != "Started") {
+    $msg = "Edit Bid is not allowed at the moment. Go back to <a href='mainpage.php?token={$_GET['token']}'>mainpage</a>";
+} else {
+    if (!isset($_SESSION['success'])) {
+        header('Location: login.php');
+        exit;
+    }
+    else{
+        $student = $_SESSION['student']; 
+        $userid = $student->getUserid(); #get userid
+        $password = $student->getPassword(); #get password
+        $name = $student->getName(); #get name
+        $school = $student->getSchool();
+        $edollar = $student->getEdollar(); #get edollar
+
+        $biddingDAO = new BidDAO();
+        $biddedModule = $biddingDAO->getBidInfo($_SESSION['success']);
+
+        $biddedmodsarray = [];
+        foreach ($biddedModule as $mods) {
+            $b = ($mods->getCode());
+            array_push($biddedmodsarray, $b);
         }
     }
+}
 ?>   
 <style>
 th, td,tr {
@@ -115,13 +118,6 @@ th, td,tr {
             if($msg != '') {
                         echo "<h2 style='color: red; text-transform: uppercase; padding-left: 1em;'>$msg</h2>";
                     }
-            // if (isset($_SESSION['errors1'])) {
-            //     foreach ($_SESSION['errors1'] as $error) {
-            //         echo "<p style='color: red'>".$error."</p>";
-            //         print "<br>";
-            //     }
-            //     unset($_SESSION['errors1']);
-            // }
             ?>
             <?php 
                 if(isset($_SESSION['errors1']) && !empty($_SESSION['errors1'])) {
@@ -173,10 +169,13 @@ th, td,tr {
                                 echo "$code</td>";
                                 echo "<td>";
                                 $course = $module->getCourseDetailsByCourseSection();
+
+                                //format datetime to time only
                                 $lStartTime = $course->getStart();
                                 $lStartTime = substr($lStartTime,0,5);
                                 $lEndTime = $course->getEnd();
                                 $lEndTime = substr($lEndTime,0,5);
+
                                 echo "{$course->getTitle()}</td>
                                     <td>{$module->getSection()}</td>
                                     <td>{$weekday[$course->getDay()]}</td>

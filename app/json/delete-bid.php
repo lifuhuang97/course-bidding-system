@@ -4,6 +4,7 @@ require_once '../include/delete-bid.php';
 require_once '../include/protect.php';
 
 if (isset($_REQUEST['r'])){
+    // json request
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
     if (!isset($request['userid'])){
@@ -50,6 +51,7 @@ if (!isEmpty($errors)) {
         ];
 }
 else{
+    //perform delete bid if there is no error
     $result=doDeleteBid($userid,$course,$section);
 }
 header('Content-Type: application/json');

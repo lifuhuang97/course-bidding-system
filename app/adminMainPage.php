@@ -42,9 +42,12 @@ require_once 'include/protect.php';
                     </div>
                     <div class="profile-details">
                         <p>Welcome, Admin!</p>
-                        <a href="bootstrap.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__logout">BOOTSTRAP <i class="fas fa-sign-out-alt"></i></div></a>
-                        <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
                     </div>
+                    <a href="bootstrap.php?token=<?php echo $_GET['token']?>" style="color: white; text-decoration: none;"><div class="navbar-left__logout">BOOTSTRAP <i class="fas fa-sign-out-alt"></i></div></a>
+                    <a href="logout.php" style="color: white; text-decoration: none;"><div class="navbar-left__logout">LOGOUT <i class="fas fa-sign-out-alt"></i></div></a>
+                    <div class="navbar-left__smuLogo">
+                    <img src="css/smulogo.png">
+                </div>
                 </div>
             </div>
         </div>

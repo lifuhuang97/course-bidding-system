@@ -4,6 +4,7 @@ require_once '../include/section-dump.php';
 require_once '../include/protect.php';
 
 if (isset($_REQUEST['r'])){
+    // json request
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
     if (!isset($request['course'])){
@@ -41,6 +42,7 @@ if (!isEmpty($errors)) {
         ];
 }
 else{
+    //perform section dump if there is no error
     $result=doSectionDump($course,$section);
 }
 header('Content-Type: application/json');
@@ -49,8 +51,10 @@ $json=json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=='success' && count($result['students'])>0){
     foreach ($result['students'] as $key=>$student){
         if (strpos($result['students'][$key]['amount'],'.')!== FALSE){
+            // display float value
             $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],2).'',$json);
         }else{
+            // display int as float value
             $json=str_replace('"amount": "'.$result['students'][$key]['amount'].'"','"amount": '.number_format($result['students'][$key]['amount'],1).'',$json);
         }
     }

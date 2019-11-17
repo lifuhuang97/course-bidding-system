@@ -30,6 +30,7 @@ function doDropSection($userid,$course,$section) {
     if (isEmpty($errors)){
         $status=CheckCourseEnrolled($userid,$course);
         if ($status===FALSE){
+            //if student drop course that is not enrolled 
             $errors[]="no such enrollment record";
         }else{
             $status=DropSectionUpdateEdollar($userid,$course,$status);

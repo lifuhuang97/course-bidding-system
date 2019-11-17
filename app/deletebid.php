@@ -1,23 +1,29 @@
 <?php
-    require_once 'include/common.php';
-    require_once 'include/function.php';
-    require_once 'include/protect.php';
 
-    $student=$_SESSION['student'];
-    $userid = $student->getUserid(); #get userid
-    $password = $student->getPassword(); #get password
-    $name = $student->getName(); #get name
-    $school = $student->getSchool(); #get school
-    $edollar = $student->getEdollar(); #get edollar
+//to be included files
 
-    $bidDAO = New BidDAO();
-    $biddedModule = $bidDAO->getBidInfo($userid); #get bidded mods
+require_once 'include/common.php';
+require_once 'include/function.php';
+require_once 'include/protect.php';
 
-    //getting the round ID and roundstat
-    $adminround = new adminRoundDAO();
-    $roundDetail = $adminround->retrieveRoundDetail();
-    $roundID = $roundDetail->getRoundID();
-    $roundstat = $roundDetail->getRoundStatus();
+//retrieve student information
+$student=$_SESSION['student'];
+$userid = $student->getUserid(); #get userid
+$password = $student->getPassword(); #get password
+$name = $student->getName(); #get name
+$school = $student->getSchool(); #get school
+$edollar = $student->getEdollar(); #get edollar
+
+//retrieve student bidded mods
+$bidDAO = New BidDAO();
+$biddedModule = $bidDAO->getBidInfo($userid); 
+
+//getting the round ID and round status
+$adminround = new adminRoundDAO();
+$roundDetail = $adminround->retrieveRoundDetail();
+$roundID = $roundDetail->getRoundID();
+$roundstat = $roundDetail->getRoundStatus();
+
 ?>
 <style>
 th, td,tr {
@@ -84,6 +90,7 @@ th, td,tr {
             </div>
             <div class="content-container">
                 <?php
+                //  display errors if there is error
                 if (isset($_SESSION['errors1'])) {
                     foreach ($_SESSION['errors1'] as $errors){
                         echo "<p style='color: red'>".$errors."</p>";
@@ -94,6 +101,7 @@ th, td,tr {
                 ?>
                 <?php
                 if (count($biddedModule)==0){
+                    // if there is no bidded module
                     echo "<h3 style='text-align:left; font-weight:bold; '>No available course</h3>";
                 }else {
                     echo"<table class='content-container__table' border='1px'>
@@ -115,12 +123,15 @@ th, td,tr {
                         $code = $module->getCode();
                         echo "$code</td>";
                         echo "<td>";
+
                         $course = $module->getCourseDetailsByCourseSection();
                         $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
+                        //format datetime to time only
                         $lStartTime = $course->getStart();
                         $lStartTime = substr($lStartTime,0,5);
                         $lEndTime = $course->getEnd();
                         $lEndTime = substr($lEndTime,0,5);
+
                         echo "{$course->getTitle()}</td>
                         <td>{$module->getSection()}</td>
                         <td>{$weekday[$course->getDay()]}</td>
@@ -130,6 +141,7 @@ th, td,tr {
                         <td>{$module->getAmount()}</td>";
                         ?>
 
+                        <!-- notification for student confirm the selection -->
                         <td>
                             <button id="<?= $code?>" class="trigger">Drop</button>
                             <div class="modal" id="modal<?= $code?>">
@@ -143,9 +155,6 @@ th, td,tr {
                                 </div>
                             </div>
                         </td>
-
-
-
 
                         <?php
                         echo "</tr>";

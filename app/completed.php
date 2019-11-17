@@ -2,20 +2,26 @@
 
 //Page shows students' completed courses
 
-    require_once 'include/common.php';
-    require_once 'include/protect.php';
-    require_once 'include/function.php';
+//to be included files
+require_once 'include/common.php';
+require_once 'include/protect.php';
+require_once 'include/function.php';
 
-    $studentDAO = New StudentDAO();
-    $student = $studentDAO->retrieveStudent($_SESSION['success']);
-    $loginID = $student->getUserid();
-    $_SESSION['student'] = $student;
-    $name = $student->getName();
-    $school = $student->getSchool();
-    $eCredit = $student->getEdollar();
+//retrieve student details
+$studentDAO = New StudentDAO();
+$student = $studentDAO->retrieveStudent($_SESSION['success']);
+$loginID = $student->getUserid();
+$_SESSION['student'] = $student;
+$name = $student->getName();
+$school = $student->getSchool();
+$eCredit = $student->getEdollar();
 
-    $completedDAO = New CourseCompletedDAO();
-    $ccompleted = $completedDAO->getAllCourseComplete($loginID);
+//retrieve student's completed course
+$completedDAO = New CourseCompletedDAO();
+$ccompleted = $completedDAO->getAllCourseComplete($loginID);
+
+//for retrieval of course name
+$courseDAO= New CourseDAO();
 ?>
 <style>
 th, td,tr {
@@ -66,20 +72,19 @@ th, td,tr {
                         <th class="table-title" colspan="2">Completed</th>
                     </tr>
                     <tr>
-                        <th>Student ID</th>
                         <th>Course Code</th>
+                        <th>Course Title</th>
                     </tr>
                 <?php
                     echo '</tr>';
                     foreach ($ccompleted as $completed){
-                        $nameofuser = $completed->getUserid();
                         $coursecodecompleted = $completed->getCode();
                         
                         echo '<tr><td>';
-                        echo $nameofuser;
-                        echo '</td><td>';
                         echo $coursecodecompleted;
-                        echo '</td></tr>';  
+                        echo '</td><td>';
+                        echo $courseDAO->RetrieveCourseName($coursecodecompleted);
+                        echo '</td></tr>';
                     }
                 ?>
                 </table>

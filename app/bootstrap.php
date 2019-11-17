@@ -1,4 +1,7 @@
 <?php
+
+//to be included files
+
 require_once 'include/common.php';
 require_once 'include/bootstrap.php';
 require_once 'include/protect.php';
@@ -29,6 +32,7 @@ if (isset($_POST['submitBootstrap'])){
         <tr>
             <th>File</th><th>Number of Records Loaded</th>
         </tr>";
+        //To display total number of data loaded
         $total=0;
         foreach($output['num-record-loaded'] as $file){
             foreach($file as $filename=> $count){

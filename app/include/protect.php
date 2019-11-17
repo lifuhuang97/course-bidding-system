@@ -20,7 +20,7 @@ if ($currentFolder == "json")
         }
     }
 }else{
-    if (isset($_REQUEST['token'])) {
+    if (isset($_REQUEST['token']) && strlen(trim($_REQUEST['token']))!=0) {
         $token = $_REQUEST['token'];
         $result=verify_token($token);
         if ($result=="Expired"){ //session expired

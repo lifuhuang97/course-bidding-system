@@ -4,8 +4,10 @@ require_once '../include/update-bid.php';
 require_once '../include/protect.php';
 
 if (isset($_REQUEST['r'])){
+    // json request
     $request=json_decode($_REQUEST['r'], JSON_PRETTY_PRINT);
     $errors=[];
+    // check userid
     if (!isset($request['userid'])){
         $errors[]="missing userid";
     }elseif(strlen(trim($request['userid']))==0){
@@ -13,6 +15,7 @@ if (isset($_REQUEST['r'])){
     }else{
         $userid=$request['userid'];
     }
+    // check amount
     if (!isset($request['amount'])){
         $errors[]="missing amount";
     }elseif(strlen(trim($request['amount']))==0){
@@ -20,6 +23,7 @@ if (isset($_REQUEST['r'])){
     }else{
         $amount=$request['amount'];
     }
+    // check course
     if (!isset($request['course'])){
         $errors[]="missing course";
     }elseif(strlen(trim($request['course']))==0){
@@ -27,6 +31,7 @@ if (isset($_REQUEST['r'])){
     }else{
         $course=$request['course'];
     }
+    // check section
     if (!isset($request['section'])){
         $errors[]="missing section";
     }elseif(strlen(trim($request['section']))==0){
@@ -34,6 +39,7 @@ if (isset($_REQUEST['r'])){
     }else{
         $section=$request['section'];
     }
+    //check for token error
     if (isset($tokenError)){
         $errors=array_merge ($tokenError,$errors);
     }
@@ -60,6 +66,7 @@ if (!isEmpty($errors)) {
         ];
 }
 else{
+    //perform update bid if there is no error
     $result=doUpdateBid($userid,$amount,$course,$section);
 }
 header('Content-Type: application/json');

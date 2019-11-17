@@ -17,6 +17,7 @@ function doUpdateBid($userid,$amount,$course,$section) {
             // if amount is less than 10
             $errors[]="invalid amount";
         }elseif(strpos($amount,'.')!=FALSE){
+            // if value have more than 2 dp
             $temp=explode('.',$amount);
             if (strlen($temp[1])>2){
                 $errors[]="invalid amount";
