@@ -423,7 +423,7 @@ if($roundID == 2 && $roundStatus != "Started"){
                                 $days = [1, 2, 3, 4, 5];
                                 $times = ['08:30', '12:00',  '03:00'];
                                     if (isset($biddedModule)){
-                                        $timetable=[1=>['','',''],2=>['','',''],3=>['','',''],4=>['','',''],5=>['','','']];
+                                        $timetable=[1=>['','',''],2=>['','',''],3=>['','',''],4=>['','',''],5=>['','',''], 6=>['','',''], 7=>['','','']];
                                         $status = [];
                                         if (count($biddedModule)!=0){
                                             foreach ($biddedModule as $module){
@@ -504,6 +504,13 @@ if($roundID == 2 && $roundStatus != "Started"){
                                     }
                                     elseif($day==5) {
                                         echo "<tr><td><b>FRIDAY</b></td>";
+                                    }
+                                    elseif($day==6) {
+                                        echo "<tr><td><b>SATURDAY</b></td>";
+
+                                    }
+                                    elseif($day==7) {
+                                        echo "<tr><td><b>SUNDAY</b></td>";
                                     }
                                     for($i=0; $i<=2;$i++){
                                         $title = $timetable[$day][$i];
