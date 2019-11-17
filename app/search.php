@@ -83,17 +83,19 @@
                 if (!in_array($cid,$array)){
                     $array[] = $cid;  
                     echo "<option value='$cid'";
-                    if (isset($_POST['course']) && $_POST['course']=="$cid"){
+                    if (isset($_POST['course']) && $_POST['course']=="$cid"){ // if option is selected, then it will display on the dropdown 
                          echo "selected";
                     }
                     echo">$cid</option>";
                 }
                 
                 
-            }echo"<option selected value='$allcourse1'>$allcourse1</option>";
+            }
+            echo"<option selected value='$allcourse1'>$allcourse1</option>";
             echo "</select>
             <input type='submit' name='courseSelect' value='Search'>";
             
+            // print out details of course selected
             if (isset($_POST['courseSelect'])){
                 $selcourse = $_POST['course'];
                 $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];  
@@ -160,7 +162,7 @@
                     $array1[]=$sch;
                     
                     echo "<option value='$sch' ";
-                    if (isset($_POST['faculty']) && $_POST['faculty']=="$sch"){
+                    if (isset($_POST['faculty']) && $_POST['faculty']=="$sch"){ // if option is selected, then it will display on the dropdown 
                         echo "selected";
                     }
                     echo">$sch</option>";
@@ -179,7 +181,7 @@
                 }
                 $coursebysch = $courseDAO->retrieveAllCourseDetail($courseid='',$sectionid='',$school);
                 
-
+                // print out details of faculty selected
                 foreach ($coursebysch as $schmods){
                     $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
                     $eStartTime = $schmods->getExamStart();
@@ -225,7 +227,7 @@
                     $array1[]=$title;
                     
                     echo "<option value='$title' ";
-                    if (isset($_POST['coursename']) && $_POST['coursename']=="$title"){
+                    if (isset($_POST['coursename']) && $_POST['coursename']=="$title"){ // if option is selected, then it will display on the dropdown 
                         echo "selected";
                     }
                     echo">$title</option>";
@@ -238,6 +240,7 @@
 
             if (isset($_POST['coursetitle'])){
                 echo  '<h1>Courses that have the same Title are: </h1>';
+                // print out details of selected course title
                 foreach($allCourses as $course){
                     $str1 = $course->getTitle();
                     $str2 = $_POST['coursename'];

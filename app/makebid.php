@@ -1,5 +1,4 @@
 <?php
-    #$_SESSION['success'] = $userid;
      require_once 'include/common.php';
      require_once 'include/function.php';
      require_once 'include/protect.php';
@@ -9,7 +8,6 @@
          exit; 
      }else{
         $student=$_SESSION['student']; 
-        #var_dump($student);
         $userid = $student->getUserid(); #get userid
         $password = $student->getPassword(); #get password
         $name = $student->getName(); #get name
@@ -100,6 +98,7 @@
         </div>
         <div class="display-right">
             <?php
+                // check if user already added any bid. if added, then the form will be populated with the course code and sectionID selected.
                 if(!isset($_GET['code'])){
                     $_GET['code'] = '';
                     $_GET['sectionID'] = '';
@@ -128,6 +127,7 @@
             </div>
 
             <?php 
+                // code for Modal Box when there is error while adding bid
                 if(isset($_SESSION['errors1']) && !empty($_SESSION['errors1'])) {
                     echo "<div class='modal'>
                     <div class='modal-content'>";
@@ -173,9 +173,9 @@ if ($roundID==1 && $roundstat=='Started'){
 
         $currentavailable = [];
         foreach ($courses as $course){
-            // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
+            // need remove modules that user alr completed and remove modules that the user already bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
             if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
-                //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
+                //print out every mods that the user haven't take and those modules that the user haven't bidded for and (those courses that require PREREQUISTIES, provided that the users had already complete the PREREQUISTIES mods)
                 $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
                 $eStartTime = $course->getExamStart();
                 $eStartTime = substr($eStartTime,0,5);
@@ -246,11 +246,9 @@ if ($roundID==1 && $roundstat=='Started'){
         //getting round 2 maximum and minimum bid
 
         foreach ($allCourses as $course){
-            // need remove modules that user alr completed and remove modules that the use alr bidded and taking out those courses that require PREREQUISITES (but the user haven't take)
-            #if ( !(in_array ($course->getCourseid(), $realarray)) and !(in_array($course->getCourseid(),$biddedmodsarray)) and CheckForCompletedPrerequisites($userid,$course->getCourseid()) ){
+            //Showing all modules and sections in round 2 
             if (True){
-    
-                //print out every mods that the user haven't take and those modules that the user haven't bidded and those courses that require PREREQUISTIES that the user is available
+                //print out every mods(ALL) 
                 $weekday = [1=>'MON',2=>'TUE',3=>'WED',4=>'THU',5=>'FRI',6=>'SAT',7=>'SUN'];
                 $eStartTime = $course->getExamStart();
                 $eStartTime = substr($eStartTime,0,5);
@@ -298,6 +296,7 @@ if ($roundID==1 && $roundstat=='Started'){
         $_SESSION['availablecourses'] = $currentavailable;
     }
 }else{
+    //css + printing words/sentence in RED
     echo "<h2 style='color: red; text-transform: uppercase; padding-left: 1em;'>Rounds have not started!</h2>";
 }
 ?>
@@ -307,7 +306,7 @@ if ($roundID==1 && $roundstat=='Started'){
 <script>
 
 
-
+// for Modal Box
 var modal = document.querySelector(".modal");
 var closeButton = document.querySelector(".close-button");
 
