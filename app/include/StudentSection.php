@@ -1,5 +1,6 @@
 <?php
 
+// Class to keep track of confirmed enrollments in the website
 class StudentSection {
 
     private $userid;

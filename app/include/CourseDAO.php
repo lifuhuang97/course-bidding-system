@@ -5,7 +5,7 @@ require_once 'common.php';
 class CourseDAO {
 
     public function add($Course) { // Adding a new course
-        // Connect to Database
+
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
@@ -17,7 +17,7 @@ class CourseDAO {
         $examStart=$Course->getExamStart();
         $examEnd=$Course->getExamEnd();
         
-        // Prepare SQL
+
         $sql = "INSERT INTO COURSE (courseID, school, title, description, examDate, examStart, examEnd) VALUES
         (:courseID, :school, :title, :description, :examDate, :examStart, :examEnd)"; 
         $stmt=$conn->prepare($sql);
@@ -29,21 +29,21 @@ class CourseDAO {
         $stmt->bindParam(':examStart',$examStart,PDO::PARAM_STR);
         $stmt->bindParam(':examEnd',$examEnd,PDO::PARAM_STR);
 
-        // Run Query
+
         $status = False;
         if ($stmt->execute()){
             $status=True;
         }
 
-        // Close Query/Connection
+
         $stmt = null;
         $conn = null;
         
-        return $status; // Boolean True or False
+        return $status;
     }
 
     public function removeAll() { // remove everything from Course
-        // $sql = 'TRUNCATE TABLE COURSE';
+
         $sql = 'DELETE FROM COURSE';
         
         $connMgr = new ConnectionManager();
@@ -58,13 +58,12 @@ class CourseDAO {
         $conn = null; 
     }
 
+    //Get all course details (filter accordingly)
     public function retrieveAllCourseDetail($courseid='',$sectionid='',$school=''){
 
-        // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
     
-        // Write & Prepare SQL Query (take care of Param Binding if necessary)
         if (strlen($courseid)!=0 && strlen($sectionid)!=0){
             $sql = "SELECT * 
                 FROM COURSE c, SECTION s
@@ -94,49 +93,38 @@ class CourseDAO {
             $stmt = $conn->prepare($sql);
         }
                 
-        //Execute SQL Query
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $status=$stmt->execute();
 
-        //Retrieve Query Results (if any)
         $course=[];
         while ($row=$stmt->fetch()){
             $course[]=new CourseSection($row['courseID'],$row['sectionID'],$row['day'],$row['start'],$row['end'],$row['instructor'],$row['venue'],$row['size'],$row['school'],$row['title'],$row['description'],$row['examDate'],$row['examStart'],$row['examEnd']);
         }
         
-        // Clear Resources $stmt, $conn
         $stmt = null;
         $conn = null;
     
-        // return (if any)
         return $course;
     }
     
     public function RetrieveAll(){
-        // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-    
-        // Write & Prepare SQL Query (take care of Param Binding if necessary)
     
         $sql = "SELECT * FROM COURSE ORDER BY courseID";
         $stmt = $conn->prepare($sql);
                 
-        //Execute SQL Query
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $status=$stmt->execute();
 
-        //Retrieve Query Results (if any)
         $course=[];
         while ($row=$stmt->fetch()){
             $course[]=new Course($row['courseID'],$row['school'],$row['title'],$row['description'],$row['examDate'],$row['examStart'],$row['examEnd']);
         }
         
-        // Clear Resources $stmt, $conn
         $stmt = null;
         $conn = null;
     
-        // return (if any)
         return $course;
     }
 }

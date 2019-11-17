@@ -68,6 +68,7 @@ class StudentDAO {
         return $student;
     }
 
+    // Update $ of student
     public function updateDollar($userid,$eDollar) {
         
         // Connect to Database
@@ -143,6 +144,8 @@ class StudentDAO {
         $stmt = null;
         $conn = null; 
     }
+
+    //Retrieve all information from student DB
     public function RetrieveAll(){
         // Connect to Database
         $connMgr = new ConnectionManager();

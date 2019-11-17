@@ -3,6 +3,8 @@
 require_once 'common.php';
 
 class PrerequisiteDAO {
+
+    //Check pre-requisites of course
     public function checkPrerequisite($courseid){
         // Connect to Database
         $connMgr = new ConnectionManager();
@@ -77,6 +79,8 @@ class PrerequisiteDAO {
         $stmt = null;
         $conn = null; 
     }
+
+    //Retrieve all from pre-requisites
     public function RetrieveAll(){
         // Connect to Database
         $connMgr = new ConnectionManager();

@@ -1,4 +1,7 @@
 <?php
+
+//Page shows students' completed courses
+
     require_once 'include/common.php';
     require_once 'include/protect.php';
     require_once 'include/function.php';
@@ -25,7 +28,9 @@ th, td,tr {
     <link rel="stylesheet" type="text/css" href="css/mainpageUI.css">
     <script src="https://kit.fontawesome.com/129e7cf8b7.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
+<!-- Nav Bar -->
     <div class="container">
         <div class="navbar-left">
             <div class="navbar-left__profile">
@@ -54,6 +59,7 @@ th, td,tr {
             </div>
         </div>
         <div class="display-right">
+        <!-- Page content of completed courses -->
             <div class="display-right__container">
                 <table>
                     <tr>

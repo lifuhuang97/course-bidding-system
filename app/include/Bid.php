@@ -1,5 +1,5 @@
 <?php
-
+// To store bid information for every round, will be cleared after rounds
 class Bid {
 
     private $userid;

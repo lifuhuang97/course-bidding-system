@@ -1,4 +1,7 @@
 <?php
+
+//to be included files
+
 require_once 'include/dump.php';
 require_once 'include/user-dump.php';
 require_once 'include/bid-dump.php';
@@ -10,15 +13,11 @@ require_once 'include/update-bid.php';
 require_once 'include/delete-bid.php';
 require_once 'include/drop-section.php';
 require_once 'include/protect.php';
-    // if (!isset($_SESSION['success'])){
-    //     header('Location: login.php');
-    //     exit;
-    // }
-
 ?>
 
 
 <html>
+<!-- HTML Stuff for admin main page-->
 <head>
     <title>BOSS Bidding System</title>
     <link rel="stylesheet" type="text/css" href="css/adminUI.css">
@@ -27,12 +26,11 @@ require_once 'include/protect.php';
         table, th, td {
             text-align:center; 
         } 
-
     </style> 
 </head>
 
 <body>
-    <!-- class "container" wraps everything inside -->
+    <!-- UI -->
     <div class="container">
         <div class="navbar-left">
             <div class="navbar-left_profile">
@@ -53,14 +51,15 @@ require_once 'include/protect.php';
         
         <div class="display-right">
             <div class="display-right-bidSystem">
+                
                 <?php
-// Get up-to-date round details
+                // Get admin round information
                 $adminRoundDAO = new adminRoundDAO();
                 $round = $adminRoundDAO->RetrieveRoundDetail();
                 $roundNo = $round->getRoundID();
                 $roundStatus = $round->getRoundStatus();
-
                 ?>
+
                 <div class="form-container">
                     <div class="form-header">
                         <p>Bid System Status</p>
@@ -68,7 +67,7 @@ require_once 'include/protect.php';
                     <form action="processAdminCommands.php?token=<?php echo "{$_GET['token']};"?>" method="post">
 
                         <?php
-//display current round & status
+                        //display current round & status
                         echo "<table>
                         <tr>
                         <th colspan='2'>Round: {$roundNo}</th>
@@ -77,16 +76,15 @@ require_once 'include/protect.php';
                         ?>
 
                         <?php
-// disables buttons according to round status
+                        // disables buttons according to round status
                         $disableButton = "disabled value='true'";
                         $value = 'Start Round';
-
                         if ($roundStatus == "Started"){
                             $startStatus = $disableButton;
                             $clearStatus = '';
                         }else{
                             if ($roundNo == 1){
-                                $value = 'Bootstrap & Start Round'; // changed 
+                                $value = 'Bootstrap & Start Round';
                                 $startStatus = '';
                                 $clearStatus = $disableButton;
                             }elseif($roundNo == 2 && $roundStatus == "Finished"){
@@ -102,30 +100,21 @@ require_once 'include/protect.php';
                         <td colspan='2'><input class='form-btn' type='submit' name='submit' value='Clear Round' $clearStatus></td>
                         </tr>
                         </form>";
-
                         ?>
-<!-- to reset database to base state >require new bootstrap< -->
 <tr>
-    <td colspan='4'><input class="form-btn" type="submit" name="submit" value="Reset Round"></td>
+<td colspan='4'><input class='form-btn' type='submit' name='submit' value='Reset Round'></td>
 </tr>
-
 </table>
 </div>
-   
 </div>
+
 <div class="display-right-bidInfo">
     <?php
     /** Display bid results after round ends */
-
-// $successBidDAO = new StudentSectionDAO();
-// $allSuccessfulBids = $successBidDAO->getAllSuccessfulBids();
-
     if (!($roundNo==1 && $roundStatus=='Not Started') && $roundStatus!='Finished'){
         $currentBidsDAO = new BidDAO();
         $allBids = $currentBidsDAO->RetrieveAll();
-        echo "<table>
-        <tr>    
-        <th colspan = 5 class='table-title'>";
+        echo "<table><tr><th colspan = 5 class='table-title'>";
         if ($roundStatus=="Started"){
             echo"Current Bids";
         }else{
@@ -184,6 +173,7 @@ require_once 'include/protect.php';
 <br>
 <br>
 <div class="display-right-allInfo">
+<!-- Additional functionality: display additional information to admin & allow admin to update/delete bid or drop selection for a user-->
     <form action="adminMainPage.php?token=<?php echo "{$_GET['token']};"?>" method="post">
         <input type='submit' name='navigation' value='Show All Data'>
         <input type='submit' name='navigation' value='Show Student'>
@@ -208,7 +198,7 @@ require_once 'include/protect.php';
                 <tr><td><a href='adminMainPage.php?token={$_GET['token']}#completedCourse'>Completed Course Table</a></td></tr>
                 <tr><td><a href='adminMainPage.php?token={$_GET['token']}#sectionStudent'>Section Student Table</a></td></tr>
                 </table>";
-            //course
+            //course details
                 echo"<section id='course'><h3>Course Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -242,7 +232,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //section
+            //section information
                 echo"<section id='section'><h3>Section Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -279,7 +269,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //student
+            //students information
                 echo"<section id='student'><h3>Student Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -309,7 +299,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //prerequisite
+            //prerequisites information
                 echo"<section id='prerequisite'><h3>Prerequisite Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -333,7 +323,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //bid
+            //bid information
                 echo"<section id='bid'><h3>Bid Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -361,7 +351,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //completed-course
+            //completed-courses information
                 echo"<section id='completedCourse'><h3>Completed Course Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -385,7 +375,7 @@ require_once 'include/protect.php';
                     </tr>";
                 }
                 echo"</table>";
-            //section-student
+            //Enrolled students information
                 echo"<section id='sectionStudent'><h3>Section Student Table</h3></section>";
                 echo"<table border='1'>
                 <tr>
@@ -415,6 +405,7 @@ require_once 'include/protect.php';
                 echo"</table>";
             }elseif(isset($_POST['studentSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show Student')){
                 echo "<h3>Show Student</h3>";
+                // All students' information
                 $studentDAO= new StudentDAO();
                 $students=$studentDAO->RetrieveAll();
                 echo"<select name='student'>
@@ -444,6 +435,7 @@ require_once 'include/protect.php';
 
             }elseif(isset($_POST['sectionSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show Bid By Section')){
                 echo "<h3>Show Bid By Section</h3>";
+                // All bids by section information
                 $sectionDAO= new SectionDAO();
                 $section=$sectionDAO->RetrieveAll();
                 echo"<select name='section'>
@@ -475,6 +467,7 @@ require_once 'include/protect.php';
                 }
 
             }elseif(isset($_POST['sectionsSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show All Student Section')){
+                // All enrolled students information
                 echo "<h3>Show All Student Section</h3>";
                 $sectionDAO= new SectionDAO();
                 $section=$sectionDAO->RetrieveAll();
@@ -509,6 +502,7 @@ require_once 'include/protect.php';
                 } 
 
             }elseif(isset($_POST['bidStatusSelect']) || (isset($_POST['navigation']) && $_POST['navigation']=='Show Bid Status')){  
+                // Bid status information
                 echo "<h3>Show Bid Status</h3>";
                 $sectionDAO= new SectionDAO();
                 $section=$sectionDAO->RetrieveAll();
@@ -550,6 +544,7 @@ require_once 'include/protect.php';
                 }
 
             }elseif (isset($_POST['updateBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Update bid')){    
+                // Update a student's bid
                 echo "<h3>Update Bid</h3>
                 <table border='0' class='bid-table'>
                 <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
@@ -590,6 +585,7 @@ require_once 'include/protect.php';
                     }
                 }
             }elseif (isset($_POST['deleteBid']) || (isset($_POST['navigation']) && $_POST['navigation']=='Delete bid')){
+                // Delete a student's bid
                 echo "<h3>Delete Bid</h3>
                 <table border='0' class='bid-table'>
                 <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
@@ -626,6 +622,7 @@ require_once 'include/protect.php';
                     }
                 }
             }elseif (isset($_POST['dropSection']) || (isset($_POST['navigation']) && $_POST['navigation']=='Drop Section')){
+                // Drop a student's enrolled section
                 echo "<h3>Drop Section</h3>
                 <table border='0' class='bid-table'>
                 <tr><td>Userid:</td><td><input type='text' name='userid'></td></tr>
@@ -667,22 +664,10 @@ require_once 'include/protect.php';
         }
         ?>
     </form>
-
 </div>
 </div>
 </div>
-<br>
-<br>
-
-
-
-
-
-<br>
-
-
+<br><br><br>
 </body>
-
 </form>
-
 </html>

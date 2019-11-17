@@ -47,48 +47,48 @@ class CourseCompletedDAO {
         $stmt = null;
         $conn = null; 
     }
+
+    //get all courses completed (optional to fill in userid)
     public function getAllCourseComplete($userid='') {
-        // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
-        // Prepare SQL
+
         $sql = 'SELECT * FROM course_completed where userid =:userid ';
         $stmt=$conn->prepare($sql);
         $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
 
-        //Execute SQL Query
-        //$stmt->setFetchMode(PDO::FETCH_ASSOC);
+
         $status=$stmt->execute();
 
         $course1=[];
         while($row=$stmt->fetch()){
             $course1[]=new CourseCompleted($row['userid'],$row['code']);
         }
-        // Close Query/Connection
+ 
         $stmt = null;
         $conn = null;
         
         return $course1;
 
     }
+
+    //Check course completed by userID and courseID
     public function checkCourseComplete($userid,$code){
         // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
 
-        // Prepare SQL
         $sql = "SELECT * FROM course_completed where userid=:userid and code=:code"; 
         $stmt=$conn->prepare($sql);
         $stmt->bindParam(':userid',$userid,PDO::PARAM_STR);
         $stmt->bindParam(':code',$code,PDO::PARAM_STR);
-        // Run Query
+
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $status = $stmt->execute();
 
-        // check if query fail
-        if (!$status){ //if ($status==False)
-            //if there is error
+
+        if (!$status){ 
             $err=$stmt->errorinfo();
         }
         $status=FALSE;
@@ -98,37 +98,32 @@ class CourseCompletedDAO {
             }
         }
 
-        // Close Query/Connection
+
         $stmt = null;
         $conn = null;
         
         return $status;
     }
+
+    //Get everything from course completed
     public function RetrieveAll(){
-        // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-    
-        // Write & Prepare SQL Query (take care of Param Binding if necessary)
     
         $sql = "SELECT * FROM course_completed ORDER BY code,userid";
         $stmt = $conn->prepare($sql);
                 
-        //Execute SQL Query
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $status=$stmt->execute();
 
-        //Retrieve Query Results (if any)
         $CourseCompleted=[];
         while ($row=$stmt->fetch()){
             $CourseCompleted[]=new CourseCompleted($row['userid'],$row['code']);
         }
         
-        // Clear Resources $stmt, $conn
         $stmt = null;
         $conn = null;
     
-        // return (if any)
         return $CourseCompleted;
     }
 }

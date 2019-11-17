@@ -9,10 +9,12 @@ require_once 'include/protect.php';
 	<input id='bootstrap-file' type="file" name="bootstrap-file"></br>
 	<input type="submit" name="submitBootstrap" value="Import">
 </form>
+
 <!-- Back if want to start round but don't want to upload any bid data -->
-<!-- temporary logout button for admin to logout -->
 <a href="adminMainPage.php?token=<?php echo $_GET['token']?>">Back</a>
+<!-- temporary logout button for admin to logout -->
 <a href="logout.php">Logout</a>
+
 <?php
 if (isset($_POST['submitBootstrap'])){
     $output=doBootstrap();
@@ -22,6 +24,7 @@ if (isset($_POST['submitBootstrap'])){
         //no file found or missing file
         echo "Message: {$output['message'][0]}";
     }else{
+        //Display number of records loaded
         echo"<table border='1'>
         <tr>
             <th>File</th><th>Number of Records Loaded</th>
@@ -38,6 +41,7 @@ if (isset($_POST['submitBootstrap'])){
         echo"<tr><th>Total Data added</th><th>$total</th></tr>
         </table>";
         if (isset($output['error'])){
+            //Display errors
             echo"<br>
             <table border='1'>
             <tr>

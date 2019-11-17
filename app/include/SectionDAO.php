@@ -43,7 +43,7 @@ class SectionDAO {
         return $status; // Boolean True or False
     }
 
-    public function updateSectionMinBid($minbid,$course,$section) { // Adding a new section
+    public function updateSectionMinBid($minbid,$course,$section) { // Updating a section's min bid
         // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -68,7 +68,7 @@ class SectionDAO {
         return $status; // Boolean True or False
     }
 
-    public function resetSectionMinBid() { // Adding a new section
+    public function resetSectionMinBid() { // Reset a section's min bid
         // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -90,7 +90,7 @@ class SectionDAO {
         return $status; // Boolean True or False
     }
 
-    public function viewMinBid($course,$section) { // Adding a new section
+    public function viewMinBid($course,$section) { // View min bid for a section
         // Connect to Database
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -115,7 +115,11 @@ class SectionDAO {
         $conn = null;
         
         return $minbid; 
+
+
     }
+
+    // Get all sections sizes
 
     public function getAllSections(){
         $connMgr = new ConnectionManager();
@@ -151,6 +155,8 @@ class SectionDAO {
         $stmt = null;
         $conn = null; 
     }
+
+    //Retrieve everything
     public function RetrieveAll(){
         // Connect to Database
         $connMgr = new ConnectionManager();

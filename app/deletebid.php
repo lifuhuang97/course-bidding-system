@@ -11,7 +11,7 @@
     $edollar = $student->getEdollar(); #get edollar
 
     $bidDAO = New BidDAO();
-    $biddedModule = $bidDAO->getBidInfo($userid);
+    $biddedModule = $bidDAO->getBidInfo($userid); #get bidded mods
 
     //getting the round ID and roundstat
     $adminround = new adminRoundDAO();
@@ -36,6 +36,7 @@ th, td,tr {
 
 <body>
     <div class="container">
+    <!-- Nav Bar -->
         <div class="navbar-left">
             <div class="navbar-left__profile">
                 <div class="navbar-left__profile__container">
@@ -63,6 +64,7 @@ th, td,tr {
             </div>
         </div>
         <div class="display-right">
+        <!-- For user to drop bid -->
             <div class="form-container">
                 <div class="form-header">
                     <p>Drop Existing Bid</p>

@@ -1,5 +1,6 @@
 <?php
 
+// Class to store all successful & failed bids categorized by roundID
 class BidProcessor {
 
     private $userid;

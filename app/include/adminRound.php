@@ -1,5 +1,6 @@
 <?php
 
+// Class to keep track of round ID and statuses for the website
 class AdminRound {
     private $adminID;
     private $adminPW;

@@ -34,18 +34,6 @@ function isMissingOrEmpty($name) {
     }
 }
 
-# check if an int input is an int and non-negative
-function isNonNegativeInt($var) {
-    if (is_numeric($var) && $var >= 0 && $var == round($var))
-        return TRUE;
-}
-
-# check if a float input is is numeric and non-negative
-function isNonNegativeFloat($var) {
-    if (is_numeric($var) && $var >= 0)
-        return TRUE;
-}
-
 # this is better than empty when use with array, empty($var) returns FALSE even when
 # $var has only empty cells
 function isEmpty($var) {
