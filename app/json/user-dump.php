@@ -43,7 +43,7 @@ $json=json_encode($result, JSON_PRETTY_PRINT);
 if ($result['status']=="success"){
     if (strpos($result['edollar'],'.')!== FALSE){
         // display float value
-        if (substr($result['students'][$key]['amount'],-1)=='0'){
+        if (substr($result['edollar'],-1)=='0'){
             $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],1).'',$json);
         }else{
             $json=str_replace('"edollar": "'.$result['edollar'].'"','"edollar": '.number_format($result['edollar'],2).'',$json);
